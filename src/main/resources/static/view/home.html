@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="../__/import.js"></script>
+<title>Demo</title>
+<style type="text/css">
+.x-fill {
+	margin: 0 0;
+	padding: 0 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+.el-container {
+	border: none;
+}
+
+.x-main {
+	padding: 0 0;
+	overflow: hidden;
+}
+
+.x-header {
+	background: #23262E;
+	color: #fff;
+}
+
+.x-aside {
+	overflow-x: hidden;
+	background: #393D49;
+}
+
+.x-aside {
+	overflow-x: hidden;
+	background: #393D49;
+}
+
+.x-aside .el-menu {
+	background: #393D49;
+}
+
+.x-aside .el-submenu .el-submenu__title, .x-aside .el-menu .el-menu-item
+	{
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+}
+
+.x-aside .el-submenu {
+	background: #4E5465;
+}
+
+.x-aside .el-menu-item.is-active {
+	background: #009688;
+	color: #fff;
+}
+</style>
+</head>
+<body>
+	<div id="vm" v-cloak>
+		<div is="el-container" style="height: 100%; margin: 0 0;">
+			<div is="el-header" height="50px" class="x-header">
+				<div is="el-row">
+					<div is="el-col" :span="20">
+						<h3>Hello World</h3>
+					</div>
+					<div is="el-col" :span="3" style="line-height: 50px;">
+						<i class="el-icon-s-custom" style="margin-left: 10px;"></i> <span>用户名：<a>{{user.realname}}</a></span>
+						<!-- ~ -->
+						<a class="el-icon-lock" style="margin-left: 10px; cursor: pointer;" @click="password()"></a>
+					</div>
+					<div is="el-col" :span="1" style="line-height: 50px; text-align: right;">
+						<a @click="logout()" title="退出" style="cursor: pointer;">【退出】</a>
+					</div>
+				</div>
+			</div>
+			<div is="el-container">
+				<div is="el-aside" width="180px" class="x-aside">
+					<ul is="el-menu" ref="nav" :default-active="nav.active">
+						<li is="menu-node" v-for="menu in nav.menus" :menu="menu"></li>
+					</ul>
+				</div>
+				<div is="el-main" class="x-main">
+					<iframe :src="content.url" frameborder="0" class="x-fill"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/x-template" id="menu-node-template">
+		<li :is="dynamicComponentTag(menu)" :index="menu.id" @click="onSelect(menu)">
+			<span slot="title"><i :class="(menu.icon||'el-icon-menu')"></i>{{menu.name}}</span>			
+			<template v-if="!isLeaf(menu)">
+		        <menu-node v-for="childmenu in menu.children" :menu="childmenu"></menu-node>
+			</template>
+		</li>
+	</script>
+	<script>
+		if (__.isEmpty(__.getAccessToken())) {
+			__.navigateTo('/view/login.html');
+		} else {
+			Vue.bus = new Vue();
+			Vue.component('menu-node', {
+				props : [ 'menu' ],
+				template : '#menu-node-template',
+				methods : {
+					dynamicComponentTag : function(menu) {
+						return this.isLeaf(menu) ? 'el-menu-item' : 'el-submenu';
+					},
+					isLeaf : function(menu) {
+						return menu.children == null || menu.children.length == 0;
+					},
+					onSelect : function(menu) {
+						menu.type == 3 && Vue.bus.$emit('select', menu);
+					}
+				}
+			});
+			new Vue({
+				el : '#vm',
+				data : function() {
+					return {
+						user : {
+							realname : ''
+						},
+						nav : {
+							menus : [],
+							active : null
+						},
+						content : {
+							url : 'about:blank'
+						}
+					}
+				},
+				mounted : function() {
+					var vm = this;
+					__.api('POST', '/rest/auth/info', {}, function(result) {
+						var user = result.data;
+
+						vm.user.realname = user.realname || '';
+
+						__.api('POST', '/rest/permission/getMenuTree', {}, function(result) {
+							if (__.err(result)) {
+								__.message({
+									message : result.message,
+									type : 'warning'
+								});
+								return;
+							}
+							var scanFirst = function(nodes) {
+								var i, node, result;
+								for (i = 0; i < nodes.length; i++) {
+									node = nodes[i];
+									if (node.type == 3) {
+										return node;
+									}
+									if (result = scanFirst(node.children || [])) {
+										return result;
+									}
+								}
+								return null;
+							};
+
+							vm.nav.menus = result.data || [];
+							var first = scanFirst(vm.nav.menus);
+							first && vm.select(first);
+						});
+
+						var filter = function(menus) {
+							var i, menu, result = [];
+							for (i = 0; i < menus.length; i++) {
+								menu = menus[i];
+								if (__.isEmpty(menu.permit) || menu.permit.includes(user.type)) {
+									result.push(menu);
+								}
+							}
+							return result;
+						}
+					});
+					Vue.bus.$on('select', function(menu) {
+						vm.select(menu);
+					});
+				},
+				methods : {
+					select : function(menu) {
+						var vm = this, path = menu.path;
+						if (!__.isEmpty(path) && path != '#') {
+							vm.content.url = __.url(path);
+							vm.nav.active = menu.id || null;
+						}
+					},
+					password : function() {
+						__.dialog.open({
+							title : '修改密码',
+							width : '550px',
+							height : '270px',
+							url : __.url('/view/user/user-password.html', {
+								t : __.now()
+							}),
+							close : function(result) {
+							}
+						});
+					},
+					logout : function() {
+						__.mask();
+						__.api('POST', '/rest/auth/logout', {}, function(result) {
+							__.removeAccessToken();
+							__.navigateTo('/view/login.html');
+						});
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>
