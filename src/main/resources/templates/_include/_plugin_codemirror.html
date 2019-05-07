@@ -1,0 +1,22 @@
+<link rel="stylesheet" th:href="@{/s/codemirror/5.28.0/lib/codemirror.css}" />
+<link rel="stylesheet" th:href="@{/s/codemirror/5.28.0/addon/hint/show-hint.css}" />
+
+<script th:src="@{/s/codemirror/5.28.0/lib/codemirror.js}"></script>
+<script th:src="@{/s/codemirror/5.28.0/mode/javascript/javascript.js}"></script>
+<script th:src="@{/s/codemirror/5.28.0/addon/hint/show-hint.js}"></script>
+<script th:src="@{/s/codemirror/5.28.0/addon/hint/anyword-hint.js}"></script>
+<script th:src="@{/s/codemirror/plugin/vue-codemirror.js}"></script>
+<style>
+.CodeMirror {
+	border: 1px solid #ddd;
+	font-size: 13px
+}
+
+.CodeMirror pre {
+	font-family: 'Microsoft Yahei', "Helvetica Neue", Helvetica, Verdana, "PingFang SC", Arial, sans-serif;
+}
+
+.CodeMirror-code, .CodeMirror-gutter-wrapper, .CodeMirror-line {
+	line-height: 15px;
+}
+</style>

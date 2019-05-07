@@ -1,0 +1,56 @@
+@charset "utf-8";
+
+html, body {
+	height: 100%;
+	margin: 0 0;
+}
+
+html {
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #333;
+	background-color: #fff;
+	min-height: 100%;
+}
+
+textarea {
+	resize: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+	display: block;
+}
+
+audio, canvas, progress, video {
+	display: inline-block;
+}
+.clearfix::before, .clearfix::after {
+	content: "";
+	display: table;
+}
+
+.clearfix::after {
+	clear: both;
+}
+.fl{
+	float:left;
+	margin-left:10px;
+}
+.fr{
+	float:right;
+}
+li{
+	list-style-type: none;
+}
+[v-cloak] {
+	display: none !important;
+}

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="yyl.demo.mapper.RolePermissionMapper">
+
+	<resultMap id="RESULT_MAP" type="yyl.demo.entity.RolePermission">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="roleId" column="role_id" jdbcType="VARCHAR" />
+		<result property="permissionId" column="permission_id" jdbcType="VARCHAR" />
+		<result property="createdBy" column="created_by" jdbcType="VARCHAR" />
+		<result property="createdAt" column="created_at" jdbcType="TIMESTAMP" />
+		<result property="updatedBy" column="updated_by" jdbcType="BIGINT" />
+		<result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="TABLE">role_permission</sql>
+
+	<sql id="COLUMNS">
+		id, role_id, permission_id,
+		created_by, created_at, updated_by, updated_at
+	</sql>
+
+	<sql id="VALUES">
+		#{id}, #{roleId}, #{permissionId},
+		#{createdBy}, #{createdAt}, #{updatedBy}, #{updatedAt}
+	</sql>
+
+	<sql id="SET_VALUES">
+		<trim suffixOverrides=",">
+			<if test=" roleId != null">
+				role_id = #{roleId},
+			</if>
+			<if test=" permissionId != null">
+				permission_id = #{permissionId},
+			</if>
+			<if test=" createdBy != null">
+				created_by = #{createdBy},
+			</if>
+			<if test=" createdAt != null">
+				created_at = #{createdAt},
+			</if>
+			<if test=" updatedBy != null">
+				updated_by = #{updatedBy},
+			</if>
+			<if test=" updatedAt != null">
+				updated_at = #{updatedAt},
+			</if>
+		</trim>
+	</sql>
+
+	<update id="save">
+		INSERT INTO
+		<include refid="TABLE" />
+		(
+		<include refid="COLUMNS" />
+		) VALUES (
+		<include refid="VALUES" />
+		)
+		ON DUPLICATE KEY UPDATE
+		<include refid="SET_VALUES" />
+	</update>
+
+	<insert id="insert" parameterType="yyl.demo.entity.RolePermission">
+		INSERT INTO
+		<include refid="TABLE" />
+		(
+		<include refid="COLUMNS" />
+		)
+		VALUES
+		(
+		<include refid="VALUES" />
+		)
+	</insert>
+
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM
+		<include refid="TABLE" />
+		WHERE
+		id =#{id}
+	</delete>
+
+	<delete id="deleteAll">
+		DELETE FROM
+		<include refid="TABLE" />
+	</delete>
+
+	<delete id="deleteByRoleId" parameterType="java.lang.String">
+		DELETE FROM
+		<include refid="TABLE" />
+		WHERE
+		role_id =#{roleId}
+	</delete>
+
+	<delete id="deleteByPermissionId" parameterType="java.lang.String">
+		DELETE FROM
+		<include refid="TABLE" />
+		WHERE
+		permission_id =#{permissionId}
+	</delete>
+
+	<update id="update" parameterType="yyl.demo.entity.RolePermission">
+		UPDATE
+		<include refid="TABLE" />
+		<set>
+			<include refid="SET_VALUES" />
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+
+	<select id="getById" parameterType="java.lang.String" resultMap="RESULT_MAP">
+		SELECT
+		<include refid="COLUMNS" />
+		FROM
+		<include refid="TABLE" />
+		WHERE id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="findAll" resultMap="RESULT_MAP">
+		SELECT
+		<include refid="COLUMNS" />
+		FROM
+		<include refid="TABLE" />
+	</select>
+
+	<select id="findByRoleId" parameterType="java.lang.String" resultMap="RESULT_MAP">
+		SELECT
+		<include refid="COLUMNS" />
+		FROM
+		<include refid="TABLE" />
+		WHERE role_id = #{roleId,jdbcType=BIGINT}
+	</select>
+
+	<select id="findPermissionIdByRoleId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+		permission_id
+		FROM
+		<include refid="TABLE" />
+		WHERE role_id = #{roleId}
+	</select>
+
+	<select id="findPermissionIdByRoleIds" resultType="java.lang.String">
+		SELECT
+		permission_id
+		FROM
+		<include refid="TABLE" />
+		where
+		<if test="array == null or array.length==0">
+			1=0
+		</if>
+		<if test="array != null and array.length > 0">
+			role_id in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+</mapper>
