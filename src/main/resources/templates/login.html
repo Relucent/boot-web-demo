@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>登录</title>
+<style type="text/css">
+.form-wrap {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -180px;
+	margin-left: -225px;
+	width: 400px;
+	padding: 25px 50px 5px 5px;
+	background: #fefefe;
+	transition: .2s;
+	border-radius: 10px;
+	border: 1px solid #efefef;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+}
+
+.from-title {
+	border: none;
+	font-size: 20px;
+	padding-left: 35px;
+}
+</style>
+<script>
+	if (window.location.href != window.top.location.href) {
+		var allowEmbedded = __.decodeUrlParams()['allowEmbedded'];
+		if (allowEmbedded !== false) {
+			try {
+				top.location.href = __.url('/login.html');
+			} catch (e) {
+			}
+		}
+	}
+</script>
+</head>
+<body>
+	<div id="vm" v-cloak>
+		<div class="form-wrap">
+			<form is="el-form" label-width="80px">
+				<fieldset class="from-title">
+					<legend>系统登录</legend>
+				</fieldset>
+				<div is="el-form-item" label="账号">
+					<input type="text" is="el-input" ref="account" @keyup.enter.native="enter(0)" v-model.trim="token.account" auto-complete="off" />
+				</div>
+				<div is="el-form-item" label="密码">
+					<input is="el-input" type="password" ref="password" @keyup.enter.native="enter(1)" v-model="token.password" auto-complete="off" />
+				</div>
+				<div is="el-form-item">
+					<button is="el-button" type="primary" @click="submit()">登录</button>
+					<button is="el-button" @click="reset()">重置</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				token : {
+					account : '',
+					password : ''
+				}
+			},
+			methods : {
+				enter : function(index) {
+					var vm = this;
+					vm.token.account = __.trim(vm.token.account);
+					if (index == 0) {
+						vm.$refs.password.focus();
+					} else if (index == 1 && __.isEmpty(vm.token.account)) {
+						vm.$refs.account.focus();
+					} else {
+						vm.submit();
+					}
+				},
+				submit : function() {
+					var vm = this;
+					var token = vm.token;
+					token.account = __.trim(token.account);
+					if (__.isEmpty(token.account)) {
+						vm.$message({
+							message : '请输入账号',
+							type : 'warning'
+						});
+						return;
+					}
+					if (__.isEmpty(token.password)) {
+						vm.$message({
+							message : '请输入密码',
+							type : 'warning'
+						});
+						return;
+					}
+					__.api('POST', '/rest/login', token, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message || '登录失败');
+						} else {
+							__.navigateTo('/home.html');
+						}
+					});
+				},
+				reset : function() {
+					var vm = this;
+					vm.token = {
+						account : '',
+						password : ''
+					};
+				}
+			}
+		});
+	</script>
+</body>
+</html>

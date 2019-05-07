@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>角色授权</title>
+</head>
+<style>
+.element-tree {
+	height: 255px;
+	border: 1px solid #e6e6e6;
+	overflow-x:hidden;
+}
+</style>
+<body>
+	<div id="vm">
+		<div>
+			<div is="el-tree" class="element-tree" :data="treeData" ref="tree" check-strictly show-checkbox :props="defaultProps" @check-change="handleCheckChange" default-expand-all node-key="id" :default-checked-keys="checkedNode"></div>
+		</div>
+		<div align="center" style="margin-top:22px;">
+			<button is="el-button" type="success" @click="confirm">确定</button>
+			<button is="el-button" @click="cancel">取消</button>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				form : {
+					id : '',
+					name : '',
+					remark : ''
+				},
+				treeData : [],
+				checkedNode : [],
+				defaultProps : {
+					children : 'children',
+					label : 'label'
+				},
+				roleId : ""
+			},
+			mounted : function() {
+				var vm = this;
+				var search = __.decodeUrlParams();
+				vm.roleId = search.id;
+				vm.loadMenuTree();
+				vm.loadAuthMenuIds();
+			},
+			methods : {
+				loadMenuTree : function() {
+					var vm = this;
+					__.api('GET', '/rest/permission/menu-perm-tree', {}, function(result) {
+						vm.treeData = result.data;
+					});
+				},
+				loadAuthMenuIds : function() {
+					var vm = this;
+					__.api('GET', '/rest/role/getAuthPerm/' + vm.roleId, {}, function(result) {
+						vm.checkedNode = result.data;
+					});
+				},
+				handleCheckChange : function(data, checked, indeterminate) {
+					this.getCheckedNodes();
+				},
+				getCheckedNodes : function() {
+					console.log(this.$refs.tree.getCheckedNodes());
+				},
+				confirm : function() {
+					var vm = this;
+					var nodes = this.$refs.tree.getCheckedNodes();
+					var permIds = [];
+					for (var i = 0; i < nodes.length; i++) {
+						permIds.push(nodes[i].id);
+					}
+					__.api('POST', '/rest/role/' + vm.roleId + '/permission-ids', permIds, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message);
+						} else {
+							__.dialog.close();
+						}
+					});
+				},
+				cancel : function() {
+					__.dialog.close();
+				},
+			}
+		})
+	</script>
+</body>
+</html>

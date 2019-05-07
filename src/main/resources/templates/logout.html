@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>logout</title>
+</head>
+<body>
+	<div>waiting...</div>
+	<script>
+		__.api('POST', '/rest/logout', {}, function(result) {
+			__.navigateTo('/');
+		});
+	</script>
+</body>
+</html>
