@@ -21,6 +21,7 @@ import yyl.demo.common.thymeleaf.CustomThymeleafDialect;
 
 /**
  * 项目公用配置
+ * 
  * @author YYL
  */
 @Configuration
@@ -42,8 +43,8 @@ public class GlobalConfiguration {
 
     /** 安全过滤器(注册) */
     @Bean
-    public FilterRegistrationBean securityFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<SecurityFilter> securityFilterRegistration() {
+        FilterRegistrationBean<SecurityFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(securityFilter());
         registration.addUrlPatterns("/*");
         registration.setName("security_filter");

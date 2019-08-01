@@ -34,8 +34,8 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
-            WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         int start = ConvertUtil.toInteger(webRequest.getParameter(START_KEY), 0);
         int limit = ConvertUtil.toInteger(webRequest.getParameter(LIMIT_KEY), DEFAULT_LIMIT);
         return new Pagination(start, limit);
