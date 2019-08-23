@@ -31,10 +31,15 @@
 
 	<dependencies>
 
-		<!-- _spring-boot| -->
+		<!-- _springboot|web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- _spring-boot$security| -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
 		<!-- _spring-boot$configuration| -->
 		<dependency>
@@ -43,21 +48,10 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- _spring-boot$security| -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-crypto</artifactId>
-		</dependency>
 		<!-- [<dependency>] -->
 		<!-- [ <groupId>org.springframework.boot</groupId>] -->
 		<!-- [ <artifactId>spring-boot-starter-security</artifactId>] -->
 		<!-- [ </dependency>] -->
-
-		<!-- _spring-boot$actuator| -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
 
 		<!-- _thymeleaf| -->
 		<dependency>
