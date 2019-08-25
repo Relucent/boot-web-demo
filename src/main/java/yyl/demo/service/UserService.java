@@ -126,7 +126,7 @@ public class UserService {
         entity.setRemark(user.getRemark());
         entity.setEnabled(BoolInts.normalize(user.getEnabled()));
 
-        AuditableUtil.setUpdated(entity, principal);
+        AuditableUtil.setLastModified(entity, principal);
         userMapper.update(entity);
     }
 
@@ -139,7 +139,7 @@ public class UserService {
         User entity = new User();
         entity.setId(id);
         entity.setEnabled(BoolInts.normalize(enabled));
-        AuditableUtil.setUpdated(entity, principal);
+        AuditableUtil.setLastModified(entity, principal);
         userMapper.update(entity);
     }
 

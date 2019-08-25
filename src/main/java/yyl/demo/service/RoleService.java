@@ -100,7 +100,7 @@ public class RoleService {
         entity.setName(role.getName());
         entity.setRemark(role.getRemark());
 
-        AuditableUtil.setUpdated(entity, principal);
+        AuditableUtil.setLastModified(entity, principal);
 
         roleMapper.update(entity);
     }

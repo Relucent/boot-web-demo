@@ -8,15 +8,16 @@ import com.github.relucent.base.util.lang.DateUtil;
  * @author Administrator
  */
 public class AuditableUtil {
-
     /**
      * 设置创建信息
      * @param record 记录对象
      * @param principal 登录人
      */
     public static void setCreated(Auditable record, Principal principal) {
-        record.setCreatedBy(principal.getUserId()); 
-        record.setCreatedAt(DateUtil.now());
+        record.setCreatedBy(principal.getUserId());
+        record.setCreatedDate(DateUtil.now());
+        record.setLastModifiedBy(principal.getUserId());
+        record.setLastModifiedDate(DateUtil.now());
     }
 
     /**
@@ -24,8 +25,8 @@ public class AuditableUtil {
      * @param record 记录对象
      * @param principal 登录人
      */
-    public static void setUpdated(Auditable record, Principal principal) {
-        record.setUpdatedBy(principal.getUserId());
-        record.setUpdatedAt(DateUtil.now());
+    public static void setLastModified(Auditable record, Principal principal) {
+        record.setLastModifiedBy(principal.getUserId());
+        record.setLastModifiedDate(DateUtil.now());
     }
 }

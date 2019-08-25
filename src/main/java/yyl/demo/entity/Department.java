@@ -39,11 +39,11 @@ public class Department implements Idable, Auditable, IdPathable, Ordinal, Seria
     /** 创建者 */
     private String createdBy;
     /** 创建时间 */
-    private Date createdAt;
-    /** 修改者 */
-    private String updatedBy;
-    /** 修改时间 */
-    private Date updatedAt;
+    private Date createdDate;
+    /** 最后修改者 */
+    private String lastModifiedBy;
+    /** 最后修改时间 */
+    private Date lastModifiedDate;
 
     /** ~上级功能权限名称 */
     private transient String parentName;
