@@ -1,28 +1,37 @@
-/target/
-!.mvn/wrapper/maven-wrapper.jar
+# Compile files
+*.class
+*.jar
+*.war
+*.ear
 
-### STS ###
-.apt_generated
+
+# Maven
+target/
+*.ser
+*.ec
+
+# Eclipse
 .classpath
-.factorypath
 .project
-.settings
+.settings/
+.metadata/
+.factorypath
 .springBeans
-.sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+# IntelliJ Idea
+.idea/
+out/
+*.ipr
 *.iws
 *.iml
-*.ipr
 
-### NetBeans ###
-/nbproject/private/
-/build/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# OS X
+.DS_Store
 
-## Other ##
-/logs/
+# Window
+Thumbs.db
+
+# Log File
+*.log
+*.log.*
+

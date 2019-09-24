@@ -10,7 +10,6 @@ import com.github.relucent.base.util.web.WebUtil;
 
 /**
  * 默认_Thymeleaf 视图层。 (使用 _Thymeleaf渲染后缀为 .html 的页面)
- * 
  * @author YYL
  */
 @Controller
