@@ -17,4 +17,9 @@ public class DepartmentIdAccess implements IdAccess<Department, String> {
     public String getParentId(Department model) {
         return model.getParentId();
     }
+
+    @Override
+    public void setIdPath(Department node, String idPath) {
+        node.setIdPath(idPath);
+    }
 }

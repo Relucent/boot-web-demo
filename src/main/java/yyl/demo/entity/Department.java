@@ -3,8 +3,6 @@ package yyl.demo.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.github.relucent.base.util.tree.IdPathable;
-
 import lombok.Data;
 import yyl.demo.common.standard.Auditable;
 import yyl.demo.common.standard.Idable;
@@ -16,7 +14,7 @@ import yyl.demo.common.standard.Ordinal;
  */
 @SuppressWarnings("serial")
 @Data
-public class Department implements Idable, Auditable, IdPathable, Ordinal, Serializable {
+public class Department implements Idable, Auditable, Ordinal, Serializable {
 
     /** 主键 */
     private String id;

@@ -11,9 +11,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.relucent.base.plug.model.Result;
 import com.github.relucent.base.plug.security.Principal;
 import com.github.relucent.base.util.json.JsonUtil;
-import com.github.relucent.base.util.model.Result;
 import com.github.relucent.base.util.web.WebUtil;
 
 /**

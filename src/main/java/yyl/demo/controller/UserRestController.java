@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.relucent.base.util.collect.Mapx;
-import com.github.relucent.base.util.model.PageResult;
-import com.github.relucent.base.util.model.Result;
+import com.github.relucent.base.plug.model.Result;
+import com.github.relucent.base.util.collection.Mapx;
 import com.github.relucent.base.util.page.Page;
 import com.github.relucent.base.util.page.Pagination;
 
@@ -92,7 +91,7 @@ public class UserRestController {
     public Result<?> pagedQuery(Pagination pagination, User condition) {
         condition = ObjectUtils.defaultIfNull(condition, new User());
         Page<User> page = userService.pagedQuery(pagination, condition);
-        return PageResult.of(page);
+        return Result.ok(page);
     }
 
     /**

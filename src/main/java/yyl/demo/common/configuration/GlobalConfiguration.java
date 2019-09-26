@@ -73,7 +73,7 @@ public class GlobalConfiguration {
 
     @PostConstruct
     public void initialize() {
-        JsonUtil.setHANDLER(JacksonHandler.INSTANCE);
+        JsonUtil.setHandler(JacksonHandler.INSTANCE);
     }
 
 }

@@ -122,7 +122,8 @@
 								vm.$message.warning(result.message);
 							} else {
 								vm.pagedQuery();
-								vm.$alert('删除成功！','删除结果');;
+								vm.$alert('删除成功！', '删除结果');
+								;
 							}
 						});
 					});
@@ -141,8 +142,9 @@
 							vm.$message.warning(result.message);
 							return;
 						}
-						vm.page.total = result.total | 0;
-						vm.page.records = result.data;
+						var page = result.data;
+						vm.page.total = page.total | 0;
+						vm.page.records = page.data;
 					});
 				}
 			}

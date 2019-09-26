@@ -7,8 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.relucent.base.plug.jackson.MyObjectMapper;
 import com.github.relucent.base.plug.jackson.databind.TreeNodeConverts;
-import com.github.relucent.base.util.collect.Listx;
-import com.github.relucent.base.util.collect.Mapx;
+import com.github.relucent.base.util.collection.Listx;
+import com.github.relucent.base.util.collection.Mapx;
 import com.github.relucent.base.util.json.JsonHandler;
 
 public class JacksonHandler implements JsonHandler {

@@ -17,4 +17,9 @@ public class PermissionIdAccess implements IdAccess<Permission, String> {
     public String getParentId(Permission model) {
         return model.getParentId();
     }
+
+    @Override
+    public void setIdPath(Permission node, String idPath) {
+        node.setIdPath(idPath);
+    }
 }

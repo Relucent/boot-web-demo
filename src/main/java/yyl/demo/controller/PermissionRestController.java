@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.relucent.base.util.model.PageResult;
-import com.github.relucent.base.util.model.Result;
+import com.github.relucent.base.plug.model.Result;
 import com.github.relucent.base.util.page.Page;
 import com.github.relucent.base.util.page.Pagination;
 
@@ -78,7 +77,7 @@ public class PermissionRestController {
     public Result<?> pagedQuery(Pagination pagination, Permission condition) {
         condition = ObjectUtils.defaultIfNull(condition, new Permission());
         Page<Permission> page = permissionService.pagedQuery(pagination, condition);
-        return PageResult.of(page);
+        return Result.ok(page);
     }
 
     /**

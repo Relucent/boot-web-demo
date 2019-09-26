@@ -1,12 +1,12 @@
-package yyl.demo.common.expection;
+package yyl.demo.common.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.relucent.base.util.expection.ErrorType;
-import com.github.relucent.base.util.expection.GeneralException;
-import com.github.relucent.base.util.model.Result;
+import com.github.relucent.base.plug.model.Result;
+import com.github.relucent.base.util.exception.ErrorType;
+import com.github.relucent.base.util.exception.GeneralException;
 
 import lombok.extern.slf4j.Slf4j;
 

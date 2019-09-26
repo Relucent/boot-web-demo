@@ -1,7 +1,9 @@
 package yyl.demo.common.standard;
 
+import java.util.Date;
+
 import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.lang.DateUtil;
+import com.github.relucent.base.util.time.DateUtil;
 
 /**
  * 可审计对象工具类
@@ -14,10 +16,11 @@ public class AuditableUtil {
      * @param principal 登录人
      */
     public static void setCreated(Auditable record, Principal principal) {
+        Date now = DateUtil.now();
         record.setCreatedBy(principal.getUserId());
-        record.setCreatedDate(DateUtil.now());
+        record.setCreatedDate(now);
         record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(DateUtil.now());
+        record.setLastModifiedDate(now);
     }
 
     /**
@@ -26,7 +29,8 @@ public class AuditableUtil {
      * @param principal 登录人
      */
     public static void setLastModified(Auditable record, Principal principal) {
+        Date now = DateUtil.now();
         record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(DateUtil.now());
+        record.setLastModifiedDate(now);
     }
 }

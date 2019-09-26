@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.github.relucent.base.plug.security.AuthToken;
 import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.expection.ExceptionHelper;
+import com.github.relucent.base.util.exception.ExceptionHelper;
 import com.github.relucent.base.util.lang.CollectionUtil;
 
 import yyl.demo.entity.User;
