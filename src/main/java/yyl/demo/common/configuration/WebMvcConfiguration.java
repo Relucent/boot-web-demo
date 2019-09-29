@@ -51,7 +51,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         return new Converter<String, Date>() {
             @Override
             public Date convert(String source) {
-                return DateUtil.parse(source);
+                return DateUtil.parseDate(source);
             }
         };
     }
