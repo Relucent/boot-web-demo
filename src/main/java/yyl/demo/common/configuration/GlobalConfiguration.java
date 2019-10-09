@@ -10,10 +10,10 @@ import org.springframework.core.Ordered;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.github.relucent.base.plug.jackson.handler.JacksonHandler;
 import com.github.relucent.base.plug.security.Securitys;
 import com.github.relucent.base.util.json.JsonUtil;
 
-import yyl.demo.common.json.JacksonHandler;
 import yyl.demo.common.security.AuthRealm;
 import yyl.demo.common.security.SecurityFilter;
 import yyl.demo.common.security.SecurityImplementor;
@@ -21,7 +21,6 @@ import yyl.demo.common.thymeleaf.CustomThymeleafDialect;
 
 /**
  * 项目公用配置
- * 
  * @author YYL
  */
 @Configuration
