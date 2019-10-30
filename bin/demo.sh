@@ -4,6 +4,7 @@
 # @author YYL
 ############################################################
 
+WORKING_DIR=$(cd $(dirname $0) && pwd)
 JARFILE="boot-web-demo.jar"
 LOGFILE=${JARFILE%.jar}.log
 STOP_WAIT_TIME=60
@@ -16,7 +17,7 @@ start() {
   if [[ -n $pid ]]; then
     isRunning "$pid" && { echo "Server Already Running [$pid]"; return 0; }
   fi
-  nohup java -jar -Xms128m -Xmx1024m ${JARFILE} > ${LOGFILE} 2>&1 &
+  nohup java -jar -Xms128m -Xmx1024m ${WORKING_DIR}/${JARFILE} > ${LOGFILE} 2>&1 &
   pid=`get_server_pid`
   echo "Server Started $pid"
 }
