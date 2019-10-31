@@ -4,20 +4,27 @@
 # @author YYL
 ############################################################
 
+PROJECT="boot-web-demo"
+
+XMS="128m";
+XMX="512m"
+
 WORKING_DIR=$(cd $(dirname $0) && pwd)
-JARFILE="boot-web-demo.jar"
-LOGFILE=${JARFILE%.jar}.log
+JARFILE_PATH="${WORKING_DIR}/${PROJECT}.jar"
+LOGFILE_PATH="${WORKING_DIR}/${PROJECT}.log"
+
 STOP_WAIT_TIME=60
 
 get_server_pid() {
-  echo `ps -ef | grep java | grep $JARFILE | awk '{print $2}'`
+  echo `ps -ef | grep java | grep ${JARFILE_PATH} | awk '{print $2}'`
 }
 
 start() {
   if [[ -n $pid ]]; then
     isRunning "$pid" && { echo "Server Already Running [$pid]"; return 0; }
   fi
-  nohup java -jar -Xms128m -Xmx1024m ${WORKING_DIR}/${JARFILE} > ${LOGFILE} 2>&1 &
+  echo "java -jar -Xms${XMS} -Xmx${XMX} ${JARFILE_PATH} >${LOGFILE_PATH} 2>&1"
+  nohup java -jar -Xms${XMS} -Xmx${XMX} ${JARFILE_PATH} >${LOGFILE_PATH} 2>&1 &
   pid=`get_server_pid`
   echo "Server Started $pid"
 }
@@ -46,7 +53,7 @@ status() {
 }
 
 log(){
-  tail -F -n 35 $LOGFILE
+  tail -F -n 35 $LOGFILE_PATH
 }
 
 isRunning() {
