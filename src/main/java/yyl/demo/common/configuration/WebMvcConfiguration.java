@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.relucent.base.plug.jackson.MyObjectMapper;
+import com.github.relucent.base.plug.json.jackson.MyObjectMapper;
 import com.github.relucent.base.util.time.DateUtil;
 
 import yyl.demo.common.resolver.MapReferenceArgumentResolver;
