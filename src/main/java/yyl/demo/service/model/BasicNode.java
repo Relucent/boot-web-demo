@@ -3,8 +3,6 @@ package yyl.demo.service.model;
 import java.io.Serializable;
 import java.util.List;
 
-import com.github.relucent.base.util.tree.Node;
-
 import lombok.Data;
 
 /**
@@ -12,7 +10,7 @@ import lombok.Data;
  */
 @SuppressWarnings("serial")
 @Data
-public class BasicNode implements Node<BasicNode>, Serializable {
+public class BasicNode implements Serializable {
     /** 主键 */
     private String id;
     /** 名称 */

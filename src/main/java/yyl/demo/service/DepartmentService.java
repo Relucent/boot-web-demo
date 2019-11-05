@@ -31,8 +31,7 @@ import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.Department;
 import yyl.demo.mapper.DepartmentMapper;
 import yyl.demo.service.model.BasicNode;
-import yyl.demo.service.support.DepartmentIdAccess;
-import yyl.demo.service.support.DeptNodeAdapter;
+import yyl.demo.service.support.DepartmentNodeAdapter;
 
 /**
  * 部门管理
@@ -148,16 +147,17 @@ public class DepartmentService {
 
     /**
      * 查询部门树
-     * @return
+     * @return 部门树
      */
     public List<BasicNode> getDeptTree() {
         List<Department> entities = departmentMapper.findAll();
         List<BasicNode> nodes = TreeUtil.buildTree(//
                 Ids.DEPT_ROOT_ID, //
                 entities, //
-                DeptNodeAdapter.INSTANCE, //
-                TreeUtil.defaultFilter(), //
-                DepartmentIdAccess.INSTANCE//
+                DepartmentNodeAdapter.INSTANCE, //
+                Department::getId, //
+                Department::getParentId, //
+                BasicNode::setChildren//
         );
         return nodes;
     }
@@ -167,7 +167,7 @@ public class DepartmentService {
      */
     public void forceRefreshIndexes() {
         List<Department> entities = departmentMapper.findAll();
-        TreeUtil.recursiveSetIdPath(entities, DepartmentIdAccess.INSTANCE, Ids.ROOT_ID, Symbols.SEPARATOR);
+        TreeUtil.recursiveSetIdPath(entities, Department::getId, Department::getParentId, Department::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Department entity : entities) {
             departmentMapper.update(entity);
         }
@@ -176,7 +176,7 @@ public class DepartmentService {
     /** 更新子节点IP路径 */
     private void updateChildrenIdPath(Department parent) {
         Collection<Department> entities = findAllByParentId(parent.getId());
-        TreeUtil.recursiveSetIdPath(entities, DepartmentIdAccess.INSTANCE, parent.getId(), parent.getIdPath());
+        TreeUtil.recursiveSetIdPath(entities, Department::getId, Department::getParentId, Department::setIdPath, parent.getId(), parent.getIdPath());
         for (Department entity : entities) {
             departmentMapper.update(entity);
         }

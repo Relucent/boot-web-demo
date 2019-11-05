@@ -38,7 +38,6 @@ import yyl.demo.mapper.PermissionMapper;
 import yyl.demo.mapper.RolePermissionMapper;
 import yyl.demo.service.model.BasicNode;
 import yyl.demo.service.support.MenuNodeAdapter;
-import yyl.demo.service.support.PermissionIdAccess;
 import yyl.demo.service.support.PermissionTypeFilter;
 
 /**
@@ -178,7 +177,15 @@ public class PermissionService {
             String[] permissionIds = principal.getPermissionIds();
             filter = filter.and(new PermissionIdsFilter(permissionIds));
         }
-        return TreeUtil.buildTree(rootId, entities, MenuNodeAdapter.INSTANCE, filter, PermissionIdAccess.INSTANCE);
+        return TreeUtil.buildTree(//
+                rootId, //
+                entities, //
+                MenuNodeAdapter.INSTANCE, //
+                filter, //
+                Permission::getId, //
+                Permission::getParentId, //
+                BasicNode::setChildren//
+        );
     }
 
     /**
@@ -202,7 +209,7 @@ public class PermissionService {
      */
     public void forceRefreshIndexes() {
         List<Permission> entities = permissionMapper.findAll();
-        TreeUtil.recursiveSetIdPath(entities, PermissionIdAccess.INSTANCE, Ids.ROOT_ID, Symbols.SEPARATOR);
+        TreeUtil.recursiveSetIdPath(entities, Permission::getId, Permission::getParentId, Permission::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Permission entity : entities) {
             permissionMapper.update(entity);
         }
@@ -211,7 +218,7 @@ public class PermissionService {
     /** 更新子节点IP路径 */
     private void updateChildrenIdPath(Permission parent) {
         Collection<Permission> entities = findAllByParentId(parent.getId());
-        TreeUtil.recursiveSetIdPath(entities, PermissionIdAccess.INSTANCE, parent.getId(), parent.getIdPath());
+        TreeUtil.recursiveSetIdPath(entities, Permission::getId, Permission::getParentId, Permission::setIdPath, parent.getId(), parent.getIdPath());
         for (Permission entity : entities) {
             permissionMapper.update(entity);
         }

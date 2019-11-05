@@ -5,9 +5,9 @@ import com.github.relucent.base.util.tree.TreeUtil.NodeAdapter;
 import yyl.demo.entity.Department;
 import yyl.demo.service.model.BasicNode;
 
-public class DeptNodeAdapter implements NodeAdapter<Department, BasicNode> {
+public class DepartmentNodeAdapter implements NodeAdapter<Department, BasicNode> {
 
-    public final static DeptNodeAdapter INSTANCE = new DeptNodeAdapter();
+    public final static DepartmentNodeAdapter INSTANCE = new DepartmentNodeAdapter();
 
     @Override
     public BasicNode adapte(Department model) {
