@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="../../__/import.js"></script>
+<title>编辑用户</title>
+<style>
+.organization-dlg .el-dialog__body {
+	padding: 0 10px;
+}
+</style>
+</head>
+<body>
+	<div id="vm" class="vm-virtual" v-cloak>
+		<form is="el-form" :model="form" ref="form" style="width: 500px;" label-width="90px" size="mini">
+			<div is="el-form-item" label="所属机构">
+				<input is="el-input" v-model="form.organizationName" size="small" disabled="disabled" style="width: 360px;">
+				<button is="el-button" size="small" icon="el-icon-office-building" @click="selectOrganization()"></button>
+			</div>
+			<div is="el-form-item" label="用户名" :required="true">
+				<input is="el-input" v-model="form.username" size="small" autocomplete="off" maxlength="20" show-word-limit>
+			</div>
+			<div is="el-form-item" label="姓名" :required="true">
+				<input is="el-input" v-model="form.realname" autocomplete="off" maxlength="20" show-word-limit>
+			</div>
+			<div is="el-form-item" label="性别">
+				<div is="el-radio" v-model="form.sex" label="男">男</div>
+				<div is="el-radio" v-model="form.sex" label="女">女</div>
+			</div>
+			<div is="el-form-item" label="电话">
+				<input is="el-input" v-model="form.phone" autocomplete="off" maxlength="20" show-word-limit>
+			</div>
+			<div is="el-form-item" label="角色">
+				<select is="el-select" v-model="form.roleIds" multiple style="width: 100%;">
+					<option is="el-option" v-for="item in role.data" :key="item.id" :label="item.name" :value="item.id"></option>
+				</select>
+			</div>
+			<div is="el-form-item" label="状态">
+				<div is="el-radio" v-model="form.enabled" :label="1">启用</div>
+				<div is="el-radio" v-if="form.id!='_admin'" v-model="form.enabled" :label="0">停用</div>
+			</div>
+			<div is="el-form-item" label="备注">
+				<input is="el-input" type="textarea" v-model="form.remark" maxlength="200" show-word-limit>
+			</div>
+			<div is="el-form-item" align="center" style="margin-top: 20px;">
+				<button is="el-button" type="success" @click="confirm()">确定</button>
+				<button is="el-button" @click="cancel()">取消</button>
+			</div>
+		</form>
+
+		<div is="el-dialog" title="选择机构" custom-class="organization-dlg" :visible.sync="organization.dlgVisible" width="400px">
+			<div is="el-table" ref="organizationTree" :data="organization.data" style="width: 100%" height="350px" @selection-change="onSelectedOrganization">
+				<div is="el-table-column" prop="name" label="机构名称"></div>
+				<div is="el-table-column" label="操作" width="80">
+					<div slot-scope="scope">
+						<button is="el-button" type="text" size="mini" @click="onSelectedOrganization(scope.row)">选择</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				form : {
+					id : '',
+					organizationId : '',
+					organizationName : '',
+					roleIds : [],
+					username : '',
+					realname : '',
+					sex : '男',
+					phone : '',
+					enabled : 1,
+					remark : ''
+				},
+				role : {
+					data : []
+				},
+				organization : {
+					dlgVisible : false,
+					data : null
+				}
+			},
+			created : function() {
+				__.$vm = this;
+			},
+			mounted : function() {
+				var vm = this, search = __.decodeUrlParams();
+
+				__.mask('role');
+				__.api('POST', '/rest/role/findAll', {}, function(result) {
+					__.unmask('role');
+					if (__.err(result)) {
+						__.message({
+							message : result.message,
+							type : 'warning'
+						});
+						return;
+					}
+					vm.role.data = result.data || [];
+				});
+
+				if (__.isEmpty(search.id)) {
+					return;
+				}
+
+				__.mask('user');
+				__.api('POST', '/rest/user/getById', {
+					id : search.id
+				}, function(result) {
+					__.unmask('user');
+					if (__.err(result)) {
+						__.message({
+							message : result.message,
+							type : 'warning'
+						});
+						return;
+					}
+					var form = result.data;
+					form.enabled = String(form.enabled);
+					vm.form = form;
+				});
+			},
+			methods : {
+				selectOrganization : function() {
+					var vm = this;
+					if (vm.organization.data == null) {
+						__.mask();
+						__.api('POST', '/rest/organization/getOrganizationTree', {}, function(result) {
+							__.unmask();
+							if (__.err(result)) {
+								__.message({
+									message : result.message,
+									type : 'warning'
+								});
+								return;
+							}
+							vm.organization.data = result.data || [];
+							vm.organization.dlgVisible = true;
+						});
+						return;
+					}
+					vm.organization.dlgVisible = true;
+				},
+				onSelectedOrganization : function(node) {
+					var vm = this;
+					vm.form.organizationId = node.id;
+					vm.form.organizationName = node.name;
+					vm.organization.dlgVisible = false;
+				},
+				confirm : function() {
+					var vm = this;
+					var params = vm.form;
+					params.id = vm.form.id;
+					params.organizationId = vm.form.organizationId;
+					params.username = __.trim(vm.form.username);
+					params.realname = __.trim(vm.form.realname);
+					params.sex = __.trim(vm.form.sex);
+					params.phone = __.trim(vm.form.phone);
+					params.enabled = vm.form.enabled;
+					params.remark = __.trim(vm.form.remark);
+					params.roleIds = vm.form.roleIds || [];
+
+					if (__.isEmpty(params.username)) {
+						__.message({
+							message : '请输入用户名！',
+							type : 'warning'
+						});
+						return;
+					}
+					if (__.isEmpty(params.realname)) {
+						__.message({
+							message : '请输入用户姓名！',
+							type : 'warning'
+						});
+						return;
+					}
+					if (params.id != '_admin' && __.isEmpty(params.organizationId)) {
+						__.message({
+							message : '请输选择一个机构！',
+							type : 'warning'
+						});
+						return;
+					}
+					var path = __.isEmpty(params.id) ? '/rest/user/save' : '/rest/user/update';
+					__.api('POST', path, params, function(result) {
+						if (__.err(result)) {
+							__.message({
+								message : result.message,
+								type : 'warning'
+							});
+						} else {
+							__.message({
+								message : '保存成功！',
+								type : 'info'
+							});
+							__.dialog.close();
+						}
+					});
+				},
+				cancel : function() {
+					__.dialog.close();
+				}
+			}
+		})
+	</script>
+</body>
+</html>

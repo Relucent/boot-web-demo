@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="../../__/import.js"></script>
+<title>功能管理</title>
+<style type="text/css">
+#vm {
+	padding: 0px 0px;
+}
+
+.el-header {
+	line-height: 50px;
+}
+
+.x-input {
+	width: 150px;
+}
+
+.x-right {
+	text-align: right;
+}
+</style>
+</head>
+<body>
+	<div id="vm" v-cloak>
+		<div is="el-container" style="height: 100%; border: 1px solid #eee; margin: 0 0;">
+			<div is="el-header" height="50px">
+				<div is="el-row">
+					<div is="el-col" :span="15">
+						<button is="el-button" type="primary" icon="el-icon-plus" size="small" @click="onEdit({})">新增</button>
+						<button is="el-button" type="primary" icon="el-icon-connection" size="small" @click="onRefreshIdPath()">刷新索引</button>
+					</div>
+					<div is="el-col" :span="9" class="x-right">
+						<button is="el-button" size="small" type="success" icon="el-icon-refresh" @click="onSearch()">刷新</button>
+					</div>
+				</div>
+			</div>
+			<div is="el-main">
+				<div is="el-table" ref="table" :data="table.data" row-key="id" border default-expand-all size="medium" style="width: 100%" :height="uiTable.height">
+					<div is="el-table-column" prop="name" label="名称" width="180"></div>
+					<div is="el-table-column" prop="type" label="类型" width="80" :formatter="formatType" width="80"></div>
+					<div is="el-table-column" prop="remark" label="备注" show-overflow-tooltip></div>
+					<div is="el-table-column" prop="ordinal" label="排序号" width="90"></div>
+					<div is="el-table-column" label="操作" width="185">
+						<div slot-scope="scope">
+							<button is="el-button" type="text" size="mini" @click="onEdit(scope.row)">编辑</button>
+							<button is="el-button" type="text" size="mini" @click="onDelete(scope.row)">删除</button>
+							<button is="el-button" v-if="scope.row.type!=4" type="text" size="mini" @click="onEdit({parentId:scope.row.id})">新增下级</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				uiTable : {
+					height : 100
+				},
+				table : {
+					data : []
+				}
+			},
+			created : function() {
+				__.$vm = this;
+			},
+			mounted : function() {
+				var vm = this;
+				var resize = function() {
+					vm.$nextTick(function() {
+						vm.uiTable.height = Math.max(window.innerHeight - 130, 100);
+					});
+				};
+				resize();
+				window.addEventListener('resize', resize);
+				vm.refresh();
+			},
+			methods : {
+				formatType : function(row, column, cellValue) {
+					switch (row.type || 0) {
+					case 1:
+						return '模块';
+					case 2:
+						return '目录';
+					case 3:
+						return '菜单';
+					case 4:
+						return '按钮';
+					default:
+						return '-';
+					}
+				},
+				refresh : function() {
+					var vm = this;
+					var params = {};
+					__.api('POST', '/rest/permission/getPermissionTree', params, function(result) {
+						if (__.err(result)) {
+							__.message({
+								message : result.message,
+								type : 'warning'
+							});
+							return;
+						}
+						vm.table.data = result.data || [];
+					});
+				},
+				onSearch : function() {
+					var vm = this;
+					vm.refresh();
+				},
+				onRefreshIdPath : function() {
+					__.api('POST', '/rest/permission/forceRefreshIdPath', {}, function(result) {
+						if (__.err(result)) {
+							__.message({
+								message : result.message,
+								type : 'warning'
+							});
+							return;
+						}
+					});
+				},
+				onEdit : function(record) {
+					var vm = this;
+					record = record || {};
+					var params = {
+						id : record.id,
+						parentId : record.parentId
+					};
+					__.dialog.open({
+						title : __.isEmpty(params.id) ? '新增功能' : '编辑功能',
+						scope : 'self',
+						fullscreen : true,
+						url : __.url('/view/permission/permission-edit-dlg.html', params),
+						close : function(result) {
+							vm.refresh();
+						}
+					});
+				},
+				onDelete : function(record) {
+					var vm = this;
+					__.confirm('确定要删除功能“' + record.name + '”？', '删除确认', {
+						confirmButtonText : '确定',
+						cancelButtonText : '取消',
+						type : 'warning'
+					}).then(function() {
+						var params = {};
+						params.id = record.id;
+						__.api('POST', '/rest/permission/deleteById', params, function(result) {
+							if (__.err(result)) {
+								__.message({
+									message : result.message,
+									type : 'warning'
+								});
+								return;
+							}
+							vm.refresh();
+							__.message({
+								message : '删除成功！',
+								type : 'success'
+							});
+						});
+					});
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -2,195 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="yyl.demo.mapper.PermissionMapper">
 
-	<resultMap id="RESULT_MAP" type="yyl.demo.entity.Permission">
-		<id property="id" column="id" jdbcType="VARCHAR" />
-		<result property="parentId" column="parent_id" jdbcType="VARCHAR" />
-		<result property="name" column="name" jdbcType="VARCHAR" />
-		<result property="remark" column="remark" jdbcType="VARCHAR" />
-		<result property="type" column="type" jdbcType="INTEGER" />
-		<result property="value" column="value" jdbcType="VARCHAR" />
-		<result property="icon" column="icon" jdbcType="VARCHAR" />
-		<result property="ordinal" column="ordinal" jdbcType="VARCHAR" />
-		<result property="idPath" column="id_path" jdbcType="VARCHAR" />
-		<result property="enabled" column="enabled" jdbcType="INTEGER" />
-		<result property="createdBy" column="created_by" jdbcType="VARCHAR" />
-		<result property="createdAt" column="created_at" jdbcType="TIMESTAMP" />
-		<result property="updatedBy" column="updated_by" jdbcType="BIGINT" />
-		<result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP" />
-	</resultMap>
-
 	<sql id="TABLE">permission</sql>
 
-	<sql id="COLUMNS">
-		id, parent_id, name, remark,
-		type, value, icon, ordinal, id_path,
-		created_by, created_at, updated_by, updated_at
-	</sql>
+	<select id="findPermissionInfoByRoleId" resultType="yyl.demo.model.ro.PermissionInfoRO">
+		SELECT DISTINCT
+		T0.id id,
+		T0.code code
+		FROM <include refid="TABLE" /> T0
+		LEFT JOIN role_permission T1 on T1.permission_id = T0.id
+		WHERE T0.deleted=0 and T1.deleted=0
+		and T1.role_id = #{roleId}
+	</select>
 
-	<sql id="VALUES">
-		#{id}, #{parentId}, #{name}, #{remark},
-		#{type}, #{value}, #{icon}, #{ordinal}, #{id_path},
-		#{createdBy}, #{createdAt}, #{updatedBy}, #{updatedAt}
-	</sql>
-
-	<sql id="SET_VALUES">
-		<trim suffixOverrides=",">
-			<if test=" parentId != null">
-				parent_id = #{parentId},
-			</if>
-			<if test=" name != null">
-				name = #{name},
-			</if>
-			<if test=" remark != null">
-				remark = #{remark},
-			</if>
-
-			<if test=" type != null">
-				type = #{type},
-			</if>
-			<if test=" value != null">
-				value = #{value},
-			</if>
-
-			<if test=" icon != null">
-				icon = #{icon},
-			</if>
-			<if test=" ordinal != null">
-				ordinal = #{ordinal},
-			</if>
-			<if test=" idPath != null">
-				id_path = #{idPath},
-			</if>
-
-			<if test=" createdBy != null">
-				created_by = #{createdBy},
-			</if>
-			<if test=" createdAt != null">
-				created_at = #{createdAt},
-			</if>
-			<if test=" updatedBy != null">
-				updated_by = #{updatedBy},
-			</if>
-			<if test=" updatedAt != null">
-				updated_at = #{updatedAt},
-			</if>
-		</trim>
-	</sql>
-
-	<sql id="WHERES">
-		<if test=" parentId != null">
-			and parent_id = #{parentId},
+	<select id="findPermissionInfoByRoleIds" resultType="yyl.demo.model.ro.PermissionInfoRO">
+		SELECT DISTINCT
+		T0.id id,
+		T0.code code
+		FROM <include refid="TABLE" /> T0
+		LEFT JOIN role_permission T1 on T1.permission_id = T0.id
+		WHERE T0.deleted=0 and T1.deleted=0
+		<if test="array == null or array.length==0">
+			and 1=0
 		</if>
-		<if test=" name != null and name !='' ">
-			and and name = #{name}
+		<if test="array != null and array.length > 0">
+			and T1.role_id in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
-		<if test=" type != null ">
-			and type = #{type},
-		</if>
-		<if test=" value != null and value !='' ">
-			and value = #{value},
-		</if>
-		<if test=" idPath != null and idPath !='' ">
-			and id_path = #{idPath},
-		</if>
-	</sql>
-
-
-	<update id="save">
-		INSERT INTO
-		<include refid="TABLE" />
-		(
-		<include refid="COLUMNS" />
-		) VALUES (
-		<include refid="VALUES" />
-		)
-		ON DUPLICATE KEY UPDATE
-		<include refid="SET_VALUES" />
-	</update>
-
-	<insert id="insert" parameterType="yyl.demo.entity.Permission">
-		INSERT INTO
-		<include refid="TABLE" />
-		(
-		<include refid="COLUMNS" />
-		)
-		VALUES
-		(
-		<include refid="VALUES" />
-		)
-	</insert>
-
-	<delete id="deleteById" parameterType="java.lang.String">
-		DELETE FROM
-		<include refid="TABLE" />
-		WHERE
-		id =#{id}
-	</delete>
-
-	<delete id="deleteAll">
-		DELETE FROM
-		<include refid="TABLE" />
-	</delete>
-
-	<update id="update" parameterType="yyl.demo.entity.Permission">
-		UPDATE
-		<include refid="TABLE" />
-		<set>
-			<include refid="SET_VALUES" />
-		</set>
-		WHERE
-		id = #{id}
-	</update>
-
-	<select id="getById" parameterType="java.lang.String" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE id = #{id}
 	</select>
-
-	<select id="findAll" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		ORDER BY ordinal ASC, type ASC, name ASC
-	</select>
-
-	<select id="findByParentId" parameterType="java.lang.String" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE parent_id = #{parentId,jdbcType=BIGINT}
-	</select>
-
-	<select id="countByParentId" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT count(*)
-		FROM
-		<include refid="TABLE" />
-		WHERE PARENT_ID = #{parentId,jdbcType=BIGINT}
-	</select>
-
-	<select id="findModules" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE type=1
-		ORDER BY ordinal ASC, type ASC, id ASC
-	</select>
-
-
-	<select id="findBy" parameterType="yyl.demo.entity.Permission" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE 1=1
-		<include refid="WHERES" />
-		ORDER BY ordinal ASC, type ASC, id ASC
-	</select>
-
 </mapper>

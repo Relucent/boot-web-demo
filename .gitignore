@@ -18,6 +18,7 @@ target/
 .apt_generated
 .factorypath
 .springBeans
+.sts4-cache
 
 # IntelliJ Idea
 .idea/

@@ -8,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import yyl.demo.entity.User;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
+import yyl.demo.entity.UserEntity;
 import yyl.demo.mapper.UserMapper;
 
 @RunWith(SpringRunner.class)
@@ -30,17 +32,17 @@ public class UserMapperTest {
 
     @Test
     public void testFindAll() throws Exception {
-        for (User record : userMapper.findAll()) {
+        for (UserEntity record : userMapper.selectList(Wrappers.emptyWrapper())) {
             System.out.println(record);
         }
     }
 
-    private User ofUser(String id, String account, String password, String name, String remark, Integer enabled) {
-        User user = new User();
+    private UserEntity ofUser(String id, String username, String password, String realname, String remark, Integer enabled) {
+        UserEntity user = new UserEntity();
         user.setId(id);
-        user.setAccount(account);
+        user.setUsername(username);
         user.setPassword(password);
-        user.setName(name);
+        user.setRealname(realname);
         user.setRemark(remark);
         user.setEnabled(enabled);
         return user;

@@ -1,0 +1,99 @@
+
+# 日志
+logging:
+  level:
+    root: info
+    yyl.demo.DemoWebApplication: info
+#  config: classpath:config/logback-spring.xml
+#  file: 
+#    max-size: 20MB
+
+
+# 自定义属性
+custom: 
+  project: 
+    version: '@project.version@'
+  file-store:
+    directory: '/data/boot-web-demo/'
+
+server:
+  http2:
+  # 开启HTTP2
+    enabled: true
+  # 服务端口号（默认8080）
+  port: 8080
+  servlet:
+  # 项目上下文路径（默认''）
+    context-path: /
+    session:
+  # Session超时时间
+      timeout: PT1H
+  undertow:
+  # 每块buffer的空间大小，越小的空间被利用越充分
+    buffer-size: 1024
+  # 是否分配的直接内存(NIO直接分配的堆外内存)
+    direct-buffers: true
+    threads:
+  # IO线程数, 它主要执行非阻塞的任务
+      io: 16
+  # 阻塞任务线程池，当执行类似servlet请求阻塞IO操作，undertow会从这个线程池中取得线程。它的值取决于系统线程执行任务的阻塞系数，默认值是 io-threads*8
+      worker: 256
+
+
+spring:
+  profiles:
+    active: dev
+  aop:
+    auto: true
+    proxy-target-class: true
+  application:
+    name: '@project.artifactId@'
+  banner:
+    location: classpath:/banner/banner.txt
+  # 数据源配置配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/_demo?serverTimezone=Asia/Shanghai&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: root
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: DatebookHikariCP
+      validation-timeout: 3000
+  redis:
+    database: 1
+    host: 101.35.150.198
+    password: REQUIREPASS
+    port: 6379
+    timeout: PT12S
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: NON_NULL
+    time-zone: GMT+8
+#  resources:
+#    # 静态资源，默认["classpath:/META-INF/resources/","classpath:/resources/", "classpath:/static/", "classpath:/public/"]
+#    static-locations:
+
+# Mybatis 配置
+mybatis-plus:
+  configuration:
+    jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+    db-config:
+      id-type: NONE
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
+
+#knife4j:
+#  enable: true
