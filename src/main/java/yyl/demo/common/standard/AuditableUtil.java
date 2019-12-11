@@ -2,35 +2,45 @@ package yyl.demo.common.standard;
 
 import java.util.Date;
 
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.time.DateUtil;
+import com.github.relucent.base.common.time.DateUtil;
 
 /**
  * 可审计对象工具类
- * @author Administrator
  */
 public class AuditableUtil {
+
     /**
      * 设置创建信息
-     * @param record 记录对象
-     * @param principal 登录人
+     * @param entity 记录对象
+     * @param identity 操作人ID
      */
-    public static void setCreated(Auditable record, Principal principal) {
+    public static void setCreated(Auditable entity, String identity) {
         Date now = DateUtil.now();
-        record.setCreatedBy(principal.getUserId());
-        record.setCreatedDate(now);
-        record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(now);
+        entity.setCreatedBy(identity);
+        entity.setUpdatedBy(identity);
+        entity.setCreatedAt(now);
+        entity.setUpdatedAt(now);
     }
 
     /**
      * 设置修改信息
-     * @param record 记录对象
-     * @param principal 登录人
+     * @param entity 记录对象
+     * @param identity 操作人ID
      */
-    public static void setLastModified(Auditable record, Principal principal) {
+    public static void setUpdated(Auditable entity, String identity) {
         Date now = DateUtil.now();
-        record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(now);
+        entity.setUpdatedBy(identity);
+        entity.setUpdatedAt(now);
+    }
+
+    /**
+     * 清空审计信息
+     * @param entity 记录对象
+     */
+    public static void clean(Auditable entity) {
+        entity.setCreatedBy(null);
+        entity.setCreatedAt(null);
+        entity.setUpdatedBy(null);
+        entity.setUpdatedAt(null);
     }
 }
