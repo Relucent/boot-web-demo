@@ -1,19 +1,17 @@
 package yyl.demo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 应用程序入口类
  * @author YYL
  */
+@Slf4j
 @SpringBootApplication
 public class DemoWebApplication {
-
-    /** 日志对象 */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DemoWebApplication.class);
 
     /**
      * 应用入口
@@ -21,6 +19,6 @@ public class DemoWebApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(DemoWebApplication.class, args);
-        LOGGER.info("[Startup Success]");
+        log.info("[Startup Success]");
     }
 }

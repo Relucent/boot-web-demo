@@ -2,132 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="yyl.demo.mapper.RoleMapper">
 
-	<resultMap id="RESULT_MAP" type="yyl.demo.entity.Role">
-		<id property="id" column="id" jdbcType="VARCHAR" />
-		<result property="name" column="name" jdbcType="VARCHAR" />
-		<result property="remark" column="remark" jdbcType="VARCHAR" />
-		<result property="createdBy" column="created_by" jdbcType="VARCHAR" />
-		<result property="createdAt" column="created_at" jdbcType="TIMESTAMP" />
-		<result property="updatedBy" column="updated_by" jdbcType="VARCHAR" />
-		<result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP" />
-	</resultMap>
-
 	<sql id="TABLE">role</sql>
 
-	<sql id="COLUMNS">
-		id, name, remark,
-		created_by, created_at, updated_by, updated_at
-	</sql>
-
-	<sql id="VALUES">
-		#{id}, #{name}, #{remark},
-		#{createdBy}, #{createdAt}, #{updatedBy}, #{updatedAt}
-	</sql>
-
-	<sql id="SET_VALUES">
-		<trim suffixOverrides=",">
-			<if test=" name != null">
-				name = #{name},
-			</if>
-			<if test=" remark != null">
-				remark = #{remark},
-			</if>
-			<if test=" createdBy != null">
-				created_by = #{createdBy},
-			</if>
-			<if test=" createdAt != null">
-				created_at = #{createdAt},
-			</if>
-			<if test=" updatedBy != null">
-				updated_by = #{updatedBy},
-			</if>
-			<if test=" updatedAt != null">
-				updated_at = #{updatedAt},
-			</if>
-		</trim>
-	</sql>
-
-	<sql id="WHERES">
-		<if test=" name != null and name !='' ">
-			and (name like CONCAT(CONCAT('%',#{name}),'%')
-			or remark like CONCAT(CONCAT('%',#{remark}),'%'))
-		</if>
-	</sql>
-
-	<update id="save">
-		INSERT INTO
-		<include refid="TABLE" />
-		(
-		<include refid="COLUMNS" />
-		) VALUES (
-		<include refid="VALUES" />
-		)
-		ON DUPLICATE KEY UPDATE
-		<include refid="SET_VALUES" />
-	</update>
-
-	<insert id="insert" parameterType="yyl.demo.entity.Role">
-		INSERT INTO
-		<include refid="TABLE" />
-		(
-		<include refid="COLUMNS" />
-		)
-		VALUES
-		(
-		<include refid="VALUES" />
-		)
-	</insert>
-
-	<delete id="deleteById" parameterType="java.lang.String">
-		DELETE FROM
-		<include refid="TABLE" />
-		WHERE
-		id =#{id}
-	</delete>
-
-	<delete id="deleteAll">
-		DELETE FROM
-		<include refid="TABLE" />
-	</delete>
-
-	<update id="update" parameterType="yyl.demo.entity.Role">
-		UPDATE
-		<include refid="TABLE" />
-		<set>
-			<include refid="SET_VALUES" />
-		</set>
-		WHERE
-		id = #{id}
-	</update>
-
-	<select id="getById" parameterType="java.lang.String" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE id = #{id}
-	</select>
-	<select id="getByName" parameterType="java.lang.String" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE name = #{name}
-	</select>
-	<select id="findAll" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
+	<select id="findRoleInfoByUserId" resultType="yyl.demo.model.ro.RoleInfoRO">
+		SELECT DISTINCT T0.id id, T0.code code
+		FROM <include refid="TABLE" /> T0
+		LEFT JOIN  user_role T1 on T1.role_id = T0.id
+		WHERE T0.deleted=0 and T1.deleted=0 and T1.user_id = #{userId}
 	</select>
 
-	<select id="findBy" parameterType="yyl.demo.entity.Role" resultMap="RESULT_MAP">
-		SELECT
-		<include refid="COLUMNS" />
-		FROM
-		<include refid="TABLE" />
-		WHERE 1=1
-		<include refid="WHERES" />
-		ORDER BY created_by desc
-	</select>
 </mapper>
