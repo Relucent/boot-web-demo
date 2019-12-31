@@ -23,7 +23,7 @@ import com.github.relucent.base.util.page.Pagination;
 import yyl.demo.common.BaseConstants.BoolInts;
 import yyl.demo.common.BaseConstants.Ids;
 import yyl.demo.common.BaseConstants.Symbols;
-import yyl.demo.common.configuration.CustomProperties;
+import yyl.demo.common.configuration.properties.GlobalProperties;
 import yyl.demo.common.identifier.IdHelper;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.User;
@@ -56,7 +56,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private CustomProperties customProperties;
+    private GlobalProperties globalProperties;
 
     // ==============================Methods==========================================
     /**
@@ -75,7 +75,7 @@ public class UserService {
         entity.setDepartmentId(user.getDepartmentId());
         entity.setAccount(user.getAccount());
 
-        String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), customProperties.getDefaultUserPassword());
+        String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), globalProperties.getSecurity().getDefaultUserPassword());
         entity.setPassword(passwordEncoder.encode(rawPassword));
 
         entity.setName(user.getName());
