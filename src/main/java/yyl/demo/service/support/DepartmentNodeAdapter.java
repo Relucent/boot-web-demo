@@ -1,6 +1,6 @@
 package yyl.demo.service.support;
 
-import com.github.relucent.base.util.tree.TreeUtil.NodeAdapter;
+import com.github.relucent.base.common.tree.TreeUtil.NodeAdapter;
 
 import yyl.demo.entity.Department;
 import yyl.demo.service.model.BasicNode;

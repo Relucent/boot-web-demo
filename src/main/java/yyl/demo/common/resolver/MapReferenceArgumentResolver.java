@@ -8,7 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.github.relucent.base.util.collection.Mapx;
+import com.github.relucent.base.common.collection.Mapx;
 
 import yyl.demo.common.model.MapReference;
 
@@ -25,8 +25,8 @@ public class MapReferenceArgumentResolver implements HandlerMethodArgumentResolv
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory) throws Exception {
         Mapx map = new Mapx();
         for (Iterator<String> names = webRequest.getParameterNames(); names.hasNext();) {
             String name = names.next();

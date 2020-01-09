@@ -11,10 +11,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.github.relucent.base.plug.model.Result;
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.json.JsonUtil;
-import com.github.relucent.base.util.web.WebUtil;
+import com.github.relucent.base.common.json.JsonUtil;
+import com.github.relucent.base.common.web.WebUtil;
+import com.github.relucent.base.plugin.model.Result;
+import com.github.relucent.base.plugin.security.Principal;
 
 /**
  * 安全控制过滤器

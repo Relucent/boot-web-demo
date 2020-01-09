@@ -12,9 +12,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.github.relucent.base.util.convert.ConvertUtil;
-import com.github.relucent.base.util.page.Pagination;
-import com.github.relucent.base.util.page.SimplePagination;
+import com.github.relucent.base.common.convert.ConvertUtil;
+import com.github.relucent.base.common.page.Pagination;
+import com.github.relucent.base.common.page.SimplePagination;
 
 /**
  * 分页视图适配器
@@ -33,8 +33,8 @@ public class PaginationArgumentResolver implements HandlerMethodArgumentResolver
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory) throws Exception {
         int start = ConvertUtil.toInteger(webRequest.getParameter(START_KEY), 0);
         int limit = ConvertUtil.toInteger(webRequest.getParameter(LIMIT_KEY), DEFAULT_LIMIT);
         return new SimplePagination(start, limit);

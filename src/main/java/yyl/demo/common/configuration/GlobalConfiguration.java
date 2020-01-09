@@ -10,9 +10,9 @@ import org.springframework.core.Ordered;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.github.relucent.base.plug.jackson.JacksonHandler;
-import com.github.relucent.base.plug.security.Securitys;
-import com.github.relucent.base.util.json.JsonUtil;
+import com.github.relucent.base.common.json.JsonUtil;
+import com.github.relucent.base.plugin.jackson.JacksonHandler;
+import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.security.AuthRealm;
 import yyl.demo.common.security.SecurityFilter;

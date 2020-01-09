@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.relucent.base.plug.model.Result;
-import com.github.relucent.base.plug.security.AuthToken;
-import com.github.relucent.base.plug.security.Securitys;
+import com.github.relucent.base.plugin.model.Result;
+import com.github.relucent.base.plugin.security.AuthToken;
+import com.github.relucent.base.plugin.security.Securitys;
 
 
 

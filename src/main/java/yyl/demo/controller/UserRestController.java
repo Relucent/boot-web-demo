@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.relucent.base.plug.model.Result;
-import com.github.relucent.base.util.collection.Mapx;
-import com.github.relucent.base.util.page.Page;
-import com.github.relucent.base.util.page.Pagination;
+import com.github.relucent.base.common.collection.Mapx;
+import com.github.relucent.base.common.page.Page;
+import com.github.relucent.base.common.page.Pagination;
+import com.github.relucent.base.plugin.model.Result;
 
 import yyl.demo.entity.User;
 import yyl.demo.service.UserService;

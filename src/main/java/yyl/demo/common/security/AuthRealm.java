@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.github.relucent.base.plug.security.AuthToken;
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.collection.CollectionUtil;
-import com.github.relucent.base.util.exception.ExceptionHelper;
+import com.github.relucent.base.common.collection.CollectionUtil;
+import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.plugin.security.AuthToken;
+import com.github.relucent.base.plugin.security.Principal;
 
 import yyl.demo.entity.User;
 import yyl.demo.service.RoleService;
@@ -43,17 +43,17 @@ public class AuthRealm {
      */
     protected Principal doGetAuthenticationInfo(AuthToken token) {
 
-        String account = token.getAccount();
+        String username = token.getUsername();
         String password = token.getPassword();
 
-        if (StringUtils.isEmpty(account)) {
-            throw ExceptionHelper.prompt("账号不能为空");
+        if (StringUtils.isEmpty(username)) {
+            throw ExceptionHelper.prompt("用户名不能为空");
         }
         if (StringUtils.isEmpty(password)) {
             throw ExceptionHelper.prompt("密码不能为空");
         }
 
-        User user = userService.getByAccount(account);
+        User user = userService.getByAccount(username);
 
         if (user == null) {
             throw ExceptionHelper.prompt("用户不存在");

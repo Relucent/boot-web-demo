@@ -23,20 +23,16 @@ import org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTag
 import org.thymeleaf.templatemode.TemplateMode;
 import org.unbescape.html.HtmlEscape;
 
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.plug.security.Securitys;
+import com.github.relucent.base.plugin.security.Principal;
+import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.BaseConstants.Ids;
 
 /**
  * 自定义_Thymeleaf_标签
- * 
  * @author YYL
  */
-public class CustomThymeleafDialect extends AbstractProcessorDialect
-        implements
-            IDialect,
-            IExpressionObjectDialect {
+public class CustomThymeleafDialect extends AbstractProcessorDialect implements IDialect, IExpressionObjectDialect {
 
     private static class NAMES {
         static final String DIALECT_NAME = "CUSTOM";
@@ -75,8 +71,7 @@ public class CustomThymeleafDialect extends AbstractProcessorDialect
         }
 
         @Override
-        protected boolean isVisible(ITemplateContext context, IProcessableElementTag tag,
-                AttributeName attributeName, String attributeValue) {
+        protected boolean isVisible(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue) {
             return tools.hasPerm(attributeValue);
         }
     }
@@ -97,8 +92,7 @@ public class CustomThymeleafDialect extends AbstractProcessorDialect
         }
 
         @Override
-        protected void doProcess(ITemplateContext context, IProcessableElementTag tag,
-                AttributeName attributeName, String attributeValue,
+        protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue,
                 IElementTagStructureHandler structureHandler) {
             structureHandler.setBody(HtmlEscape.escapeHtml5(tools.text(attributeValue)), false);
         }

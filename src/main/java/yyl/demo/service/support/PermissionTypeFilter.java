@@ -1,6 +1,6 @@
 package yyl.demo.service.support;
 
-import com.github.relucent.base.util.tree.TreeUtil.NodeFilter;
+import com.github.relucent.base.common.tree.TreeUtil.NodeFilter;
 
 import yyl.demo.common.BaseConstants.PermissionType;
 import yyl.demo.entity.Permission;

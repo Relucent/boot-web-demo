@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.github.relucent.base.plug.model.Result;
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.json.JsonUtil;
-import com.github.relucent.base.util.web.WebUtil;
+import com.github.relucent.base.common.json.JsonUtil;
+import com.github.relucent.base.common.web.WebUtil;
+import com.github.relucent.base.plugin.model.Result;
+import com.github.relucent.base.plugin.security.Principal;
 
 import yyl.demo.common.BaseConstants.Ids;
 import yyl.demo.common.annotations.PermissionAx;
@@ -17,8 +17,7 @@ import yyl.demo.common.annotations.PermissionAx;
 public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod hm = (HandlerMethod) handler;
             PermissionAx ax = hm.getMethodAnnotation(PermissionAx.class);

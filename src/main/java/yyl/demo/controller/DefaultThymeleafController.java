@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.relucent.base.util.web.WebUtil;
+import com.github.relucent.base.common.web.WebUtil;
 
 /**
  * 默认_Thymeleaf 视图层。 (使用 _Thymeleaf渲染后缀为 .html 的页面)

@@ -13,12 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.relucent.base.plug.mybatis.MybatisHelper;
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.plug.security.Securitys;
-import com.github.relucent.base.util.exception.ExceptionHelper;
-import com.github.relucent.base.util.page.Page;
-import com.github.relucent.base.util.page.Pagination;
+import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.page.Page;
+import com.github.relucent.base.common.page.Pagination;
+import com.github.relucent.base.plugin.mybatis.MybatisHelper;
+import com.github.relucent.base.plugin.security.Principal;
+import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.BaseConstants.BoolInts;
 import yyl.demo.common.BaseConstants.Ids;

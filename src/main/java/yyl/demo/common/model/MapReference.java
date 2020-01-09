@@ -1,6 +1,6 @@
 package yyl.demo.common.model;
 
-import com.github.relucent.base.util.collection.Mapx;
+import com.github.relucent.base.common.collection.Mapx;
 
 public class MapReference {
 

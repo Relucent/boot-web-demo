@@ -2,8 +2,8 @@ package yyl.demo.common.standard;
 
 import java.util.Date;
 
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.util.time.DateUtil;
+import com.github.relucent.base.common.time.DateUtil;
+import com.github.relucent.base.plugin.security.Principal;
 
 /**
  * 可审计对象工具类

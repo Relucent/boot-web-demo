@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.relucent.base.plug.model.Result;
-import com.github.relucent.base.util.exception.ErrorType;
-import com.github.relucent.base.util.exception.GeneralException;
+import com.github.relucent.base.common.exception.ErrorType;
+import com.github.relucent.base.common.exception.GeneralException;
+import com.github.relucent.base.plugin.model.Result;
 
 import lombok.extern.slf4j.Slf4j;
 

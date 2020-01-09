@@ -4,10 +4,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.relucent.base.plug.security.AuthToken;
-import com.github.relucent.base.plug.security.Principal;
-import com.github.relucent.base.plug.security.Securitys;
-import com.github.relucent.base.plug.spring.context.WebContextHolder;
+import com.github.relucent.base.plugin.security.AuthToken;
+import com.github.relucent.base.plugin.security.Principal;
+import com.github.relucent.base.plugin.security.Securitys;
+import com.github.relucent.base.plugin.spring.context.WebContextHolder;
 
 /**
  * 用户信息提供者

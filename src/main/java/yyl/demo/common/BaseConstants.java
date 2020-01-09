@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.github.relucent.base.util.convert.ConvertUtil;
-import com.github.relucent.base.util.net.NetworkHelper;
+import com.github.relucent.base.common.convert.ConvertUtil;
+import com.github.relucent.base.common.net.NetworkUtil;
 
 /**
  * 基础常量类
@@ -37,7 +37,7 @@ public class BaseConstants {
         public static final String CURRENT_SERVER_ID;
         static {
             final String seed;
-            String[] mac = NetworkHelper.getMacAddress();
+            String[] mac = NetworkUtil.getMacAddress();
             if (mac != null && mac.length != 0) {
                 seed = Arrays.toString(mac);
             } else {

@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.relucent.base.util.identifier.SerialIdWorker;
+import com.github.relucent.base.common.identifier.SerialIdWorker;
 
 import yyl.demo.common.standard.Idable;
 
