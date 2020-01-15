@@ -16,6 +16,7 @@ import lombok.Data;
 public class GlobalProperties {
 
     /** 安全信息 */
+    @NestedConfigurationProperty
     private Security security = new Security();
 
     /** 项目信息 */
