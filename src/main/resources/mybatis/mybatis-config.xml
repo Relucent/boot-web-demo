@@ -8,6 +8,6 @@
 		<typeAlias alias="ArrayList" type="java.util.ArrayList" />
 	</typeAliases>
 	<plugins>
-		<plugin interceptor="com.github.relucent.base.plug.mybatis.PaginationInterceptor" />
+		<plugin interceptor="com.github.relucent.base.plugin.mybatis.PaginationInterceptor" />
 	</plugins>
 </configuration>
