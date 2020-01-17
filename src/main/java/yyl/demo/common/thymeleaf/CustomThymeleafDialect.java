@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
@@ -141,9 +142,9 @@ public class CustomThymeleafDialect extends AbstractProcessorDialect implements 
         /** ${#__.text(name)} */
         public String text(String name) {
             if (NAMES.USER_NAME.equals(name)) {
-                return securitys.getPrincipal().getName();
+                return StringUtils.defaultString(securitys.getPrincipal().getName());
             }
-            return "";
+            return StringUtils.EMPTY;
         }
 
         /** ${#__.hasPerm(10000)} */
