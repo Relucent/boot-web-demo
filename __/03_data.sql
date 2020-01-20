@@ -1,0 +1,1 @@
+INSERT INTO user (id,department_id,department_name,username,password,name,remark,enabled,deleted) VALUES ('0', '-1', '', 'admin', '{bcrypt}$2a$10$Eq1XFZbrSqFlFQmkePcMXO1wyVQGgkI6WgWFL7Uxqq3X4P2mXexqi', '管理员', '管理员', 1, 0);
