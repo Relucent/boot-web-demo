@@ -18,9 +18,9 @@ public class AuditableUtil {
     public static void setCreated(Auditable record, Principal principal) {
         Date now = DateUtil.now();
         record.setCreatedBy(principal.getUserId());
-        record.setCreatedDate(now);
-        record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(now);
+        record.setCreatedAt(now);
+        record.setUpdatedBy(principal.getUserId());
+        record.setUpdatedAt(now);
     }
 
     /**
@@ -28,9 +28,9 @@ public class AuditableUtil {
      * @param record 记录对象
      * @param principal 登录人
      */
-    public static void setLastModified(Auditable record, Principal principal) {
+    public static void setUpdated(Auditable record, Principal principal) {
         Date now = DateUtil.now();
-        record.setLastModifiedBy(principal.getUserId());
-        record.setLastModifiedDate(now);
+        record.setUpdatedBy(principal.getUserId());
+        record.setUpdatedAt(now);
     }
 }

@@ -18,7 +18,7 @@ public class Department implements Idable, Auditable, Ordinal, Serializable {
 
     /** 主键 */
     private String id;
-    /** 上级功能权限ID */
+    /** 上级ID */
     private String parentId;
 
     /** 名称 */
@@ -37,11 +37,11 @@ public class Department implements Idable, Auditable, Ordinal, Serializable {
     /** 创建者 */
     private String createdBy;
     /** 创建时间 */
-    private Date createdDate;
+    private Date createdAt;
     /** 最后修改者 */
-    private String lastModifiedBy;
+    private String updatedBy;
     /** 最后修改时间 */
-    private Date lastModifiedDate;
+    private Date updatedAt;
 
     /** ~上级功能权限名称 */
     private transient String parentName;

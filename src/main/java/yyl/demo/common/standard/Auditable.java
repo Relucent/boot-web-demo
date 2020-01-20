@@ -22,35 +22,35 @@ public interface Auditable {
      * 获得创建时间
      * @return 创建时间
      */
-    Date getCreatedDate();
+    Date getCreatedAt();
 
     /**
      * 设置创建时间
-     * @param createdDate 创建时间
+     * @param createdAt 创建时间
      */
-    void setCreatedDate(Date createdDate);
+    void setCreatedAt(Date createdAt);
 
     /**
      * 获得最后的修改者
      * @param 修改者ID
      */
-    String getLastModifiedBy();
+    String getUpdatedBy();
 
     /**
      * 设置最后的修改者
-     * @param lastModifiedBy 修改者ID
+     * @param updatedBy 修改者ID
      */
-    void setLastModifiedBy(String lastModifiedBy);
+    void setUpdatedBy(String updatedBy);
 
     /**
      * 获得最后修改时间
      * @return 获得最后的修改时间
      */
-    Date getLastModifiedDate();
+    Date getUpdatedAt();
 
     /**
      * 设置最后修改时间
-     * @param lastModifiedDate 获得最后的修改时间
+     * @param updatedAt 获得最后的修改时间
      */
-    void setLastModifiedDate(Date lastModifiedDate);
+    void setUpdatedAt(Date updatedAt);
 }

@@ -18,7 +18,7 @@ public class User implements Idable, Auditable, Serializable {
     /** 主键 */
     private String id;
     /** 登录名 */
-    private String account;
+    private String username;
     /** 登录密码 */
     private String password;
 
@@ -39,9 +39,9 @@ public class User implements Idable, Auditable, Serializable {
     /** 创建者 */
     private String createdBy;
     /** 创建时间 */
-    private Date createdDate;
+    private Date createdAt;
     /** 最后修改者 */
-    private String lastModifiedBy;
+    private String updatedBy;
     /** 最后修改时间 */
-    private Date lastModifiedDate;
+    private Date updatedAt;
 }

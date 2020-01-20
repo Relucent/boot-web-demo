@@ -104,7 +104,7 @@ public class DepartmentService {
         entity.setName(department.getName());
         entity.setRemark(department.getRemark());
         entity.setIdPath(forceGetIdPath(entity));
-        AuditableUtil.setLastModified(entity, principal);
+        AuditableUtil.setUpdated(entity, principal);
 
         departmentMapper.update(entity);
 

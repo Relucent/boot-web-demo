@@ -6,7 +6,7 @@
 		<id property="id" column="id" jdbcType="VARCHAR" />
 		<result property="departmentId" column="department_id" jdbcType="VARCHAR" />
 		<result property="departmentName" column="department_name" jdbcType="VARCHAR" />
-		<result property="account" column="account" jdbcType="VARCHAR" />
+		<result property="username" column="username" jdbcType="VARCHAR" />
 		<result property="password" column="password" jdbcType="VARCHAR" />
 		<result property="name" column="name" jdbcType="VARCHAR" />
 		<result property="remark" column="remark" jdbcType="VARCHAR" />
@@ -21,13 +21,13 @@
 	<sql id="TABLE">user</sql>
 
 	<sql id="COLUMNS">
-		id, department_id, department_name,account, password,
+		id, department_id, department_name,username, password,
 		name, remark, enabled,deleted,
 		created_by, created_at, updated_by, updated_at
 	</sql>
 
 	<sql id="VALUES">
-		#{id}, #{departmentId}, #{departmentName},#{account}, #{password},
+		#{id}, #{departmentId}, #{departmentName},#{username}, #{password},
 		#{name}, #{remark}, #{enabled}, #{deleted},
 		#{createdBy}, #{createdAt}, #{updatedBy}, #{updatedAt}
 	</sql>
@@ -40,8 +40,8 @@
 			<if test=" departmentName != null">
 				department_name = #{departmentName},
 			</if>
-			<if test=" account != null">
-				account = #{account},
+			<if test=" username != null">
+				username = #{username},
 			</if>
 			<if test=" password != null">
 				password = #{password},
@@ -80,8 +80,8 @@
 		<if test=" departmentId != null and departmentId != ''">
 			and department_id = #{departmentId}
 		</if>
-		<if test=" account != null and account != '' ">
-			and account = #{account}
+		<if test=" username != null and username != '' ">
+			and username = #{username}
 		</if>
 		<if test=" name != null and name != '' ">
 			and name like CONCAT(CONCAT('%',#{name}),'%')
@@ -153,12 +153,12 @@
 		<include refid="TABLE" />
 	</select>
 
-	<select id="getByAccount" parameterType="java.lang.String" resultMap="RESULT_MAP">
+	<select id="getByUsername" parameterType="java.lang.String" resultMap="RESULT_MAP">
 		SELECT
 		<include refid="COLUMNS" />
 		FROM
 		<include refid="TABLE" />
-		WHERE account = #{account}
+		WHERE username = #{username}
 	</select>
 
 	<select id="findBy" parameterType="yyl.demo.entity.User" resultMap="RESULT_MAP">
@@ -168,7 +168,7 @@
 		<include refid="TABLE" />
 		WHERE 1=1
 		<include refid="WHERES" />
-		ORDER BY account ASC
+		ORDER BY username ASC
 	</select>
 
 </mapper>

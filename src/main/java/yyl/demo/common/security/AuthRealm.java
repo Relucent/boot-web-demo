@@ -53,7 +53,7 @@ public class AuthRealm {
             throw ExceptionHelper.prompt("密码不能为空");
         }
 
-        User user = userService.getByAccount(username);
+        User user = userService.getByUsername(username);
 
         if (user == null) {
             throw ExceptionHelper.prompt("用户不存在");

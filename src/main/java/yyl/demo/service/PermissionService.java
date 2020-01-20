@@ -121,7 +121,7 @@ public class PermissionService {
         entity.setValue(permission.getValue());
         entity.setOrdinal(ObjectUtils.defaultIfNull(permission.getOrdinal(), "9999"));
         entity.setIdPath(forceGetIdPath(entity));
-        AuditableUtil.setLastModified(entity, principal);
+        AuditableUtil.setUpdated(entity, principal);
 
         permissionMapper.update(entity);
 

@@ -73,7 +73,7 @@ public class UserService {
 
         IdHelper.setIfEmptyId(entity);
         entity.setDepartmentId(user.getDepartmentId());
-        entity.setAccount(user.getAccount());
+        entity.setUsername(user.getUsername());
 
         String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), globalProperties.getSecurity().getDefaultUserPassword());
         entity.setPassword(passwordEncoder.encode(rawPassword));
@@ -114,7 +114,7 @@ public class UserService {
         }
 
         entity.setDepartmentId(user.getDepartmentId());
-        entity.setAccount(user.getAccount());
+        entity.setUsername(user.getUsername());
 
         String rawPassword = user.getPassword();
 
@@ -126,7 +126,7 @@ public class UserService {
         entity.setRemark(user.getRemark());
         entity.setEnabled(BoolInts.normalize(user.getEnabled()));
 
-        AuditableUtil.setLastModified(entity, principal);
+        AuditableUtil.setUpdated(entity, principal);
         userMapper.update(entity);
     }
 
@@ -139,7 +139,7 @@ public class UserService {
         User entity = new User();
         entity.setId(id);
         entity.setEnabled(BoolInts.normalize(enabled));
-        AuditableUtil.setLastModified(entity, principal);
+        AuditableUtil.setUpdated(entity, principal);
         userMapper.update(entity);
     }
 
@@ -158,11 +158,11 @@ public class UserService {
 
     /**
      * 查询用户
-     * @param account 账号
+     * @param username 用户名
      * @return 用户信息
      */
-    public User getByAccount(String account) {
-        return userMapper.getByAccount(account);
+    public User getByUsername(String username) {
+        return userMapper.getByUsername(username);
     }
 
     /**
@@ -219,17 +219,17 @@ public class UserService {
     /** 验证数据 */
     private void validate(User user) {
         String id = user.getId();
-        String account = user.getAccount();
+        String username = user.getUsername();
         String name = user.getName();
         String departmentId = user.getDepartmentId();
 
-        if (StringUtils.isEmpty(account)) {
-            throw ExceptionHelper.prompt("账号不能为空");
+        if (StringUtils.isEmpty(username)) {
+            throw ExceptionHelper.prompt("用户名不能为空");
         }
         if (StringUtils.isEmpty(name)) {
             throw ExceptionHelper.prompt("姓名不能为空");
         }
-        User entity = userMapper.getByAccount(account);
+        User entity = userMapper.getByUsername(username);
         if (entity != null && !Objects.equals(entity.getId(), id)) {
             throw ExceptionHelper.prompt("已经存在相同账号");
         }
