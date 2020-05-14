@@ -15,23 +15,33 @@ import lombok.Data;
 @Data
 public class GlobalProperties {
 
-    /** 安全信息 */
-    @NestedConfigurationProperty
-    private Security security = new Security();
+	/** 安全信息 */
+	@NestedConfigurationProperty
+	private Security security = new Security();
 
-    /** 项目信息 */
-    @NestedConfigurationProperty
-    private Project project = new Project();
+	/** 项目信息 */
+	@NestedConfigurationProperty
+	private Project project = new Project();
 
-    @Data
-    public class Project {
-        /** 项目版本号 */
-        private String version = "0.0.0";
-    }
+	/** 文件存储 */
+	@NestedConfigurationProperty
+	private StoreConfig store = new StoreConfig();
 
-    @Data
-    public class Security {
-        /** 用户默认密码 */
-        private String defaultUserPassword;
-    }
+	@Data
+	public class Project {
+		/** 项目版本号 */
+		private String version = "0.0.0";
+	}
+
+	@Data
+	public class Security {
+		/** 用户默认密码 */
+		private String defaultUserPassword;
+	}
+
+	/** 文件存储 */
+	@Data
+	public class StoreConfig {
+		private String directory = "/data/boot-web-demo/";
+	}
 }
