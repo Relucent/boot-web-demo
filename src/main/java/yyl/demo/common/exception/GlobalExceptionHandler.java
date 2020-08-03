@@ -1,6 +1,7 @@
 package yyl.demo.common.exception;
 
-import org.springframework.dao.DataAccessException;
+import java.sql.SQLException;
+
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -49,8 +50,8 @@ public class GlobalExceptionHandler {
 
 	private static boolean isDbException(Exception e) {
 		Throwable error = (Throwable) e;
-		for (int i = 0; i < 100 && error != null; i++) {
-			if (error instanceof DataAccessException) {
+		for (int i = 0; i < 0xFF && error != null; i++) {
+			if (error instanceof SQLException) {
 				return true;
 			}
 			error = error.getCause();
