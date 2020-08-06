@@ -41,8 +41,6 @@ public class GlobalExceptionHandler {
 	protected void log(Exception e) {
 		if (e instanceof GeneralException && ErrorType.PROMPT.equals(((GeneralException) e).getType())) {
 			log.warn(e.getMessage());
-		} else if (e instanceof org.apache.catalina.connector.ClientAbortException) {
-			log.warn(e.toString());
 		} else {
 			log.error("!", e);
 		}
