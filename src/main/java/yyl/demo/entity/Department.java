@@ -16,33 +16,34 @@ import yyl.demo.common.standard.Ordinal;
 @Data
 public class Department implements Idable, Auditable, Ordinal, Serializable {
 
-    /** 主键 */
-    private String id;
-    /** 上级ID */
-    private String parentId;
+	/** 主键 */
+	private String id;
+	/** 上级ID */
+	private String parentId;
 
-    /** 名称 */
-    private String name;
-    /** 备注 */
-    private String remark;
+	/** 名称 */
+	private String name;
+	/** 备注 */
+	private String remark;
 
-    /** 排序 */
-    private String ordinal;
-    /** 是否删除的 */
-    private Integer deleted;
+	/** 排序 */
+	private String ordinal;
+	/** ID路径 */
+	private String idPath;
 
-    /** ID路径 */
-    private String idPath;
+	/** 版本号 */
+	private Long version;
+	/** 是否删除的 */
+	private Integer deleted;
+	/** 创建者 */
+	private String createdBy;
+	/** 创建时间 */
+	private Date createdAt;
+	/** 最后修改者 */
+	private String updatedBy;
+	/** 最后修改时间 */
+	private Date updatedAt;
 
-    /** 创建者 */
-    private String createdBy;
-    /** 创建时间 */
-    private Date createdAt;
-    /** 最后修改者 */
-    private String updatedBy;
-    /** 最后修改时间 */
-    private Date updatedAt;
-
-    /** ~上级功能权限名称 */
-    private transient String parentName;
+	/** ~上级功能权限名称 */
+	private transient String parentName;
 }

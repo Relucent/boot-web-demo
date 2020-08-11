@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.relucent.base.common.identifier.SerialIdWorker;
+import com.github.relucent.base.common.identifier.TimeIdWorker;
 
 import yyl.demo.common.standard.Idable;
 
@@ -16,29 +16,30 @@ import yyl.demo.common.standard.Idable;
  */
 public class IdHelper {
 
-    // ==============================Fields===========================================
-    private static final AtomicReference<String> SUFFIX = new AtomicReference<>("00");
+	// ==============================Fields===========================================
+	private static final AtomicReference<String> SUFFIX = new AtomicReference<>("00");
+	private static final TimeIdWorker ID_WORKER = new TimeIdWorker();
 
-    // ==============================Methods==========================================
-    /**
-     * 下一个ID
-     * @return
-     */
-    public static String nextId() {
-        return SerialIdWorker.DEFAULT.nextId() + SUFFIX.get();
-    }
+	// ==============================Methods==========================================
+	/**
+	 * 下一个ID
+	 * @return
+	 */
+	public static String nextId() {
+		return ID_WORKER.nextId() + SUFFIX.get();
+	}
 
-    /**
-     * 设置ID(如果ID为空)
-     * @param entity 实体对象
-     */
-    public static void setIfEmptyId(Idable entity) {
-        if (entity != null && StringUtils.isEmpty(entity.getId())) {
-            entity.setId(nextId());
-        }
-    }
+	/**
+	 * 设置ID(如果ID为空)
+	 * @param entity 实体对象
+	 */
+	public static void setIfEmptyId(Idable entity) {
+		if (entity != null && StringUtils.isEmpty(entity.getId())) {
+			entity.setId(nextId());
+		}
+	}
 
-    protected static void setSuffix(String suffix) {
-        SUFFIX.set(StringUtils.substring(StringUtils.leftPad(suffix, SUFFIX.get().length(), '0'), 0, 2));
-    }
+	protected static void setSuffix(String suffix) {
+		SUFFIX.set(StringUtils.substring(StringUtils.leftPad(suffix, SUFFIX.get().length(), '0'), 0, 2));
+	}
 }

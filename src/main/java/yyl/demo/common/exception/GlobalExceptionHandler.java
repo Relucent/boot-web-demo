@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.github.relucent.base.common.exception.ErrorType;
-import com.github.relucent.base.common.exception.GeneralException;
+import com.github.relucent.base.common.exception.PromptException;
 import com.github.relucent.base.plugin.model.Result;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ public class GlobalExceptionHandler {
 	}
 
 	protected void log(Exception e) {
-		if (e instanceof GeneralException && ErrorType.PROMPT.equals(((GeneralException) e).getType())) {
+		if (e instanceof PromptException) {
 			log.warn(e.getMessage());
 		} else {
 			log.error("!", e);

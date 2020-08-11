@@ -15,19 +15,23 @@ import yyl.demo.common.standard.Idable;
 @Data
 public class UserRole implements Idable, Auditable, Serializable {
 
-    /** 主键 */
-    private String id;
-    /** 用户主键id */
-    private String userId;
-    /** 角色id */
-    private String roleId;
+	/** 主键 */
+	private String id;
+	/** 用户主键id */
+	private String userId;
+	/** 角色id */
+	private String roleId;
 
-    /** 创建者 */
-    private String createdBy;
-    /** 创建时间 */
-    private Date createdAt;
-    /** 最后修改者 */
-    private String updatedBy;
-    /** 最后修改时间 */
-    private Date updatedAt;
+	/** 版本号 */
+	private Long version;
+	/** 是否删除的 */
+	private Integer deleted;
+	/** 创建者 */
+	private String createdBy;
+	/** 创建时间 */
+	private Date createdAt;
+	/** 最后修改者 */
+	private String updatedBy;
+	/** 最后修改时间 */
+	private Date updatedAt;
 }
