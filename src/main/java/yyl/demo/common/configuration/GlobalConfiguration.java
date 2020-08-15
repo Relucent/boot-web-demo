@@ -17,7 +17,6 @@ import com.github.relucent.base.plugin.security.Securitys;
 import yyl.demo.common.security.AuthRealm;
 import yyl.demo.common.security.SecurityFilter;
 import yyl.demo.common.security.SecurityImplementor;
-import yyl.demo.common.thymeleaf.CustomThymeleafDialect;
 
 /**
  * 项目公用配置
@@ -64,15 +63,8 @@ public class GlobalConfiguration {
         return new AuthRealm();
     }
 
-    /** 自定义_Thymeleaf标签 */
-    @Bean
-    public CustomThymeleafDialect customThymeleafDialect() {
-        return new CustomThymeleafDialect(securitys());
-    }
-
     @PostConstruct
     public void initialize() {
         JsonUtil.setHandler(JacksonHandler.INSTANCE);
     }
-
 }
