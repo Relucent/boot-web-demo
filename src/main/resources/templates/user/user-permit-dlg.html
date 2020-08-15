@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>分配角色</title>
+</head>
+<body>
+	<div id="vm" v-cloak>
+		<div is="el-row" class="transWarp">
+			<div class="transLeft">
+				<div is="el-table" :data="options(false)" border  @selection-change="leftSelectionChange">
+					<div is="el-table-column" align="center" type="selection" width="50"></div>
+					<div is="el-table-column" align="center" prop="name" label="未分配角色"></div>
+				</div>
+			</div>
+			<div class="transCenter">
+				<div>
+					<button is="el-button" @click="moveRight">
+						<i class="el-icon-arrow-right"></i>
+					</button>
+				</div>
+				<div>
+					<button is="el-button" @click="moveLeft">
+						<i class="el-icon-arrow-left"></i>
+					</button>
+				</div>
+			</div>
+			<div class="transRight">
+				<div is="el-table" ref="table" :data="options(true)" border @selection-change="rightSelectionChange">
+					<div is="el-table-column" align="center" type="selection" width="50"></div>
+					<div is="el-table-column" align="center" prop="name" label="已分配角色"></div>
+				</div>
+			</div>
+		</div>
+		<div class="transFoot">
+			<button is="el-button" type="success" @click="confirm">确定</button>
+			<button is="el-button" @click="cancel" class="cancel">取消</button>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				id : null,
+				roles : [],
+				roleIds : [],
+				selectdLeft : [],
+				selectdRight : []
+			},
+			created : function() {
+				__.$vm = this;
+			},
+			mounted : function() {
+				var vm = this, search = __.decodeUrlParams();
+				vm.id = search.id;
+				__.api('GET', '/rest/role/all', {}, function(result) {
+					if (__.err(result)) {
+						vm.$message.warning(result.message);
+						return;
+					}
+					vm.roles = result.data;
+					__.api('GET', '/rest/user/' + vm.id + '/role-ids', {}, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message);
+							return;
+						}
+						vm.roleIds = result.data || [];
+					});
+				});
+			},
+			methods : {
+				options : function(right) {
+					var vm = this, records = [], roleIds = vm.roleIds;
+					__.each(vm.roles, function(i, role) {
+						(__.indexOf(roleIds, role.id) != -1) == right && records.push(role);
+					});
+					return records;
+				},
+				leftSelectionChange : function(selectd) {
+					this.selectdLeft = selectd;
+				},
+				rightSelectionChange : function(selectd) {
+					this.selectdRight = selectd;
+				},
+				moveRight : function() {
+					var vm = this;
+					__.each(vm.selectdLeft, function(i, role) {
+						vm.roleIds.push(role.id);
+					});
+				},
+				moveLeft : function() {
+					var vm = this, roleIds = vm.roleIds, i, removeId;
+					__.each(vm.selectdRight, function(i, role) {
+						removeId = role.id;
+						for (i = roleIds.length - 1; i >= 0; i--) {
+							if (roleIds[i] == removeId) {
+								roleIds.splice(i, 1);
+							}
+						}
+					});
+				},
+				confirm : function(done) {
+					var vm = this;
+					__.api('POST', '/rest/user/' + vm.id + '/role-ids', vm.roleIds, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message);
+							return;
+						}
+						__.dialog.close(1);
+					});
+				},
+				cancel : function() {
+					__.dialog.close(0);
+				}
+			}
+		})
+	</script>
+</body>
+</html>

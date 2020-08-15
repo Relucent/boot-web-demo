@@ -24,13 +24,13 @@ import com.github.relucent.base.plugin.mybatis.MybatisHelper;
 import com.github.relucent.base.plugin.security.Principal;
 import com.github.relucent.base.plugin.security.Securitys;
 
-import yyl.demo.common.BaseConstants.Ids;
-import yyl.demo.common.BaseConstants.Symbols;
+import yyl.demo.common.constant.Ids;
+import yyl.demo.common.constant.Symbols;
 import yyl.demo.common.identifier.IdHelper;
+import yyl.demo.common.model.BasicNodeVO;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.Department;
 import yyl.demo.mapper.DepartmentMapper;
-import yyl.demo.service.model.BasicNode;
 import yyl.demo.service.support.DepartmentNodeAdapter;
 
 /**
@@ -77,7 +77,7 @@ public class DepartmentService {
      * @param id 部门ID
      */
     public void deleteById(String id) {
-        if (departmentMapper.countByParentId(id) != 0) {
+        if (departmentMapper.selectCountByParentId(id) != 0) {
             throw ExceptionHelper.prompt("存在子机构，不能被直接删除");
         }
         departmentMapper.deleteById(id);
@@ -93,7 +93,7 @@ public class DepartmentService {
 
         Principal principal = securitys.getPrincipal();
 
-        Department entity = departmentMapper.getById(department.getId());
+        Department entity = departmentMapper.selectById(department.getId());
 
         if (entity == null) {
             throw ExceptionHelper.prompt("数据不存在");
@@ -106,7 +106,7 @@ public class DepartmentService {
         entity.setIdPath(forceGetIdPath(entity));
         AuditableUtil.setUpdated(entity, principal);
 
-        departmentMapper.update(entity);
+        departmentMapper.updateById(entity);
 
         // IdPath发生更改, 更新子节点
         if (!Objects.equals(originalIdPath, entity.getIdPath())) {
@@ -114,14 +114,13 @@ public class DepartmentService {
         }
     }
 
-
     /**
      * 查询部门
      * @param id 部门ID
      * @return 部门
      */
     public Department getById(String id) {
-        Department entity = departmentMapper.getById(id);
+        Department entity = departmentMapper.selectById(id);
         if (entity == null) {
             throw ExceptionHelper.prompt("数据不存在或者已经失效");
         }
@@ -129,7 +128,7 @@ public class DepartmentService {
         if (Ids.ROOT_ID.equals(parentId)) {
             entity.setParentName("/");
         } else {
-            Department parentEntity = departmentMapper.getById(parentId);
+            Department parentEntity = departmentMapper.selectById(parentId);
             entity.setParentName(parentEntity == null ? "[未知]" : parentEntity.getName());
         }
         return entity;
@@ -142,22 +141,22 @@ public class DepartmentService {
      * @return 查询结果
      */
     public Page<Department> pagedQuery(Pagination pagination, Department condition) {
-        return MybatisHelper.selectPage(pagination, () -> departmentMapper.findBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> departmentMapper.selectListBy(condition));
     }
 
     /**
      * 查询部门树
      * @return 部门树
      */
-    public List<BasicNode> getDeptTree() {
-        List<Department> entities = departmentMapper.findAll();
-        List<BasicNode> nodes = TreeUtil.buildTree(//
+    public List<BasicNodeVO> getDeptTree() {
+        List<Department> entities = departmentMapper.selectAllList();
+        List<BasicNodeVO> nodes = TreeUtil.buildTree(//
                 Ids.DEPT_ROOT_ID, //
                 entities, //
                 DepartmentNodeAdapter.INSTANCE, //
                 Department::getId, //
                 Department::getParentId, //
-                BasicNode::setChildren//
+                BasicNodeVO::setChildren//
         );
         return nodes;
     }
@@ -166,10 +165,10 @@ public class DepartmentService {
      * 强制刷新机构树索引(ID路径)
      */
     public void forceRefreshIndexes() {
-        List<Department> entities = departmentMapper.findAll();
+        List<Department> entities = departmentMapper.selectAllList();
         TreeUtil.recursiveSetIdPath(entities, Department::getId, Department::getParentId, Department::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Department entity : entities) {
-            departmentMapper.update(entity);
+            departmentMapper.updateById(entity);
         }
     }
 
@@ -178,7 +177,7 @@ public class DepartmentService {
         Collection<Department> entities = findAllByParentId(parent.getId());
         TreeUtil.recursiveSetIdPath(entities, Department::getId, Department::getParentId, Department::setIdPath, parent.getId(), parent.getIdPath());
         for (Department entity : entities) {
-            departmentMapper.update(entity);
+            departmentMapper.updateById(entity);
         }
     }
 
@@ -190,7 +189,7 @@ public class DepartmentService {
             throw ExceptionHelper.prompt("名称不能为空");
         }
         if (!Ids.ROOT_ID.equals(parentId)) {
-            Department parentEntity = departmentMapper.getById(parentId);
+            Department parentEntity = departmentMapper.selectById(parentId);
             if (parentEntity == null) {
                 throw ExceptionHelper.prompt("没有查询到对应的上级");
             }
@@ -208,7 +207,7 @@ public class DepartmentService {
         idList.add(id);
         while (parentId != null && !Ids.ROOT_ID.equals(parentId)) {
             idList.add(parentId);
-            Department parentEntity = departmentMapper.getById(parentId);
+            Department parentEntity = departmentMapper.selectById(parentId);
             if (parentEntity == null) {
                 break;
             }
@@ -235,7 +234,7 @@ public class DepartmentService {
         for (; !idQueue.isEmpty();) {
             String id = idQueue.remove();// QUEUE->I
             idSet.add(id);//
-            for (Department entity : departmentMapper.findByParentId(id)) {
+            for (Department entity : departmentMapper.selectListByParentId(id)) {
                 if (!idSet.contains(entity.getId())) {
                     entities.add(entity);
                     idQueue.add(entity.getId());// QUEUE<-I

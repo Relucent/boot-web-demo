@@ -3,60 +3,173 @@
 <head>
 <meta charset="utf-8" />
 <object th:replace="_include/_meta"></object>
-<title>home</title>
+<title>Demo</title>
 <style type="text/css">
-.el-header {
-	background-color: #B3C0D1;
-	color: #333;
-	text-align: center;
-	height: 60px;
+.header {
+	height: 50px;
+	line-height: 50px;
+	background: #23262E;
+	color: #fff;
 }
 
-.el-aside {
-	background-color: #D3DCE6;
-	color: #333;
-	text-align: center;
-}
-
-.el-main {
-	background-color: #E9EEF3;
-	color: #333;
-	text-align: center;
-	line-height: 160px;
-}
-
-.el-main iframe {
+.x-layout-container {
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 50px);
+	background: #ffffff;
 }
 
-.fit {
+.x-layout-side {
+	position: fixed;
+	left: 0;
+	width: 220px;
 	height: 100%;
+	overflow-x: hidden;
+	background: #393D49;
+}
+
+.x-layout-side .el-menu {
+	background: #393D49;
+}
+
+.x-layout-side .el-submenu .el-submenu__title, .x-layout-side .el-menu .el-menu-item
+	{
+	height: 40px;
+	line-height: 40px;
+	color: #fff;
+}
+
+.x-layout-side .el-submenu {
+	background: #4E5465;
+}
+
+.x-layout-side .el-menu-item.is-active {
+	background: #009688;
+	color: #fff;
+}
+
+.x-layout-body {
+	position: fixed;
+	left: 200px;
+	right: 0px;
+	width: auto;
+	height: 100%;
+	overflow: hidden;
+	background-color: #fff;
 }
 </style>
 </head>
 <body>
-	<div id="vm" class="fit">
-		<div is="el-container" class="fit">
-			<div is="el-header"></div>
-			<div is="el-container" style="height: calc(100% - 60px);">
-				<div is="el-aside" width="200px"></div>
-				<div is="el-main">
-					<iframe src="about:blank" style="border: none;"></iframe>
+	<div id="vm">
+		<div is="el-row" class="header">
+			<div is="el-col" :span="19" class="title">
+				<div style="margin-left: 30px;">
+					<a>Demo</a>
 				</div>
+			</div>
+			<div is="el-col" :span="2">
+				<i class="el-icon-s-custom" style="margin-left: 10px;"></i> <span>用户名：<a __:text="user.name"></a></span>
+			</div>
+			<div is="el-col" :span="2" style="text-align: right;">
+				<a @click="logout()" title="退出" style="cursor: pointer;">【退出】</a>
+			</div>
+		</div>
+		<div is="el-row" class="x-layout-container">
+			<div class="x-layout-side">
+				<ul is="el-menu" ref="nav" :default-active="active">
+					<li is="menu-node" v-for="menu in menus" :menu="menu"></li>
+				</ul>
+			</div>
+			<div class="x-layout-body">
+				<iframe :src="contentUrl" frameborder="0" style="width:100%;height:100%;"></iframe>
 			</div>
 		</div>
 	</div>
+	<script type="text/x-template" id="menu-node-template">
+		<li :is="dynamicComponentTag(menu)" :index="menu.id" @click="onSelect(menu)">
+			<span slot="title"><i :class="'el-icon-menu'"></i>{{menu.label}}</span>			
+			<template v-if="!isLeaf(menu)">
+		        <menu-node v-for="childmenu in menu.children" :menu="childmenu"></menu-node>
+			</template>
+		</li>
+	</script>
 	<script>
+		Vue.bus = new Vue();
+		Vue.component('menu-node', {
+			props : [ 'menu' ],
+			template : '#menu-node-template',
+			methods : {
+				dynamicComponentTag : function(menu) {
+					return this.isLeaf(menu) ? 'el-menu-item' : 'el-submenu';
+				},
+				isLeaf : function(menu) {
+					return menu.children == null || menu.children.length == 0;
+				},
+				onSelect : function(menu) {
+					menu.type == 2 && Vue.bus.$emit('select', menu);
+				}
+			}
+		});
 		new Vue({
 			el : '#vm',
-			data : {
-				token : {
-					account : '',
-					password : ''
+			data : function() {
+				return {
+					contentUrl : 'about:blank',
+					menus : [],
+					active : null
 				}
 			},
-			methods : {}
+			mounted : function() {
+				var vm = this;
+				__.api('GET', '/rest/permission/menu-all-tree', {}, function(result) {
+					vm.menus = result.data;
+					vm.menusHash = result.data;
+					var scanFirst = function(nodes) {
+						var i, node, result;
+						for (i = 0; i < nodes.length; i++) {
+							node = nodes[i];
+							if (node.type == 2) {
+								return node;
+							}
+							if (result = scanFirst(node.children || [])) {
+								return result;
+							}
+						}
+						return null;
+					};
+					var first = scanFirst(vm.menus);
+					first && vm.select(first);
+
+				});
+				Vue.bus.$on('select', function(menu) {
+					vm.select(menu);
+				});
+			},
+			methods : {
+				select : function(menu) {
+					var vm = this, path = menu.value;
+					if (!__.isEmpty(path) && path != '#') {
+						vm.contentUrl = __.url(path);
+						vm.active = menu.id;
+					}
+				},
+				password : function() {
+					__.dialog.open({
+						title : '密码修改',
+						width : '600px',
+						height : '350px',
+						url : __.url('/user/user-password.html', {
+							t : __.now()
+						}),
+						close : function(result) {
+						}
+					});
+				},
+				logout : function() {
+					__.api('POST', '/rest/logout', {}, function(result) {
+						window.location.href = __.url('/login.html');
+					});
+				}
+			}
 		});
 	</script>
 </body>

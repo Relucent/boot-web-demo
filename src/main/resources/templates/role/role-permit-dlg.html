@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>角色授权</title>
+</head>
+<style>
+.element-tree {
+	height: 255px;
+	border: 1px solid #e6e6e6;
+	overflow-x: hidden;
+}
+</style>
+<body>
+	<div id="vm" v-cloak>
+		<div>
+			<div is="el-tree" class="element-tree" :data="treeData" ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" :default-checked-keys="checkedNodeIds"></div>
+		</div>
+		<div align="center" style="margin-top: 22px;">
+			<button is="el-button" type="success" @click="confirm">确定</button>
+			<button is="el-button" @click="cancel">取消</button>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				roleId : '',
+				treeData : [],
+				checkedNodeIds : [],
+				defaultProps : {
+					children : 'children',
+					label : 'label'
+				}
+			},
+			mounted : function() {
+				var vm = this;
+				var search = __.decodeUrlParams();
+				vm.roleId = search.id;
+				vm.loadMenuTree();
+			},
+			methods : {
+				loadMenuTree : function() {
+					var vm = this;
+					__.api('GET', '/rest/permission/menu-perm-tree', {}, function(result) {
+						vm.treeData = result.data;
+						vm.loadAuthMenuIds();
+					});
+				},
+				loadAuthMenuIds : function() {
+					var vm = this;
+					__.api('GET', '/rest/role/' + vm.roleId + '/permission-ids', {}, function(result) {
+						var nodes = vm.treeData, scan = function(nodes, consumer) {
+							__.each(nodes, function(i, node) {
+								consumer(node) | scan(node.children || [], consumer);
+							});
+						}, permissionIds = result.data || [], checkedNodeIds = [], idLeafHash = {};
+						scan(nodes, function(node) {
+							if (__.isEmpty(node.children)) {
+								idLeafHash[node.id] = true;
+							}
+						});
+						__.each(permissionIds, function(i, permissionId) {
+							if (idLeafHash[permissionId]) {
+								checkedNodeIds.push(permissionId);
+							}
+						});
+						vm.checkedNodeIds = checkedNodeIds;
+					});
+				},
+				confirm : function() {
+					var vm = this;
+					var nodes = this.$refs.tree.getCheckedNodes();
+					var halfCheckedNodes = this.$refs.tree.getHalfCheckedNodes();
+					var permIds = [];
+					for (var i = 0; i < nodes.length; i++) {
+						permIds.push(nodes[i].id);
+					}
+					for (var n = 0; n < halfCheckedNodes.length; n++) {
+						permIds.push(halfCheckedNodes[n].id);
+					}
+					__.api('POST', '/rest/role/' + vm.roleId + '/permission-ids', permIds, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message);
+						} else {
+							__.dialog.close();
+						}
+					});
+				},
+				cancel : function() {
+					__.dialog.close();
+				},
+			}
+		})
+	</script>
+</body>
+</html>

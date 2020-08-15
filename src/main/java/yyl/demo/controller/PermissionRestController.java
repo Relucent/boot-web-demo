@@ -16,11 +16,11 @@ import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.plugin.model.Result;
 
-import yyl.demo.common.BaseConstants.Ids;
-import yyl.demo.common.BaseConstants.PermissionType;
+import yyl.demo.common.constant.Ids;
+import yyl.demo.common.constant.PermissionTypes;
+import yyl.demo.common.model.BasicNodeVO;
 import yyl.demo.entity.Permission;
 import yyl.demo.service.PermissionService;
-import yyl.demo.service.model.BasicNode;
 
 /**
  * 功能权限管理
@@ -86,27 +86,17 @@ public class PermissionRestController {
      */
     @GetMapping(value = "/menu-tree/{rootId}")
     public Result<?> menuTree(@PathVariable("rootId") String rootId) {
-        List<BasicNode> menus = permissionService.getMenuTree(rootId, PermissionType.MENU);
+        List<BasicNodeVO> menus = permissionService.getMenuTree(rootId, PermissionTypes.MENU);
         return Result.ok(menus);
     }
 
     /**
-     * [GET] /rest/permission/menu-perm-tree <br>
+     * [GET] /rest/permission/menu-all-tree <br>
      * 查询菜单功能树(全部层级)
      */
-    @GetMapping(value = "/menu-perm-tree")
+    @GetMapping(value = "/menu-all-tree")
     public Result<?> menuPermTree() {
-        List<BasicNode> nodes = permissionService.getMenuTree(Ids.ADMIN_ID, PermissionType.BUTTON);
-        return Result.ok(nodes);
-    }
-
-    /**
-     * [GET] /rest/permission/menu-tops <br>
-     * 查询TOP层菜单树
-     */
-    @GetMapping(value = "/menu-tops")
-    public Result<?> findModules() {
-        List<BasicNode> nodes = permissionService.findModules();
+        List<BasicNodeVO> nodes = permissionService.getMenuTree(Ids.ROOT_ID, PermissionTypes.BUTTON);
         return Result.ok(nodes);
     }
 }

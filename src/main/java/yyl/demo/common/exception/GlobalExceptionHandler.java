@@ -17,42 +17,43 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(Exception.class)
-	@ResponseBody
-	protected Result<?> handleGlobalException(Exception exception) {
-		log(exception);
-		final String message;
-		if (exception instanceof HttpMessageNotReadableException) {
-			Throwable cause = exception.getCause();
-			if (cause instanceof JsonParseException) {
-				message = "Request Json Format Error!";
-			} else {
-				message = "Request Format Error!";
-			}
-		} else if (isDbException(exception)) {
-			message = "Data Exception!";
-		} else {
-			message = "Service Error!";
-		}
-		return Result.error(message);
-	}
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    protected Result<?> handleGlobalException(Exception exception) {
+        log(exception);
+        if (exception instanceof PromptException) {
+            return Result.error(exception.getMessage());
+        }
+        if (exception instanceof HttpMessageNotReadableException) {
+            Throwable cause = exception.getCause();
+            if (cause instanceof JsonParseException) {
+                return Result.error("Request Json Format Error!");
+            } else {
+                return Result.error("Request Format Error!");
+            }
+        }
+        if (isDbException(exception)) {
+            return Result.error("Data Exception!");
+        }
+        return Result.error("Service Error!");
+    }
 
-	protected void log(Exception e) {
-		if (e instanceof PromptException) {
-			log.warn(e.getMessage());
-		} else {
-			log.error("!", e);
-		}
-	}
+    protected void log(Exception e) {
+        if (e instanceof PromptException) {
+            log.warn(e.getMessage());
+        } else {
+            log.error("!", e);
+        }
+    }
 
-	private static boolean isDbException(Exception e) {
-		Throwable error = (Throwable) e;
-		for (int i = 0; i < 0xFF && error != null; i++) {
-			if (error instanceof SQLException) {
-				return true;
-			}
-			error = error.getCause();
-		}
-		return false;
-	}
+    private static boolean isDbException(Exception e) {
+        Throwable error = (Throwable) e;
+        for (int i = 0; i < 0xFF && error != null; i++) {
+            if (error instanceof SQLException) {
+                return true;
+            }
+            error = error.getCause();
+        }
+        return false;
+    }
 }

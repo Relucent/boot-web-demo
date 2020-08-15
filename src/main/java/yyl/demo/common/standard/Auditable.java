@@ -8,13 +8,13 @@ import java.util.Date;
 public interface Auditable {
     /**
      * 获得创建者
-     * @param 创建者ID
+     * @param 创建者
      */
     String getCreatedBy();
 
     /**
      * 设置创建者
-     * @param createdBy 创建者ID
+     * @param createdBy 创建者
      */
     void setCreatedBy(String createdBy);
 
@@ -22,35 +22,35 @@ public interface Auditable {
      * 获得创建时间
      * @return 创建时间
      */
-    Date getCreatedAt();
+    Date getCreatedDate();
 
     /**
      * 设置创建时间
-     * @param createdAt 创建时间
+     * @param createdDate 创建时间
      */
-    void setCreatedAt(Date createdAt);
+    void setCreatedDate(Date createdDate);
 
     /**
      * 获得最后的修改者
-     * @param 修改者ID
+     * @param 修改者
      */
-    String getUpdatedBy();
+    String getModifiedBy();
 
     /**
      * 设置最后的修改者
-     * @param updatedBy 修改者ID
+     * @param modifiedBy 修改者
      */
-    void setUpdatedBy(String updatedBy);
+    void setModifiedBy(String modifiedBy);
 
     /**
      * 获得最后修改时间
      * @return 获得最后的修改时间
      */
-    Date getUpdatedAt();
+    Date getModifiedDate();
 
     /**
      * 设置最后修改时间
-     * @param updatedAt 获得最后的修改时间
+     * @param modifiedDate 最后的修改时间
      */
-    void setUpdatedAt(Date updatedAt);
+    void setModifiedDate(Date modifiedDate);
 }

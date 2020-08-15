@@ -4,27 +4,41 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
 import yyl.demo.entity.Role;
-import yyl.demo.mapper.basic.BasicMapper;
 
 /**
  * 系统角色_Mapper接口
  * @author _yyl
  */
 @Mapper
-public interface RoleMapper extends BasicMapper<Role, String> {
+public interface RoleMapper extends BaseMapper<Role> {
+
+    /**
+     * 查询全部角色
+     * @return 角色列表
+     */
+    default List<Role> selectAllList() {
+        return selectList(Wrappers.emptyWrapper());
+    }
 
     /**
      * 根据名称查询角色
      * @param name 角色名称
      * @return 角色
      */
-    Role getByName(String name);
+    default Role selectByName(String name) {
+        return selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getName, name).last("limit 1"));
+    }
 
     /**
      * 根据条件查询角色
      * @param condition 查询条件
      * @return 角色列表
      */
-    List<Role> findBy(Role condition);
+    default List<Role> selectListBy(Role condition) {
+        return selectList(Wrappers.lambdaQuery(condition));
+    }
 }

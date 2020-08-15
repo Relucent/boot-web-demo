@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<object th:replace="_include/_meta"></object>
+<title>角色管理</title>
+<style type="text/css">
+#vm {
+	padding: 10px 10px;
+}
+</style>
+</head>
+<body>
+	<div is="el-row" id="vm" v-cloak>
+		<div is="el-col" :span="24" class="warp">
+			<div is="el-row" class="element-row">
+				<div is="el-col" :span="8">
+					<div is="el-button" type="primary" icon="el-icon-plus" @click="addClick">新增</div>
+				</div>
+				<div is="el-col" :span="16">
+					<div is="el-form" :model="form" :inline="true" lable-width="80px" class="demo-form-inline clearfix" @submit.native.prevent>
+						<div class="fr">
+							<div is="el-form-item" label="角色名称/备注" label-width="100px">
+								<div is="el-input" v-model="form.keyword" placeholder="请输入角色名称/备注" clearable></div>
+							</div>
+							<div is="el-form-item">
+								<div is="el-button" type="warning" @click="search">查询</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="element-table">
+				<div is="el-table" ref="table" :data="page.records" border style="width: 100%" @selection-change="handleSelectionChange" v-loading="page.isLoading" element-loading-text="加载中" element-loading-spinner="el-icon-loading"
+					element-loading-background="rgba(0,0,0,0.4)">
+					<div is="el-table-column" align="center" prop="name" label="名称" width="200" show-overflow-tooltip></div>
+					<div is="el-table-column" align="center" prop="remark" label="备注" show-overflow-tooltip></div>
+					<div is="el-table-column" align="center" label="操作" width="200">
+						<div slot-scope="scope">
+							<button is="el-button" type="text" size="mini" @click="editClick(scope.row)">编辑</button>
+							<button is="el-button" type="text" size="mini" @click="authClick(scope.row)">分配功能</button>
+							<button is="el-button" type="text" size="mini" @click="removeClick(scope.row)">刪除</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pagination">
+				<div is="el-pagination" @current-change="pagedQuery" :current-page="page.currentPage" :page-size="page.limit" layout="total,prev,pager,next,jumper" :total="page.total"></div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el : '#vm',
+			data : {
+				form : {
+					keyword : ''
+				},
+				page : {
+					currentPage : 1,
+					limit : 15,
+					total : 0,
+					records : [],
+					isLoading : false
+				}
+			},
+			mounted : function() {
+				__.mask();
+				this.pagedQuery(1);
+				__.unmask();
+			},
+			methods : {
+				handleSelectionChange : function(val) {
+					this.multipleSelection = val;
+				},
+				search : function() {
+					this.pagedQuery();
+				},
+				addClick : function(record) {
+					var vm = this;
+					__.dialog.open({
+						title : '新增角色',
+						width : '500px',
+						height : '220px',
+						url : __.url('/role/role-edit-dlg.html'),
+						close : function(result) {
+							vm.pagedQuery();
+						}
+					});
+				},
+				editClick : function(record) {
+					var vm = this;
+					var id = record.id;
+					__.dialog.open({
+						title : '编辑角色',
+						width : '500px',
+						height : '220px',
+						url : __.url('/role/role-edit-dlg.html', {
+							id : id
+						}),
+						close : function(result) {
+							vm.pagedQuery();
+						}
+					});
+				},
+				authClick : function(record) {
+					var id = record.id;
+					__.dialog.open({
+						title : '分配功能',
+						width : '500px',
+						height : '320px',
+						url : __.url('/role/role-permit-dlg.html', {
+							id : id
+						})
+					});
+				},
+				removeClick : function(record) {
+					var vm = this;
+					var id = record.id;
+					var name = record.name;
+					this.$confirm("确定要删除角色--【" + name + "】？", "删除确认", {
+						confirmButtonText : "确定",
+						cancelButtonText : "取消",
+						type : "warning"
+					}).then(function() {
+						__.api('DELETE', '/rest/role/deleteById/' + id, {}, function(result) {
+							if (__.err(result)) {
+								vm.$message.warning(result.message);
+							} else {
+								vm.pagedQuery();
+								vm.$message({
+									message : '删除成功！',
+									type : 'success'
+								});
+							}
+						});
+					});
+				},
+				//分页
+				pagedQuery : function(currentPage) {
+					var vm = this, page = vm.page;
+					currentPage && (page.currentPage = currentPage);
+					var params = __.pagedParams(page.currentPage, page.limit);
+
+					params.name = __.trim(vm.form.keyword);
+					params.remark = __.trim(vm.form.keyword);
+
+					__.api('GET', '/rest/role/list', params, function(result) {
+						if (__.err(result)) {
+							vm.$message.warning(result.message);
+							return;
+						}
+						vm.page.total = result.total | 0;
+						vm.page.records = result.data;
+					});
+				}
+			}
+		})
+	</script>
+</body>
+</html>

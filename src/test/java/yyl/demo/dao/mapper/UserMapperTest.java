@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
 import yyl.demo.entity.User;
 import yyl.demo.mapper.UserMapper;
 
@@ -30,7 +32,7 @@ public class UserMapperTest {
 
     @Test
     public void testFindAll() throws Exception {
-        for (User record : userMapper.findAll()) {
+        for (User record : userMapper.selectList(Wrappers.emptyWrapper())) {
             System.out.println(record);
         }
     }

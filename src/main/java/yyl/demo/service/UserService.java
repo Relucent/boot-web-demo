@@ -20,11 +20,11 @@ import com.github.relucent.base.plugin.mybatis.MybatisHelper;
 import com.github.relucent.base.plugin.security.Principal;
 import com.github.relucent.base.plugin.security.Securitys;
 
-import yyl.demo.common.BaseConstants.BoolInts;
-import yyl.demo.common.BaseConstants.Ids;
-import yyl.demo.common.BaseConstants.Symbols;
-import yyl.demo.common.configuration.properties.GlobalProperties;
+import yyl.demo.common.constant.BoolInts;
+import yyl.demo.common.constant.Ids;
+import yyl.demo.common.constant.Symbols;
 import yyl.demo.common.identifier.IdHelper;
+import yyl.demo.common.properties.SecurityProperties;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.User;
 import yyl.demo.entity.UserRole;
@@ -56,7 +56,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private GlobalProperties globalProperties;
+    private SecurityProperties securityProperties;
 
     // ==============================Methods==========================================
     /**
@@ -75,7 +75,7 @@ public class UserService {
         entity.setDepartmentId(user.getDepartmentId());
         entity.setUsername(user.getUsername());
 
-        String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), globalProperties.getSecurity().getDefaultUserPassword());
+        String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), securityProperties.getDefaultUserPassword());
         entity.setPassword(passwordEncoder.encode(rawPassword));
 
         entity.setName(user.getName());
@@ -107,7 +107,7 @@ public class UserService {
 
         Principal principal = securitys.getPrincipal();
 
-        User entity = userMapper.getById(user.getId());
+        User entity = userMapper.selectById(user.getId());
 
         if (entity == null) {
             throw ExceptionHelper.prompt("用户不存在或者已经失效");
@@ -127,7 +127,7 @@ public class UserService {
         entity.setEnabled(BoolInts.normalize(user.getEnabled()));
 
         AuditableUtil.setUpdated(entity, principal);
-        userMapper.update(entity);
+        userMapper.updateById(entity);
     }
 
     /**
@@ -140,7 +140,7 @@ public class UserService {
         entity.setId(id);
         entity.setEnabled(BoolInts.normalize(enabled));
         AuditableUtil.setUpdated(entity, principal);
-        userMapper.update(entity);
+        userMapper.updateById(entity);
     }
 
     /**
@@ -149,7 +149,7 @@ public class UserService {
      * @return 用户信息
      */
     public User getById(String id) {
-        User entity = userMapper.getById(id);
+        User entity = userMapper.selectById(id);
         if (entity != null) {
             entity.setPassword(Symbols.PASSWORD_PLACEHOLDER);
         }
@@ -162,7 +162,7 @@ public class UserService {
      * @return 用户信息
      */
     public User getByUsername(String username) {
-        return userMapper.getByUsername(username);
+        return userMapper.selectByUsername(username);
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserService {
      * @return 分页结果
      */
     public Page<User> pagedQuery(Pagination pagination, User condition) {
-        return MybatisHelper.selectPage(pagination, () -> userMapper.findBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> userMapper.selectListBy(condition));
     }
 
     /**
@@ -181,7 +181,7 @@ public class UserService {
      * @return 角色ID列表
      */
     public List<String> findRoleIdByUserId(String userId) {
-        return userRoleMapper.findRoleIdByUserId(userId);
+        return userRoleMapper.selectRoleIdListByUserId(userId);
     }
 
     /**
@@ -192,7 +192,7 @@ public class UserService {
     public void updateUserRole(String userId, String[] roleIds) {
         Principal principal = securitys.getPrincipal();
         Map<String, UserRole> roleIdMap = new HashMap<>();
-        for (UserRole entity : userRoleMapper.findByUserId(userId)) {
+        for (UserRole entity : userRoleMapper.selectListByUserId(userId)) {
             roleIdMap.put(entity.getRoleId(), entity);
         }
         List<UserRole> newEntities = new ArrayList<>();
@@ -229,14 +229,13 @@ public class UserService {
         if (StringUtils.isEmpty(name)) {
             throw ExceptionHelper.prompt("姓名不能为空");
         }
-        User entity = userMapper.getByUsername(username);
+        User entity = userMapper.selectByUsername(username);
         if (entity != null && !Objects.equals(entity.getId(), id)) {
             throw ExceptionHelper.prompt("已经存在相同账号");
         }
 
-        if (!Ids.UNDEFINED_ID.equals(departmentId) && departmentMapper.getById(departmentId) == null) {
+        if (!Ids.UNDEFINED_ID.equals(departmentId) && departmentMapper.selectById(departmentId) == null) {
             throw ExceptionHelper.prompt("该组织机构无效");
         }
     }
-
 }

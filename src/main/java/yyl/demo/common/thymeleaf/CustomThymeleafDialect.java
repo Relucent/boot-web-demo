@@ -27,7 +27,7 @@ import org.unbescape.html.HtmlEscape;
 import com.github.relucent.base.plugin.security.Principal;
 import com.github.relucent.base.plugin.security.Securitys;
 
-import yyl.demo.common.BaseConstants.Ids;
+import yyl.demo.common.constant.Ids;
 
 /**
  * 自定义_Thymeleaf_标签

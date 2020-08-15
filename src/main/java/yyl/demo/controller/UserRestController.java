@@ -20,8 +20,6 @@ import com.github.relucent.base.plugin.model.Result;
 import yyl.demo.entity.User;
 import yyl.demo.service.UserService;
 
-
-
 /**
  * 用户管理
  * @author YYL

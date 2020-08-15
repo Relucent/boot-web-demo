@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -29,14 +27,14 @@ import com.github.relucent.base.plugin.mybatis.MybatisHelper;
 import com.github.relucent.base.plugin.security.Principal;
 import com.github.relucent.base.plugin.security.Securitys;
 
-import yyl.demo.common.BaseConstants.Ids;
-import yyl.demo.common.BaseConstants.Symbols;
+import yyl.demo.common.constant.Ids;
+import yyl.demo.common.constant.Symbols;
 import yyl.demo.common.identifier.IdHelper;
+import yyl.demo.common.model.BasicNodeVO;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.Permission;
 import yyl.demo.mapper.PermissionMapper;
 import yyl.demo.mapper.RolePermissionMapper;
-import yyl.demo.service.model.BasicNode;
 import yyl.demo.service.support.MenuNodeAdapter;
 import yyl.demo.service.support.PermissionTypeFilter;
 
@@ -90,7 +88,7 @@ public class PermissionService {
      * @param id 权限ID
      */
     public void deleteById(String id) {
-        if (permissionMapper.countByParentId(id) != 0) {
+        if (permissionMapper.selectCountByParentId(id) != 0) {
             throw ExceptionHelper.prompt("该功能存在子节点，不能被直接删除");
         }
         permissionMapper.deleteById(id);
@@ -107,7 +105,7 @@ public class PermissionService {
 
         Principal principal = securitys.getPrincipal();
 
-        Permission entity = permissionMapper.getById(permission.getId());
+        Permission entity = permissionMapper.selectById(permission.getId());
 
         if (entity == null) {
             throw ExceptionHelper.prompt("数据不存在");
@@ -123,7 +121,7 @@ public class PermissionService {
         entity.setIdPath(forceGetIdPath(entity));
         AuditableUtil.setUpdated(entity, principal);
 
-        permissionMapper.update(entity);
+        permissionMapper.updateById(entity);
 
         // IdPath发生更改, 更新子节点
         if (!Objects.equals(originalIdPath, entity.getIdPath())) {
@@ -131,14 +129,13 @@ public class PermissionService {
         }
     }
 
-
     /**
      * 查询功能权限
      * @param id 功能权限ID
      * @return 功能权限
      */
     public Permission getById(String id) {
-        Permission entity = permissionMapper.getById(id);
+        Permission entity = permissionMapper.selectById(id);
         if (entity == null) {
             throw ExceptionHelper.prompt("数据不存在或者已经失效");
         }
@@ -146,7 +143,7 @@ public class PermissionService {
         if (Ids.ROOT_ID.equals(parentId)) {
             entity.setParentName("/");
         } else {
-            Permission parentEntity = permissionMapper.getById(parentId);
+            Permission parentEntity = permissionMapper.selectById(parentId);
             entity.setParentName(parentEntity == null ? "[未知]" : parentEntity.getName());
         }
         return entity;
@@ -159,9 +156,8 @@ public class PermissionService {
      * @return 查询结果
      */
     public Page<Permission> pagedQuery(Pagination pagination, Permission condition) {
-        return MybatisHelper.selectPage(pagination, () -> permissionMapper.findBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> permissionMapper.selectListBy(condition));
     }
-
 
     /**
      * 获得菜单树
@@ -169,9 +165,9 @@ public class PermissionService {
      * @param typeLevel 类型级别
      * @return 菜单树
      */
-    public List<BasicNode> getMenuTree(String rootId, Integer typeLevel) {
+    public List<BasicNodeVO> getMenuTree(String rootId, Integer typeLevel) {
         Principal principal = securitys.getPrincipal();
-        List<Permission> entities = permissionMapper.findAll();
+        List<Permission> entities = permissionMapper.selectAllList();
         NodeFilter<Permission> filter = PermissionTypeFilter.getInstance(typeLevel);
         if (!Ids.ADMIN_ID.equals(principal.getUserId())) {
             String[] permissionIds = principal.getPermissionIds();
@@ -184,34 +180,18 @@ public class PermissionService {
                 filter, //
                 Permission::getId, //
                 Permission::getParentId, //
-                BasicNode::setChildren//
+                BasicNodeVO::setChildren//
         );
-    }
-
-    /**
-     * 获得TOP菜单树
-     * @return 菜单树(仅一层)
-     */
-    public List<BasicNode> findModules() {
-        Principal principal = securitys.getPrincipal();
-        List<Permission> entities = permissionMapper.findModules();
-        Stream<Permission> stream = entities.stream();
-        if (!Ids.ADMIN_ID.equals(principal.getUserId())) {
-            String[] permissionIds = principal.getPermissionIds();
-            stream = stream.filter((e) -> ArrayUtils.contains(permissionIds, e.getId()));
-        }
-        List<BasicNode> nodes = stream.map(MenuNodeAdapter.INSTANCE::adapte).collect(Collectors.toList());
-        return nodes;
     }
 
     /**
      * 强制刷新功能树索引(ID路径)
      */
     public void forceRefreshIndexes() {
-        List<Permission> entities = permissionMapper.findAll();
+        List<Permission> entities = permissionMapper.selectAllList();
         TreeUtil.recursiveSetIdPath(entities, Permission::getId, Permission::getParentId, Permission::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Permission entity : entities) {
-            permissionMapper.update(entity);
+            permissionMapper.updateById(entity);
         }
     }
 
@@ -220,7 +200,7 @@ public class PermissionService {
         Collection<Permission> entities = findAllByParentId(parent.getId());
         TreeUtil.recursiveSetIdPath(entities, Permission::getId, Permission::getParentId, Permission::setIdPath, parent.getId(), parent.getIdPath());
         for (Permission entity : entities) {
-            permissionMapper.update(entity);
+            permissionMapper.updateById(entity);
         }
     }
 
@@ -236,7 +216,7 @@ public class PermissionService {
             throw ExceptionHelper.prompt("类别不能为空");
         }
         if (!Ids.ROOT_ID.equals(parentId)) {
-            Permission parentEntity = permissionMapper.getById(parentId);
+            Permission parentEntity = permissionMapper.selectById(parentId);
             if (parentEntity == null) {
                 throw ExceptionHelper.prompt("没有查询到对应的上级");
             }
@@ -254,7 +234,7 @@ public class PermissionService {
         idList.add(id);
         while (parentId != null && !Ids.ROOT_ID.equals(parentId)) {
             idList.add(parentId);
-            Permission parentEntity = permissionMapper.getById(parentId);
+            Permission parentEntity = permissionMapper.selectById(parentId);
             if (parentEntity == null) {
                 break;
             }
@@ -281,7 +261,7 @@ public class PermissionService {
         for (; !idQueue.isEmpty();) {
             String id = idQueue.remove();// QUEUE->I
             idSet.add(id);//
-            for (Permission entity : permissionMapper.findByParentId(id)) {
+            for (Permission entity : permissionMapper.selectListByParentId(id)) {
                 if (!idSet.contains(entity.getId())) {
                     entities.add(entity);
                     idQueue.add(entity.getId());// QUEUE<-I

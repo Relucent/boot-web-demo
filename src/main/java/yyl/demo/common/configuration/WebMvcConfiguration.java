@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.relucent.base.common.time.DateUtil;
 import com.github.relucent.base.plugin.jackson.MyObjectMapper;
 
-import yyl.demo.common.resolver.MapReferenceArgumentResolver;
 import yyl.demo.common.resolver.PaginationArgumentResolver;
 import yyl.demo.common.security.SecurityHandlerInterceptor;
 
@@ -41,7 +40,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MapReferenceArgumentResolver());
         resolvers.add(new PaginationArgumentResolver());
     }
 

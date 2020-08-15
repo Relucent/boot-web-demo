@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.relucent.base.plugin.model.Result;
 
+import yyl.demo.common.model.BasicNodeVO;
 import yyl.demo.service.DepartmentService;
-import yyl.demo.service.model.BasicNode;
 
 /**
  * 部门管理
@@ -30,7 +30,7 @@ public class DepartmentRestController {
      */
     @GetMapping(value = "/tree")
     public Result<?> getById() {
-        List<BasicNode> nodes = departmentService.getDeptTree();
+        List<BasicNodeVO> nodes = departmentService.getDeptTree();
         return Result.ok(nodes);
     }
 }

@@ -87,7 +87,7 @@ public class RoleService {
      */
     public void update(Role role) {
 
-        Role entity = roleMapper.getById(role.getId());
+        Role entity = roleMapper.selectById(role.getId());
 
         if (entity == null) {
             throw ExceptionHelper.prompt("角色不存在或者已经失效");
@@ -102,7 +102,7 @@ public class RoleService {
 
         AuditableUtil.setUpdated(entity, principal);
 
-        roleMapper.update(entity);
+        roleMapper.updateById(entity);
     }
 
     /**
@@ -112,7 +112,7 @@ public class RoleService {
      * @return 查询结果
      */
     public Page<Role> pagedQuery(Pagination pagination, Role condition) {
-        return MybatisHelper.selectPage(pagination, () -> roleMapper.findBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> roleMapper.selectListBy(condition));
     }
 
     /**
@@ -120,7 +120,7 @@ public class RoleService {
      * @return 角色列表
      */
     public List<Role> findAll() {
-        return roleMapper.findAll();
+        return roleMapper.selectAllList();
     }
 
     /**
@@ -129,7 +129,7 @@ public class RoleService {
      * @return 角色数据
      */
     public Role getById(String id) {
-        Role entity = roleMapper.getById(id);
+        Role entity = roleMapper.selectById(id);
         if (entity == null) {
             throw ExceptionHelper.prompt("角色不存在或者已经失效");
         }
@@ -143,7 +143,7 @@ public class RoleService {
      * @return 功能权限ID列表
      */
     public List<String> findPermissionIdByRoleId(String roleId) {
-        return rolePermissionMapper.findPermissionIdByRoleId(roleId);
+        return rolePermissionMapper.selectPermissionIdListByRoleId(roleId);
     }
 
     /**
@@ -152,7 +152,7 @@ public class RoleService {
      * @return 功能权限ID列表
      */
     public List<String> findPermissionIdByRoleIds(String[] roleIds) {
-        return rolePermissionMapper.findPermissionIdByRoleIds(roleIds);
+        return rolePermissionMapper.selectPermissionIdListByRoleIds(roleIds);
     }
 
     /**
@@ -163,7 +163,7 @@ public class RoleService {
     public void updateRolePermissions(String roleId, String[] permissionIds) {
         Principal principal = securitys.getPrincipal();
         Map<String, RolePermission> permissionIdMap = new HashMap<>();
-        for (RolePermission entity : rolePermissionMapper.findByRoleId(roleId)) {
+        for (RolePermission entity : rolePermissionMapper.selectListByRoleId(roleId)) {
             permissionIdMap.put(entity.getPermissionId(), entity);
         }
         List<RolePermission> newEntities = new ArrayList<>();
@@ -193,7 +193,7 @@ public class RoleService {
         if (StringUtils.isEmpty(name)) {
             throw ExceptionHelper.prompt("角色名称不能为空");
         }
-        Role entity = roleMapper.getByName(name);
+        Role entity = roleMapper.selectByName(name);
         if (entity != null && !Objects.equals(entity.getId(), role.getId())) {
             throw ExceptionHelper.prompt("已经存在相同名称的角色");
         }

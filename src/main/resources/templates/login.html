@@ -46,7 +46,7 @@
 					<legend>系统登录</legend>
 				</fieldset>
 				<div is="el-form-item" label="账号">
-					<input type="text" is="el-input" ref="account" @keyup.enter.native="enter(0)" v-model.trim="token.account" auto-complete="off" />
+					<input type="text" is="el-input" ref="username" @keyup.enter.native="enter(0)" v-model.trim="token.username" auto-complete="off" />
 				</div>
 				<div is="el-form-item" label="密码">
 					<input is="el-input" type="password" ref="password" @keyup.enter.native="enter(1)" v-model="token.password" auto-complete="off" />
@@ -63,18 +63,18 @@
 			el : '#vm',
 			data : {
 				token : {
-					account : '',
+					username : '',
 					password : ''
 				}
 			},
 			methods : {
 				enter : function(index) {
 					var vm = this;
-					vm.token.account = __.trim(vm.token.account);
+					vm.token.username = __.trim(vm.token.username);
 					if (index == 0) {
 						vm.$refs.password.focus();
-					} else if (index == 1 && __.isEmpty(vm.token.account)) {
-						vm.$refs.account.focus();
+					} else if (index == 1 && __.isEmpty(vm.token.username)) {
+						vm.$refs.username.focus();
 					} else {
 						vm.submit();
 					}
@@ -82,8 +82,8 @@
 				submit : function() {
 					var vm = this;
 					var token = vm.token;
-					token.account = __.trim(token.account);
-					if (__.isEmpty(token.account)) {
+					token.username = __.trim(token.username);
+					if (__.isEmpty(token.username)) {
 						vm.$message({
 							message : '请输入账号',
 							type : 'warning'
@@ -108,7 +108,7 @@
 				reset : function() {
 					var vm = this;
 					vm.token = {
-						account : '',
+						username : '',
 						password : ''
 					};
 				}

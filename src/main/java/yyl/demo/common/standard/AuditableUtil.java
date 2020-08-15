@@ -17,10 +17,12 @@ public class AuditableUtil {
      */
     public static void setCreated(Auditable record, Principal principal) {
         Date now = DateUtil.now();
-        record.setCreatedBy(principal.getUserId());
-        record.setCreatedAt(now);
-        record.setUpdatedBy(principal.getUserId());
-        record.setUpdatedAt(now);
+        if (principal != null) {
+            record.setCreatedBy(principal.getUserId());
+            record.setModifiedBy(principal.getUserId());
+        }
+        record.setCreatedDate(now);
+        record.setModifiedDate(now);
     }
 
     /**
@@ -30,7 +32,9 @@ public class AuditableUtil {
      */
     public static void setUpdated(Auditable record, Principal principal) {
         Date now = DateUtil.now();
-        record.setUpdatedBy(principal.getUserId());
-        record.setUpdatedAt(now);
+        if (principal != null) {
+            record.setModifiedBy(principal.getUserId());
+        }
+        record.setModifiedDate(now);
     }
 }
