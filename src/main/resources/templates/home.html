@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<div is="el-col" :span="2">
-				<i class="el-icon-s-custom" style="margin-left: 10px;"></i> <span>用户名：<a __:text="user.name"></a></span>
+				<i class="el-icon-s-custom" style="margin-left: 10px;"></i> <span>用户名：<a>{{user.name}}</a></span>
 			</div>
 			<div is="el-col" :span="2" style="text-align: right;">
 				<a @click="logout()" title="退出" style="cursor: pointer;">【退出】</a>
@@ -75,12 +75,12 @@
 		</div>
 		<div is="el-row" class="x-layout-container">
 			<div class="x-layout-side">
-				<ul is="el-menu" ref="nav" :default-active="active">
-					<li is="menu-node" v-for="menu in menus" :menu="menu"></li>
+				<ul is="el-menu" ref="nav" :default-active="nav.active">
+					<li is="menu-node" v-for="menu in nav.menus" :menu="menu"></li>
 				</ul>
 			</div>
 			<div class="x-layout-body">
-				<iframe :src="contentUrl" frameborder="0" style="width:100%;height:100%;"></iframe>
+				<iframe :src="content.url" frameborder="0" style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
 	</div>
@@ -113,15 +113,25 @@
 			el : '#vm',
 			data : function() {
 				return {
-					contentUrl : 'about:blank',
-					menus : [],
-					active : null
+					user : {
+						name : ''
+					},
+					nav : {
+						menus : [],
+						active : null
+					},
+					content : {
+						url : 'about:blank'
+					}
 				}
 			},
 			mounted : function() {
 				var vm = this;
+				__.api('GET', '/rest/user/current/name', {}, function(result) {
+					vm.user.name = result.data || '';
+				});
 				__.api('GET', '/rest/permission/menu-all-tree', {}, function(result) {
-					vm.menus = result.data;
+					vm.nav.menus = result.data;
 					vm.menusHash = result.data;
 					var scanFirst = function(nodes) {
 						var i, node, result;
@@ -136,7 +146,7 @@
 						}
 						return null;
 					};
-					var first = scanFirst(vm.menus);
+					var first = scanFirst(vm.nav.menus);
 					first && vm.select(first);
 
 				});
@@ -148,8 +158,8 @@
 				select : function(menu) {
 					var vm = this, path = menu.value;
 					if (!__.isEmpty(path) && path != '#') {
-						vm.contentUrl = __.url(path);
-						vm.active = menu.id;
+						vm.content.url = __.url(path);
+						vm.nav.active = menu.id || null;
 					}
 				},
 				password : function() {

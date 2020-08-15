@@ -2,8 +2,10 @@ package yyl.demo.mapper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
@@ -22,7 +24,16 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 用户列表
      */
     default List<User> selectListBy(User condition) {
-        return selectList(Wrappers.lambdaQuery(condition));
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
+        String name = condition.getName();
+        String departmentId = condition.getDepartmentId();
+        if (StringUtils.isNotEmpty(name)) {
+            wrapper.eq(User::getName, name);
+        }
+        if (StringUtils.isNotEmpty(departmentId)) {
+            wrapper.eq(User::getDepartmentId, departmentId);
+        }
+        return selectList(wrapper);
     }
 
     /**

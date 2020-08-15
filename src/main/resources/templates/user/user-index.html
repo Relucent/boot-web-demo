@@ -35,7 +35,7 @@
 			<div class="element-table">
 				<div is="el-table" ref="table" :data="page.records" border style="width: 100%" @selection-change="handleSelectionChange" v-loading="page.isLoading" element-loading-text="加载中" element-loading-spinner="el-icon-loading"
 					element-loading-background="rgba(0,0,0,0.4)">
-					<div is="el-table-column" align="center" prop="account" label="账号" width="220"></div>
+					<div is="el-table-column" align="center" prop="username" label="账号" width="220"></div>
 					<div is="el-table-column" align="center" prop="name" label="姓名"></div>
 					<div is="el-table-column" align="center" prop="departmentName" label="所属部门" show-overflow-tooltip></div>
 					<div is="el-table-column" align="center" prop="enabled" label="状态" :formatter="formatEnabled" width="80"></div>
@@ -90,7 +90,6 @@
 			mounted : function() {
 				__.mask();
 				this.loadDeptTree();
-				this.getTreeFirstNode();
 				this.pagedQuery(1);
 				//处理分页输入框 可以输入小数的问题
 				var oInput = document.getElementsByTagName('input')[1];
@@ -101,16 +100,6 @@
 			},
 			methods : {
 				loadDeptTree : function() {
-					var vm = this;
-					__.api('GET', '/rest/department/tree', {}, function(result) {
-						if (__.err(result)) {
-							vm.$message.warning(result.message);
-							return;
-						}
-						vm.tree.data = result.data;
-					});
-				},
-				getTreeFirstNode : function() {
 					var vm = this;
 					__.api('GET', '/rest/department/tree', {}, function(result) {
 						if (__.err(result)) {
@@ -143,7 +132,6 @@
 						departmentId : ''
 					}
 					this.pagedQuery(1);
-					this.getTreeFirstNode();
 				},
 				pagedQuery : function(currentPage) {
 					var vm = this, page = vm.page;
@@ -155,8 +143,9 @@
 							vm.$message.warning(result.message);
 							return;
 						}
-						vm.page.total = result.total | 0;
-						vm.page.records = result.data;
+						var page = result.data;
+						vm.page.total = page.total | 0;
+						vm.page.records = page.records;
 					});
 				},
 				formatEnabled : function(row, column, cellValue) {

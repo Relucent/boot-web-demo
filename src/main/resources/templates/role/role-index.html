@@ -151,8 +151,9 @@
 							vm.$message.warning(result.message);
 							return;
 						}
-						vm.page.total = result.total | 0;
-						vm.page.records = result.data;
+						var page = result.data;
+						vm.page.total = page.total | 0;
+						vm.page.records = page.records;
 					});
 				}
 			}
