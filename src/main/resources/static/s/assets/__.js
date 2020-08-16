@@ -11,9 +11,9 @@ var __ = {
 	},
 	api : (function() {
 		var wrapCb = function(callback) {
-			return !callback ? __.noop : function(response) {
-				var headers = response.headers || {};
-				if (headers['session-timeout-signal'] === 'is-timeout') {
+			return function(response) {
+				var code = (response.data || {}).code | 0;
+				if (code === 401) {
 					__.alert('当前会话已经失效，请重新登录', '提示', {
 						callback : function(action) {
 							__.navigateTo('/');
@@ -21,7 +21,9 @@ var __ = {
 					});
 					return;
 				}
-				callback(response.data);
+				if (!!callback) {
+					callback(response.data);
+				}
 			}
 		}, catchFn = function(error, s) {
 			console.log(error);
@@ -76,7 +78,8 @@ var __ = {
 			target = arguments[i] || {};
 			i++;
 		}
-		// Handle case when target is a string or something (possible in deep copy)
+		// Handle case when target is a string or something (possible in deep
+		// copy)
 		if (typeof target !== "object" && !__.isFunction(target)) {
 			target = {};
 		}
@@ -309,7 +312,8 @@ var __ = {
 		decodeUrlParams : function(search) {
 			search = search || location.search;
 			var params = {};
-			// (remove any leading ? || #)(remove any trailing & || ;)(replace +'s
+			// (remove any leading ? || #)(remove any trailing & || ;)(replace
+			// +'s
 			// with spaces)(split & || ;)
 			__.each(search.replace(/^[?#]/, '').replace(/[;&]$/, '').replace(/[+]/g, ' ').split(/[&;]/), function(i, t) {
 				var kv = t.split('='), k = decodeURIComponent(kv[0] || ''), v = decodeURIComponent(kv[1] || '');
@@ -700,7 +704,8 @@ var __ = {
 				dialog && ((options.width && (dialog.width = options.width)) | (options.height && (dialog.height = options.height)))
 			}
 		},
-		// alert(message, title,{callback:fn1}) || alert(message, title).then(fn1,fn2)
+		// alert(message, title,{callback:fn1}) || alert(message,
+		// title).then(fn1,fn2)
 		alert : function(message, title, options) {
 			var _opener_ = __.top();
 			return _opener_ != __// 

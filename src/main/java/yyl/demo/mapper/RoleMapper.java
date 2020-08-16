@@ -2,8 +2,10 @@ package yyl.demo.mapper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
@@ -39,6 +41,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return 角色列表
      */
     default List<Role> selectListBy(Role condition) {
-        return selectList(Wrappers.lambdaQuery(condition));
+        LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery();
+        String name = condition.getName();
+        if (StringUtils.isNotEmpty(name)) {
+            wrapper.eq(Role::getName, name);
+        }
+        return selectList(wrapper);
     }
 }

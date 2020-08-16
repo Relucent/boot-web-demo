@@ -39,8 +39,7 @@ public class SecurityFilter implements Filter {
         }
 
         if (isRest(path)) {
-            response.setHeader("session-timeout-signal", "is-timeout");
-            Result<?> result = Result.ofMessage(403, "SESSION超时");
+            Result<?> result = Result.ofMessage(401, "SESSION超时");
             String json = JsonUtil.encode(result);
             WebUtil.writeJson(json, request, response);
             return;
