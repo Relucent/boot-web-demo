@@ -1,7 +1,7 @@
 var __ = {
 	cxt : (function() {
 		var scripts = document.getElementsByTagName('script'), src = scripts[scripts.length - 1].src;
-		return src.substring(0, src.length - '/s/assets/__.js'.length);
+		return src.substring(0, src.length - '/__/__/__.js'.length);
 	})(),
 	url : function(path, params) {
 		return ((/^https?:/ig).test(path) ? path : __.cxt + path) + (__.isEmpty(params) ? '' : (path.indexOf('?') != -1 ? '&' : '?') + __.encodeUrlParams(params));

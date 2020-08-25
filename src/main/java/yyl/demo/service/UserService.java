@@ -31,6 +31,7 @@ import yyl.demo.entity.UserRole;
 import yyl.demo.mapper.DepartmentMapper;
 import yyl.demo.mapper.UserMapper;
 import yyl.demo.mapper.UserRoleMapper;
+import yyl.demo.service.dto.PasswordDTO;
 
 /**
  * 系统用户
@@ -139,6 +140,52 @@ public class UserService {
         User entity = new User();
         entity.setId(id);
         entity.setEnabled(BoolInts.normalize(enabled));
+        AuditableUtil.setUpdated(entity, principal);
+        userMapper.updateById(entity);
+    }
+
+    /**
+     * 重置用户密码
+     * @param id 用户ID
+     */
+    public void resetPassword(String id) {
+        Principal principal = securitys.getPrincipal();
+        User entity = userMapper.selectById(id);
+        if (entity == null) {
+            throw ExceptionHelper.prompt("用户不存在或者已经失效");
+        }
+        String password = securityProperties.getDefaultUserPassword();
+        entity.setPassword(passwordEncoder.encode(password));
+        AuditableUtil.setUpdated(entity, principal);
+        userMapper.updateById(entity);
+    }
+
+    /**
+     * 修改当前用户密码
+     * @param passwordDto 新旧密码
+     */
+    public void updateCurrentPassword(PasswordDTO passwordDto) {
+
+        String oldPassword = passwordDto.getOldPassword();
+        String newPassword = passwordDto.getNewPassword();
+
+        if (StringUtils.isEmpty(oldPassword)) {
+            throw ExceptionHelper.prompt("请输入旧密码");
+        }
+        if (StringUtils.isEmpty(newPassword)) {
+            throw ExceptionHelper.prompt("请输入新密码");
+        }
+
+        Principal principal = securitys.getPrincipal();
+        String userId = principal.getUserId();
+        User entity = userMapper.selectById(userId);
+        if (entity == null) {
+            throw ExceptionHelper.prompt("用户未登录");
+        }
+        if (!passwordEncoder.matches(passwordDto.getOldPassword(), entity.getPassword())) {
+            throw ExceptionHelper.prompt("旧密码输入错误");
+        }
+        entity.setPassword(passwordEncoder.encode(newPassword));
         AuditableUtil.setUpdated(entity, principal);
         userMapper.updateById(entity);
     }

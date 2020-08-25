@@ -50,7 +50,7 @@ public class SecurityFilter implements Filter {
     }
 
     private boolean authc(String path) {
-        if (path.startsWith("/s/")//
+        if (path.startsWith("/__/")//
                 || path.startsWith("/login.html") //
                 || path.startsWith("/rest/login") //
                 || path.startsWith("/rest/logout")) {

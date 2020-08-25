@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<object th:replace="_include/_meta"></object>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="../../__/import.js"></script>
 <title>用户管理</title>
 <style type="text/css">
 #vm {
@@ -162,7 +164,7 @@
 						title : '分配角色',
 						width : '800px',
 						height : '350px',
-						url : __.url('/user/user-permit-dlg.html', {
+						url : __.url('/system/user/user-permit-dlg.html', {
 							id : record.id
 						}),
 						close : function(result) {
@@ -195,7 +197,7 @@
 				reset : function(record) {
 					var vm = this;
 					var id = record.id;
-					__.api('GET', '/rest/user/reset/' + id, {}, function(result) {
+					__.api('POST', '/rest/user/' + id + '/reset-password', {}, function(result) {
 						if (__.err(result)) {
 							vm.$message.warning(result.message);
 							return;

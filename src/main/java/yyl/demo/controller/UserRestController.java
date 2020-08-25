@@ -21,6 +21,7 @@ import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.entity.User;
 import yyl.demo.service.UserService;
+import yyl.demo.service.dto.PasswordDTO;
 
 /**
  * 用户管理
@@ -127,4 +128,23 @@ public class UserRestController {
         return Result.ok();
     }
 
+    /**
+     * [POST] /rest/user/{id}/reset-password <br>
+     * 重置密码
+     */
+    @PostMapping(value = "/{id}/reset-password")
+    public Result<?> resetPassword(@PathVariable("id") String id) {
+        userService.resetPassword(id);
+        return Result.ok();
+    }
+
+    /**
+     * [POST] /rest/user/password <br>
+     * 修改用户密码
+     */
+    @PostMapping(value = "/password")
+    public Result<?> updateCurrentPassword(@RequestBody PasswordDTO passwordDto) {
+        userService.updateCurrentPassword(passwordDto);
+        return Result.ok();
+    }
 }

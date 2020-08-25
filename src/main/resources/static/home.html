@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
-<object th:replace="_include/_meta"></object>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<script src="./__/import.js"></script>
 <title>Demo</title>
 <style type="text/css">
 .header {
@@ -61,13 +63,15 @@
 <body>
 	<div id="vm">
 		<div is="el-row" class="header">
-			<div is="el-col" :span="19" class="title">
+			<div is="el-col" :span="18" class="title">
 				<div style="margin-left: 30px;">
 					<a>Demo</a>
 				</div>
 			</div>
-			<div is="el-col" :span="2">
+			<div is="el-col" :span="3">
 				<i class="el-icon-s-custom" style="margin-left: 10px;"></i> <span>用户名：<a>{{user.name}}</a></span>
+				<!-- ~ -->
+				<i class="el-icon-lock" style="margin-left: 10px; cursor: pointer;" @click="password()"></i>
 			</div>
 			<div is="el-col" :span="2" style="text-align: right;">
 				<a @click="logout()" title="退出" style="cursor: pointer;">【退出】</a>
@@ -164,10 +168,10 @@
 				},
 				password : function() {
 					__.dialog.open({
-						title : '密码修改',
-						width : '600px',
-						height : '350px',
-						url : __.url('/user/user-password.html', {
+						title : '修改密码',
+						width : '550px',
+						height : '270px',
+						url : __.url('/system/user/user-password.html', {
 							t : __.now()
 						}),
 						close : function(result) {
