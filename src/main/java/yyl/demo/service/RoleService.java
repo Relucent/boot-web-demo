@@ -133,7 +133,6 @@ public class RoleService {
         if (entity == null) {
             throw ExceptionHelper.prompt("角色不存在或者已经失效");
         }
-        rolePermissionMapper.deleteByRoleId(id);
         return entity;
     }
 
