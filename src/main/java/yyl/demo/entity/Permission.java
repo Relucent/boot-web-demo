@@ -24,7 +24,7 @@ import yyl.demo.common.standard.Ordinal;
 public class Permission implements Idable, Auditable, Ordinal, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /** 上级功能权限ID */
     @TableField("parent_id")

@@ -23,7 +23,7 @@ import yyl.demo.common.standard.Idable;
 public class UserRole implements Idable, Auditable, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /** 用户主键id */
     @TableField("user_id")

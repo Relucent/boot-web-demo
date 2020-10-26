@@ -23,7 +23,7 @@ import yyl.demo.common.standard.Idable;
 public class RolePermission implements Idable, Auditable, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /** 角色组ID */
     @TableField("role_id")

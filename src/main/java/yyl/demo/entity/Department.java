@@ -24,7 +24,7 @@ import yyl.demo.common.standard.Ordinal;
 public class Department implements Idable, Auditable, Ordinal, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /** 上级ID */
     @TableField("parent_id")

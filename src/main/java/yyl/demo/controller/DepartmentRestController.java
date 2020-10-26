@@ -29,7 +29,7 @@ public class DepartmentRestController {
      * 查询部门数据(新增|更新)
      */
     @GetMapping(value = "/tree")
-    public Result<?> getById() {
+    public Result<?> getDeptTree() {
         List<BasicNodeVO> nodes = departmentService.getDeptTree();
         return Result.ok(nodes);
     }

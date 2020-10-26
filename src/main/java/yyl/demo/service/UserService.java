@@ -133,7 +133,8 @@ public class UserService {
 
     /**
      * 用户启用禁用
-     * @param user 用户信息
+     * @param id 用户ID
+     * @param enabled 是否启用
      */
     public void enable(String id, Integer enabled) {
         Principal principal = securitys.getPrincipal();

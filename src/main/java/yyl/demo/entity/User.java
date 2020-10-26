@@ -23,7 +23,7 @@ import yyl.demo.common.standard.Idable;
 public class User implements Idable, Auditable, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
     /** 登录名 */
     @TableField("username")

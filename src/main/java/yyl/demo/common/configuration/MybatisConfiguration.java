@@ -5,7 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.relucent.base.plugin.mybatis.PaginationInterceptor;
+import com.github.relucent.base.plugin.mybatis.MybatisPaginationInterceptor;
 
 /**
  * _Mybatis 配置
@@ -18,7 +18,7 @@ public class MybatisConfiguration {
      * @return 基础分页插件
      */
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+    public MybatisPaginationInterceptor mybatisPaginationInterceptor() {
+        return new MybatisPaginationInterceptor();
     }
 }
