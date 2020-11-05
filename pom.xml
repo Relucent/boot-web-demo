@@ -27,7 +27,7 @@
 		<lombok.version>1.16.22</lombok.version>
 		<mybatis-plus.version>3.3.2</mybatis-plus.version>
 		<springdoc-openapi.version>1.4.4</springdoc-openapi.version>
-		<base-lib.version>0.0.7</base-lib.version>
+		<base-lib.version>0.0.8</base-lib.version>
 	</properties>
 	<dependencies>
 		<!-- _springboot|web -->
