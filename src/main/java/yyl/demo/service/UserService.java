@@ -79,7 +79,7 @@ public class UserService {
         String rawPassword = ObjectUtils.defaultIfNull(user.getPassword(), securityProperties.getDefaultUserPassword());
         entity.setPassword(passwordEncoder.encode(rawPassword));
 
-        entity.setName(user.getName());
+        entity.setRealname(user.getRealname());
         entity.setRemark(user.getRemark());
         entity.setEnabled(BoolInts.normalize(user.getEnabled()));
 
@@ -123,7 +123,7 @@ public class UserService {
             entity.setPassword(passwordEncoder.encode(rawPassword));
         }
 
-        entity.setName(user.getName());
+        entity.setRealname(user.getRealname());
         entity.setRemark(user.getRemark());
         entity.setEnabled(BoolInts.normalize(user.getEnabled()));
 
@@ -268,13 +268,13 @@ public class UserService {
     private void validate(User user) {
         String id = user.getId();
         String username = user.getUsername();
-        String name = user.getName();
+        String realname = user.getRealname();
         String departmentId = user.getDepartmentId();
 
         if (StringUtils.isEmpty(username)) {
             throw ExceptionHelper.prompt("用户名不能为空");
         }
-        if (StringUtils.isEmpty(name)) {
+        if (StringUtils.isEmpty(realname)) {
             throw ExceptionHelper.prompt("姓名不能为空");
         }
         User entity = userMapper.selectByUsername(username);

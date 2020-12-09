@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
-import com.github.relucent.base.plugin.security.Principal;
 
 /**
  * 安全控制过滤器
@@ -32,8 +31,8 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        Principal principal = SecurityImplementor.getPrincipal(request.getSession());
-        if (!Principal.NONE.equals(principal)) {
+        UserDetails principal = Securitys.getPrincipal(request.getSession());
+        if (!UserDetails.NONE.equals(principal)) {
             chain.doFilter(request, response);
             return;
         }

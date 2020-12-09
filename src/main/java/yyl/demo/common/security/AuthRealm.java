@@ -10,8 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.github.relucent.base.common.collection.CollectionUtil;
 import com.github.relucent.base.common.exception.ExceptionHelper;
-import com.github.relucent.base.plugin.security.AuthToken;
-import com.github.relucent.base.plugin.security.Principal;
 
 import yyl.demo.entity.User;
 import yyl.demo.service.RoleService;
@@ -38,10 +36,10 @@ public class AuthRealm {
     // ==============================Methods==========================================
     /**
      * (登陆验证)认证回调函数,登录时调用.
-     * @param authcToken 认证凭据
+     * @param token 认证凭据
      * @return 认证信息
      */
-    protected Principal doGetAuthenticationInfo(AuthToken token) {
+    protected UserDetails doGetAuthenticationInfo(UsernamePasswordToken token) {
 
         String username = token.getUsername();
         String password = token.getPassword();
@@ -71,10 +69,11 @@ public class AuthRealm {
         List<String> permissionIdList = roleService.findPermissionIdByRoleIds(roleIds);
         String[] permissionIds = CollectionUtil.toArray(permissionIdList, String.class);
 
-        Principal principal = new Principal();
+        UserDetails principal = new UserDetails();
 
         principal.setUserId(userId);
-        principal.setName(user.getName());
+        principal.setUsername(user.getUsername());
+        principal.setRealname(user.getRealname());
         principal.setDepartmentId(user.getDepartmentId());
         principal.setRoleIds(roleIds);
         principal.setPermissionIds(permissionIds);

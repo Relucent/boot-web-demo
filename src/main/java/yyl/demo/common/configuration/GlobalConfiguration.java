@@ -12,11 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.plugin.jackson.JacksonHandler;
-import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.security.AuthRealm;
 import yyl.demo.common.security.SecurityFilter;
-import yyl.demo.common.security.SecurityImplementor;
+import yyl.demo.common.security.Securitys;
 
 /**
  * 项目公用配置
@@ -29,7 +28,7 @@ public class GlobalConfiguration {
     @Primary
     @Bean
     public Securitys securitys() {
-        return new SecurityImplementor();
+        return new Securitys();
     }
 
     /** 密码编码器 */

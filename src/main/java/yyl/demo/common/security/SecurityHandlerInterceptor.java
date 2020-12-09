@@ -9,7 +9,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
-import com.github.relucent.base.plugin.security.Principal;
 
 import yyl.demo.common.annotations.PermissionAx;
 import yyl.demo.common.constant.Ids;
@@ -22,7 +21,7 @@ public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
             HandlerMethod hm = (HandlerMethod) handler;
             PermissionAx ax = hm.getMethodAnnotation(PermissionAx.class);
             if (ax != null) {
-                Principal principal = SecurityImplementor.getPrincipal(request.getSession());
+                UserDetails principal = Securitys.getPrincipal(request.getSession());
                 String userId = principal.getUserId();
                 String[] permissionIds = principal.getPermissionIds();
                 if (!Ids.ADMIN_ID.equals(userId) && !intersect(ax.value(), permissionIds)) {

@@ -36,8 +36,8 @@ public class User implements Idable, Auditable, Serializable {
     @TableField("department_id")
     private String departmentId;
     /** 用户姓名 */
-    @TableField("name")
-    private String name;
+    @TableField("realname")
+    private String realname;
     /** 备注 */
     @TableField("remark")
     private String remark;

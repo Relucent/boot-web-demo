@@ -80,7 +80,7 @@
 					records : [],
 					isLoading : false,
 					params : {
-						name : '',
+						realname : '',
 						departmentId : ''
 					}
 				},
@@ -116,21 +116,21 @@
 				},
 				clickNode : function(node) {
 					this.page.params = {
-						name : '',
+							realname : '',
 						departmentId : this.tree.selectId = node.id
 					}
 					this.pagedQuery(1);
 				},
 				search : function() {
 					this.page.params = {
-						name : __.trim(this.form.keyword),
+						realname : __.trim(this.form.keyword),
 						departmentId : this.tree.selectId
 					}
 					this.pagedQuery(1);
 				},
 				searchAll : function() {
 					this.page.params = {
-						name : __.trim(this.form.keyword),
+						realname : __.trim(this.form.keyword),
 						departmentId : ''
 					}
 					this.pagedQuery(1);

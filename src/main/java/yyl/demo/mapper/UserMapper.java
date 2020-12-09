@@ -25,10 +25,10 @@ public interface UserMapper extends BaseMapper<User> {
      */
     default List<User> selectListBy(User condition) {
         LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
-        String name = condition.getName();
+        String realname = condition.getRealname();
         String departmentId = condition.getDepartmentId();
-        if (StringUtils.isNotEmpty(name)) {
-            wrapper.eq(User::getName, name);
+        if (StringUtils.isNotEmpty(realname)) {
+            wrapper.eq(User::getRealname, realname);
         }
         if (StringUtils.isNotEmpty(departmentId)) {
             wrapper.eq(User::getDepartmentId, departmentId);

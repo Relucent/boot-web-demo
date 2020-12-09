@@ -37,12 +37,12 @@ public class UserMapperTest {
         }
     }
 
-    private User ofUser(String id, String username, String password, String name, String remark, Integer enabled) {
+    private User ofUser(String id, String username, String password, String realname, String remark, Integer enabled) {
         User user = new User();
         user.setId(id);
         user.setUsername(username);
         user.setPassword(password);
-        user.setName(name);
+        user.setRealname(realname);
         user.setRemark(remark);
         user.setEnabled(enabled);
         return user;
