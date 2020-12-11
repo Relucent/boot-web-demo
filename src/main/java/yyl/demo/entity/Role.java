@@ -25,6 +25,9 @@ public class Role implements Idable, Auditable, Serializable {
     /** 主键 */
     @TableId(value = "id", type = IdType.INPUT)
     private String id;
+    /** 编码 */
+    @TableField("code")
+    private String code;
     /** 名称 */
     @TableField("name")
     private String name;

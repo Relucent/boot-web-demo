@@ -61,9 +61,9 @@ public class AuthRealm {
             throw ExceptionHelper.prompt("用户名或密码错误");
         }
 
-        String userId = user.getId();
+        String id = user.getId();
 
-        List<String> roldIdList = userService.findRoleIdByUserId(userId);
+        List<String> roldIdList = userService.findRoleIdByUserId(id);
         String[] roleIds = CollectionUtil.toArray(roldIdList, String.class);
 
         List<String> permissionIdList = roleService.findPermissionIdByRoleIds(roleIds);
@@ -71,7 +71,7 @@ public class AuthRealm {
 
         UserDetails principal = new UserDetails();
 
-        principal.setUserId(userId);
+        principal.setId(id);
         principal.setUsername(user.getUsername());
         principal.setRealname(user.getRealname());
         principal.setDepartmentId(user.getDepartmentId());

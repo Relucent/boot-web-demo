@@ -12,7 +12,7 @@ public class UserDetails implements Serializable {
 
     // ========================================Fields=========================================
     /** 用户ID */
-    private String userId;
+    private String id;
     /** 用户名 */
     private String username;
     /** 用户姓名 */
@@ -31,7 +31,7 @@ public class UserDetails implements Serializable {
     public static final UserDetails NONE;
     static {
         NONE = new UserDetails();
-        NONE.setUserId(StringConstants.EMPTY);
+        NONE.setId(StringConstants.EMPTY);
         NONE.setUsername(StringConstants.EMPTY);
         NONE.setRealname(StringConstants.EMPTY);
         NONE.setOrganizationId(StringConstants.EMPTY);
@@ -39,12 +39,12 @@ public class UserDetails implements Serializable {
     }
 
     // ========================================Methods========================================
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {

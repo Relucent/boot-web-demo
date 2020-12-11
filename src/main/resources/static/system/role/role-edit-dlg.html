@@ -10,6 +10,9 @@
 <body>
 	<div id="vm" v-cloak>
 		<form is="el-form" :model="form" :rules="rules" ref="form" @submit.native.prevent>
+			<div is="el-form-item" label="编码" prop="code" label-width="60px">
+				<input is="el-input" v-model.trim="form.code" autocomplete="off" />
+			</div>
 			<div is="el-form-item" label="名称" prop="name" label-width="60px">
 				<input is="el-input" v-model.trim="form.name" autocomplete="off" />
 			</div>
@@ -28,10 +31,16 @@
 			data : {
 				form : {
 					id : '',
+					code : '',
 					name : '',
 					remark : ''
 				},
 				rules : {
+					code : [ {
+						required : true,
+						message : '请输入编码',
+						trigger : 'blur'
+					} ],
 					name : [ {
 						required : true,
 						message : '请输入角色名称',

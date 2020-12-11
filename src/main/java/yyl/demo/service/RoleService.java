@@ -60,6 +60,7 @@ public class RoleService {
 
         Role entity = new Role();
         IdHelper.setIfEmptyId(entity);
+        entity.setCode(role.getCode());
         entity.setName(role.getName());
         entity.setRemark(role.getRemark());
 
@@ -97,6 +98,7 @@ public class RoleService {
 
         Principal principal = securitys.getPrincipal();
 
+        entity.setCode(role.getCode());
         entity.setName(role.getName());
         entity.setRemark(role.getRemark());
 
@@ -188,7 +190,11 @@ public class RoleService {
     // ==============================ToolMethods======================================
     /** 验证数据 */
     private void validate(Role role) {
+        String code = role.getCode();
         String name = role.getName();
+        if (StringUtils.isEmpty(code)) {
+            throw ExceptionHelper.prompt("角色编码不能为空");
+        }
         if (StringUtils.isEmpty(name)) {
             throw ExceptionHelper.prompt("角色名称不能为空");
         }

@@ -22,7 +22,7 @@ public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
             PermissionAx ax = hm.getMethodAnnotation(PermissionAx.class);
             if (ax != null) {
                 UserDetails principal = Securitys.getPrincipal(request.getSession());
-                String userId = principal.getUserId();
+                String userId = principal.getId();
                 String[] permissionIds = principal.getPermissionIds();
                 if (!Ids.ADMIN_ID.equals(userId) && !intersect(ax.value(), permissionIds)) {
                     response.setHeader("unauthorized-signal", "403");
