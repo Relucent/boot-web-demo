@@ -10,8 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
-import yyl.demo.common.standard.Auditable;
-import yyl.demo.common.standard.Idable;
+import yyl.demo.common.standard.IdEntity;
 
 /**
  * 用户角色关联
@@ -20,7 +19,7 @@ import yyl.demo.common.standard.Idable;
 @SuppressWarnings("serial")
 @Data
 @TableName(value = "user_role", autoResultMap = true)
-public class UserRole implements Idable, Auditable, Serializable {
+public class UserRole implements IdEntity, Serializable {
 
     /** 主键 */
     @TableId(value = "id", type = IdType.INPUT)

@@ -1,6 +1,5 @@
 package yyl.demo.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -10,8 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
-import yyl.demo.common.standard.Auditable;
-import yyl.demo.common.standard.Idable;
+import yyl.demo.common.standard.IdEntity;
 import yyl.demo.common.standard.Ordinal;
 
 /**
@@ -21,7 +19,7 @@ import yyl.demo.common.standard.Ordinal;
 @SuppressWarnings("serial")
 @Data
 @TableName(value = "department", autoResultMap = true)
-public class Department implements Idable, Auditable, Ordinal, Serializable {
+public class Department implements IdEntity, Ordinal {
 
     /** 主键 */
     @TableId(value = "id", type = IdType.INPUT)
