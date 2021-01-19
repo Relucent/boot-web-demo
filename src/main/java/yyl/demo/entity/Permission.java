@@ -2,7 +2,6 @@ package yyl.demo.entity;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -22,7 +21,7 @@ import yyl.demo.common.standard.Ordinal;
 public class Permission implements IdEntity, Ordinal {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.INPUT)
+    @TableId("id")
     private String id;
     /** 上级功能权限ID */
     @TableField("parent_id")

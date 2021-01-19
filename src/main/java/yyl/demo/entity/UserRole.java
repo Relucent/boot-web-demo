@@ -3,7 +3,6 @@ package yyl.demo.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -22,7 +21,7 @@ import yyl.demo.common.standard.IdEntity;
 public class UserRole implements IdEntity, Serializable {
 
     /** 主键 */
-    @TableId(value = "id", type = IdType.INPUT)
+    @TableId("id")
     private String id;
     /** 用户主键id */
     @TableField("user_id")

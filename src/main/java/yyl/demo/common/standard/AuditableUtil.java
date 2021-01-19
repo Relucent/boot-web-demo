@@ -7,7 +7,6 @@ import com.github.relucent.base.plugin.security.Principal;
 
 /**
  * 可审计对象工具类
- * @author Administrator
  */
 public class AuditableUtil {
     /**
