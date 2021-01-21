@@ -16,9 +16,9 @@ import com.github.relucent.base.common.collection.Mapx;
 import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.plugin.model.Result;
-import com.github.relucent.base.plugin.security.Principal;
-import com.github.relucent.base.plugin.security.Securitys;
 
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.entity.User;
 import yyl.demo.service.UserService;
 import yyl.demo.service.dto.PasswordDTO;
@@ -34,9 +34,6 @@ public class UserRestController {
     // ==============================Fields===========================================
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private Securitys securitys;
 
     // ==============================Methods==========================================
     /**
@@ -104,8 +101,8 @@ public class UserRestController {
      */
     @GetMapping(value = "/current/name")
     public Result<String> currentName() {
-        Principal principal = securitys.getPrincipal();
-        return Result.ok(principal.getName());
+        UserPrincipal principal = Securitys.getPrincipal();
+        return Result.ok(principal.getRealname());
     }
 
     /**

@@ -1,4 +1,4 @@
-package yyl.demo.common.security;
+package yyl.demo.service;
 
 import java.util.List;
 
@@ -7,19 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.github.relucent.base.common.collection.CollectionUtil;
 import com.github.relucent.base.common.exception.ExceptionHelper;
 
+import yyl.demo.common.security.UserPrincipal;
+import yyl.demo.common.security.UsernamePasswordToken;
 import yyl.demo.entity.User;
-import yyl.demo.service.RoleService;
-import yyl.demo.service.UserService;
 
 /**
  * 权限验证类<br>
  * @author YYL
  */
-public class AuthRealm {
+@Service
+public class AuthRealmService {
 
     // ==============================Fields===========================================
     @Autowired
@@ -39,7 +41,7 @@ public class AuthRealm {
      * @param token 认证凭据
      * @return 认证信息
      */
-    protected UserDetails doGetAuthenticationInfo(UsernamePasswordToken token) {
+    public UserPrincipal doGetAuthenticationInfo(UsernamePasswordToken token) {
 
         String username = token.getUsername();
         String password = token.getPassword();
@@ -69,7 +71,7 @@ public class AuthRealm {
         List<String> permissionIdList = roleService.findPermissionIdByRoleIds(roleIds);
         String[] permissionIds = CollectionUtil.toArray(permissionIdList, String.class);
 
-        UserDetails principal = new UserDetails();
+        UserPrincipal principal = new UserPrincipal();
 
         principal.setId(id);
         principal.setUsername(user.getUsername());

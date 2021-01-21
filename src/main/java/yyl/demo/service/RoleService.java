@@ -15,11 +15,11 @@ import com.github.relucent.base.common.exception.ExceptionHelper;
 import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.plugin.mybatis.MybatisHelper;
-import com.github.relucent.base.plugin.security.Principal;
-import com.github.relucent.base.plugin.security.Securitys;
 
-import yyl.demo.common.identifier.IdHelper;
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.common.standard.AuditableUtil;
+import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.Role;
 import yyl.demo.entity.RolePermission;
 import yyl.demo.mapper.RoleMapper;
@@ -44,8 +44,6 @@ public class RoleService {
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
 
-    @Autowired
-    private Securitys securitys;
     // ==============================Methods==========================================
 
     /**
@@ -56,10 +54,10 @@ public class RoleService {
 
         validate(role);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         Role entity = new Role();
-        IdHelper.setIfEmptyId(entity);
+        entity.setId(IdUtil.uuid32());
         entity.setCode(role.getCode());
         entity.setName(role.getName());
         entity.setRemark(role.getRemark());
@@ -96,7 +94,7 @@ public class RoleService {
 
         validate(role);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         entity.setCode(role.getCode());
         entity.setName(role.getName());
@@ -162,7 +160,7 @@ public class RoleService {
      * @param permissionIds 功能权限ID
      */
     public void updateRolePermissions(String roleId, String[] permissionIds) {
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
         Map<String, RolePermission> permissionIdMap = new HashMap<>();
         for (RolePermission entity : rolePermissionMapper.selectListByRoleId(roleId)) {
             permissionIdMap.put(entity.getPermissionId(), entity);
@@ -172,7 +170,7 @@ public class RoleService {
             RolePermission entity = permissionIdMap.remove(permissionId);
             if (entity == null) {
                 entity = new RolePermission();
-                IdHelper.setIfEmptyId(entity);
+                entity.setId(IdUtil.uuid32());
                 entity.setRoleId(roleId);
                 entity.setPermissionId(permissionId);
                 AuditableUtil.setCreated(entity, principal);

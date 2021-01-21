@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +18,15 @@ import com.github.relucent.base.common.exception.ExceptionHelper;
 import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.plugin.mybatis.MybatisHelper;
-import com.github.relucent.base.plugin.security.Principal;
-import com.github.relucent.base.plugin.security.Securitys;
 
+import yyl.demo.common.configuration.properties.SecurityProperties;
 import yyl.demo.common.constant.BoolInts;
 import yyl.demo.common.constant.Ids;
 import yyl.demo.common.constant.Symbols;
-import yyl.demo.common.identifier.IdHelper;
-import yyl.demo.common.properties.SecurityProperties;
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.common.standard.AuditableUtil;
+import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.User;
 import yyl.demo.entity.UserRole;
 import yyl.demo.mapper.DepartmentMapper;
@@ -38,6 +39,7 @@ import yyl.demo.service.dto.PasswordDTO;
  */
 @Transactional
 @Service
+@EnableConfigurationProperties(SecurityProperties.class)
 public class UserService {
 
     // ==============================Fields===========================================
@@ -49,9 +51,6 @@ public class UserService {
 
     @Autowired
     private DepartmentMapper departmentMapper;
-
-    @Autowired
-    private Securitys securitys;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -68,11 +67,11 @@ public class UserService {
 
         validate(user);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         User entity = new User();
 
-        IdHelper.setIfEmptyId(entity);
+        entity.setId(IdUtil.uuid32());
         entity.setDepartmentId(user.getDepartmentId());
         entity.setUsername(user.getUsername());
 
@@ -106,7 +105,7 @@ public class UserService {
     public void update(User user) {
         validate(user);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         User entity = userMapper.selectById(user.getId());
 
@@ -137,7 +136,7 @@ public class UserService {
      * @param enabled 是否启用
      */
     public void enable(String id, Integer enabled) {
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
         User entity = new User();
         entity.setId(id);
         entity.setEnabled(BoolInts.normalize(enabled));
@@ -150,7 +149,7 @@ public class UserService {
      * @param id 用户ID
      */
     public void resetPassword(String id) {
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
         User entity = userMapper.selectById(id);
         if (entity == null) {
             throw ExceptionHelper.prompt("用户不存在或者已经失效");
@@ -177,8 +176,8 @@ public class UserService {
             throw ExceptionHelper.prompt("请输入新密码");
         }
 
-        Principal principal = securitys.getPrincipal();
-        String userId = principal.getUserId();
+        UserPrincipal principal = Securitys.getPrincipal();
+        String userId = principal.getId();
         User entity = userMapper.selectById(userId);
         if (entity == null) {
             throw ExceptionHelper.prompt("用户未登录");
@@ -238,7 +237,7 @@ public class UserService {
      * @param roleIds 角色 ID
      */
     public void updateUserRole(String userId, String[] roleIds) {
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
         Map<String, UserRole> roleIdMap = new HashMap<>();
         for (UserRole entity : userRoleMapper.selectListByUserId(userId)) {
             roleIdMap.put(entity.getRoleId(), entity);
@@ -248,7 +247,7 @@ public class UserService {
             UserRole entity = roleIdMap.remove(roleId);
             if (entity == null) {
                 entity = new UserRole();
-                IdHelper.setIfEmptyId(entity);
+                entity.setId(IdUtil.uuid32());
                 entity.setUserId(userId);
                 entity.setRoleId(roleId);
                 AuditableUtil.setCreated(entity, principal);

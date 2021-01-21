@@ -21,14 +21,14 @@ import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.common.tree.TreeUtil;
 import com.github.relucent.base.plugin.mybatis.MybatisHelper;
-import com.github.relucent.base.plugin.security.Principal;
-import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.constant.Ids;
 import yyl.demo.common.constant.Symbols;
-import yyl.demo.common.identifier.IdHelper;
 import yyl.demo.common.model.BasicNodeVO;
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.common.standard.AuditableUtil;
+import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.Department;
 import yyl.demo.mapper.DepartmentMapper;
 import yyl.demo.service.support.DepartmentNodeAdapter;
@@ -46,9 +46,6 @@ public class DepartmentService {
     @Autowired
     private DepartmentMapper departmentMapper;
 
-    @Autowired
-    private Securitys securitys;
-
     // ==============================Methods==========================================
     /**
      * 新增部门
@@ -58,11 +55,11 @@ public class DepartmentService {
 
         validate(department);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         Department entity = new Department();
 
-        IdHelper.setIfEmptyId(entity);
+        entity.setId(IdUtil.uuid32());
         entity.setName(department.getName());
         entity.setRemark(department.getRemark());
         entity.setIdPath(forceGetIdPath(entity));
@@ -91,7 +88,7 @@ public class DepartmentService {
 
         validate(department);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         Department entity = departmentMapper.selectById(department.getId());
 

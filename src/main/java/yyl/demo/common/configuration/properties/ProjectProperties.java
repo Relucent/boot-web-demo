@@ -1,15 +1,12 @@
-package yyl.demo.common.properties;
+package yyl.demo.common.configuration.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
 /**
  * 自定义属性
- * @author YYL
  */
-@Component
 @ConfigurationProperties(prefix = "global.project")
 @Data
 public class ProjectProperties {

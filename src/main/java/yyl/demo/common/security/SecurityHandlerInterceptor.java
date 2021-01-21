@@ -10,8 +10,8 @@ import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
 
-import yyl.demo.common.annotations.PermissionAx;
 import yyl.demo.common.constant.Ids;
+import yyl.demo.common.security.annotations.PermissionAx;
 
 public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
 
@@ -21,7 +21,7 @@ public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
             HandlerMethod hm = (HandlerMethod) handler;
             PermissionAx ax = hm.getMethodAnnotation(PermissionAx.class);
             if (ax != null) {
-                UserDetails principal = Securitys.getPrincipal(request.getSession());
+                UserPrincipal principal = Securitys.getPrincipal();
                 String userId = principal.getId();
                 String[] permissionIds = principal.getPermissionIds();
                 if (!Ids.ADMIN_ID.equals(userId) && !intersect(ax.value(), permissionIds)) {

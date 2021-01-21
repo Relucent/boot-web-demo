@@ -1,4 +1,4 @@
-package yyl.demo.common.annotations;
+package yyl.demo.common.security.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package yyl.demo.common.resolver;
+package yyl.demo.common.plugin.resolver;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

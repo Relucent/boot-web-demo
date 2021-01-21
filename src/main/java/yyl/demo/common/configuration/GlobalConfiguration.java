@@ -2,20 +2,15 @@ package yyl.demo.common.configuration;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.Ordered;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.plugin.jackson.JacksonHandler;
 
-import yyl.demo.common.security.AuthRealm;
-import yyl.demo.common.security.SecurityFilter;
-import yyl.demo.common.security.Securitys;
+import yyl.demo.common.plugin.jackson.Jackson2ObjectMapperBuilderCustomizerImplement;
 
 /**
  * 项目公用配置
@@ -24,42 +19,14 @@ import yyl.demo.common.security.Securitys;
 @Configuration
 public class GlobalConfiguration {
 
-    /** 权限信息工具 */
+    /**
+     * _Jackson 定制器
+     * @return _Jackson 定制器
+     */
     @Primary
     @Bean
-    public Securitys securitys() {
-        return new Securitys();
-    }
-
-    /** 密码编码器 */
-    @Primary
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    /** 安全过滤器(注册) */
-    @Bean
-    public FilterRegistrationBean<SecurityFilter> securityFilterRegistration() {
-        FilterRegistrationBean<SecurityFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(securityFilter());
-        registration.addUrlPatterns("/*");
-        registration.setName("security_filter");
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return registration;
-    }
-
-    /** 安全过滤器 */
-    @Primary
-    @Bean
-    public SecurityFilter securityFilter() {
-        return new SecurityFilter();
-    }
-
-    /** 认证领域类 */
-    @Bean
-    public AuthRealm authRealm() {
-        return new AuthRealm();
+    public Jackson2ObjectMapperBuilderCustomizer Jackson2ObjectMapperBuilderCustomizer() {
+        return new Jackson2ObjectMapperBuilderCustomizerImplement();
     }
 
     @PostConstruct

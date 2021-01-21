@@ -1,10 +1,12 @@
 package yyl.demo.common.security;
 
-import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.github.relucent.base.common.exception.GeneralException;
 import com.github.relucent.base.plugin.spring.context.WebContextHolder;
 
 /**
@@ -12,43 +14,47 @@ import com.github.relucent.base.plugin.spring.context.WebContextHolder;
  */
 public class Securitys {
 
-    public static final String PRINCIPAL_NAME = "@principal";
+    /**
+     * 获得当前登录用户
+     * @return 当前登录用户
+     */
+    public static UserPrincipal getPrincipal() {
+        return Optional.ofNullable(getAuthentication())//
+                .map(Authentication::getPrincipal)//
+                .filter(UserPrincipal.class::isInstance)//
+                .map(UserPrincipal.class::cast)//
+                .orElse(UserPrincipal.ANONYMOUS);
+    }
 
-    @Autowired
-    private AuthRealm realm;
+    /**
+     * 获得当前身份验证
+     * @return 身份验证
+     */
+    public static Authentication getAuthentication() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        return context != null ? context.getAuthentication() : null;
+    }
 
     /**
      * 用户登录
-     * @param token 登录凭证
-     * @throws GeneralException 登录失败抛出认证异常
+     * @param principal 用户信息
      */
-    public void login(UsernamePasswordToken token) {
-        UserDetails principal = realm.doGetAuthenticationInfo(token);
-        WebContextHolder.setSessionAttribute(PRINCIPAL_NAME, principal);
+    public static void login(UserPrincipal principal) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+        context.setAuthentication(authentication);
     }
 
     /**
-     * 用户登出
+     * 用户注销
      */
-    public void logout() {
-        WebContextHolder.invalidateSession();
-    }
-
-    /**
-     * 获得当前登录用户
-     * @return 当前登录用户
-     */
-    public UserDetails getPrincipal() {
-        return getPrincipal(WebContextHolder.getSession());
-    }
-
-    /**
-     * 获得当前登录用户
-     * @param session 当前HTTP会话
-     * @return 当前登录用户
-     */
-    protected static UserDetails getPrincipal(HttpSession session) {
-        UserDetails principal = WebContextHolder.getSessionAttribute(session, PRINCIPAL_NAME);
-        return principal == null ? UserDetails.NONE : principal;
+    public static void logout() {
+        Authentication authentication = getAuthentication();
+        if (authentication != null) {
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(null);
+            WebContextHolder.invalidateSession();
+            SecurityContextHolder.clearContext();
+        }
     }
 }

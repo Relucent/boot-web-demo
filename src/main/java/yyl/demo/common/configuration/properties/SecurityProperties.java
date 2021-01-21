@@ -1,13 +1,14 @@
-package yyl.demo.common.properties;
+package yyl.demo.common.configuration.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-@Component
 @ConfigurationProperties(prefix = "global.security")
 @Data
 public class SecurityProperties {
+
     private String defaultUserPassword;
+
+    private String[] ignoreUrls = { "/rest/auth/index/**" };
 }

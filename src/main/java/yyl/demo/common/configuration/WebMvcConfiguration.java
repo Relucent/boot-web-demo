@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.relucent.base.common.time.DateUtil;
 import com.github.relucent.base.plugin.jackson.MyObjectMapper;
 
-import yyl.demo.common.resolver.PaginationArgumentResolver;
+import yyl.demo.common.plugin.resolver.PaginationArgumentResolver;
 import yyl.demo.common.security.SecurityHandlerInterceptor;
 
 @Configuration

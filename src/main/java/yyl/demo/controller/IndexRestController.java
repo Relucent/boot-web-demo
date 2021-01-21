@@ -7,21 +7,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.relucent.base.plugin.model.Result;
-import com.github.relucent.base.plugin.security.AuthToken;
-import com.github.relucent.base.plugin.security.Securitys;
 
-
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
+import yyl.demo.common.security.UsernamePasswordToken;
+import yyl.demo.service.AuthRealmService;
 
 /**
  * 主页/登录/注销 视图类
  */
 @RestController
-@RequestMapping(value = "/rest")
+@RequestMapping(value = "/rest/passport")
 public class IndexRestController {
 
     // ==============================Fields===========================================
     @Autowired
-    private Securitys securitys;
+    private AuthRealmService authRealmService;
 
     // ==============================Methods==========================================
     /**
@@ -29,8 +30,9 @@ public class IndexRestController {
      * 用户登录
      */
     @PostMapping(value = "/login")
-    public Result<?> doLogin(@RequestBody AuthToken token) {
-        securitys.login(token);
+    public Result<?> doLogin(@RequestBody UsernamePasswordToken token) {
+        UserPrincipal principal = authRealmService.doGetAuthenticationInfo(token);
+        Securitys.login(principal);
         return Result.ok();
     }
 
@@ -40,7 +42,7 @@ public class IndexRestController {
      */
     @RequestMapping(value = "/logout")
     public Result<?> logout() {
-        securitys.logout();
+        Securitys.logout();
         return Result.ok();
     }
 }

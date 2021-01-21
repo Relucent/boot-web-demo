@@ -1,4 +1,4 @@
-package yyl.demo.common.plugin;
+package yyl.demo.common.plugin.mybatis;
 
 import java.util.function.Function;
 

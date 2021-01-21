@@ -24,14 +24,14 @@ import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.common.tree.TreeUtil;
 import com.github.relucent.base.common.tree.TreeUtil.NodeFilter;
 import com.github.relucent.base.plugin.mybatis.MybatisHelper;
-import com.github.relucent.base.plugin.security.Principal;
-import com.github.relucent.base.plugin.security.Securitys;
 
 import yyl.demo.common.constant.Ids;
 import yyl.demo.common.constant.Symbols;
-import yyl.demo.common.identifier.IdHelper;
 import yyl.demo.common.model.BasicNodeVO;
+import yyl.demo.common.security.Securitys;
+import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.common.standard.AuditableUtil;
+import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.Permission;
 import yyl.demo.mapper.PermissionMapper;
 import yyl.demo.mapper.RolePermissionMapper;
@@ -54,9 +54,6 @@ public class PermissionService {
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
 
-    @Autowired
-    private Securitys securitys;
-
     // ==============================Methods==========================================
     /**
      * 新增功能权限
@@ -66,11 +63,11 @@ public class PermissionService {
 
         validate(permission);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         Permission entity = new Permission();
 
-        IdHelper.setIfEmptyId(entity);
+        entity.setId(IdUtil.uuid32());
         entity.setName(permission.getName());
         entity.setRemark(permission.getRemark());
         entity.setType(permission.getType());
@@ -103,7 +100,7 @@ public class PermissionService {
 
         validate(permission);
 
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
 
         Permission entity = permissionMapper.selectById(permission.getId());
 
@@ -166,10 +163,10 @@ public class PermissionService {
      * @return 菜单树
      */
     public List<BasicNodeVO> getMenuTree(String rootId, Integer typeLevel) {
-        Principal principal = securitys.getPrincipal();
+        UserPrincipal principal = Securitys.getPrincipal();
         List<Permission> entities = permissionMapper.selectAllList();
         NodeFilter<Permission> filter = PermissionTypeFilter.getInstance(typeLevel);
-        if (!Ids.ADMIN_ID.equals(principal.getUserId())) {
+        if (!Ids.ADMIN_ID.equals(principal.getId())) {
             String[] permissionIds = principal.getPermissionIds();
             filter = filter.and(new PermissionIdsFilter(permissionIds));
         }
