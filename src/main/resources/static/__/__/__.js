@@ -7,6 +7,7 @@ var __ = {
 		return ((/^https?:/ig).test(path) ? path : __.cxt + path) + (__.isEmpty(params) ? '' : (path.indexOf('?') != -1 ? '&' : '?') + __.encodeUrlParams(params));
 	},
 	navigateTo : function(url) {
+		alert(__.url(url))
 		location.href = __.url(url);
 	},
 	api : (function() {
@@ -16,7 +17,7 @@ var __ = {
 				if (code === 401) {
 					__.alert('当前会话已经失效，请重新登录', '提示', {
 						callback : function(action) {
-							__.navigateTo('/');
+							__.navigateTo('/login.html');
 						}
 					});
 					return;

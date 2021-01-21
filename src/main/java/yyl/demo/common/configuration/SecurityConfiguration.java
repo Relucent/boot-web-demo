@@ -25,7 +25,6 @@ import com.github.relucent.base.plugin.model.Result;
 import yyl.demo.common.configuration.properties.SecurityProperties;
 import yyl.demo.common.security.SecurityFilter;
 
-
 /**
  * 安全相关配置
  */
@@ -56,13 +55,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 // 未登录时
                 .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     Result<?> result = Result.ofMessage(HttpServletResponse.SC_UNAUTHORIZED, "未登录");
                     WebUtil.writeJson(JsonUtil.encode(result), request, response);
                 })
                 // 未授权时
                 .accessDeniedHandler((request, response, ex) -> {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     Result<?> result = Result.ofMessage(HttpServletResponse.SC_FORBIDDEN, "未授权");
                     WebUtil.writeJson(JsonUtil.encode(result), request, response);
                 }).and()
