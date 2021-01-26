@@ -20,6 +20,6 @@ public class IdUtil {
      * @return 时序 ID
      */
     public static String timeId() {
-        return TimeIdWorker.DEFAULT.nextId() + TimeIdWorker.getIdSuffixFromEnvironment();
+        return TimeIdWorker.DEFAULT.nextId();
     }
 }
