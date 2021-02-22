@@ -145,7 +145,7 @@ public class DepartmentService {
      * 查询部门树
      * @return 部门树
      */
-    public List<BasicNodeVO> getDeptTree() {
+    public List<BasicNodeVO> getTree() {
         List<Department> entities = departmentMapper.selectAllList();
         List<BasicNodeVO> nodes = TreeUtil.buildTree(//
                 Ids.DEPT_ROOT_ID, //

@@ -25,7 +25,7 @@ import yyl.demo.service.RoleService;
  * @author YYL
  */
 @RestController
-@RequestMapping(value = "/rest/role")
+@RequestMapping("/rest/role")
 public class RoleRestController {
 
     // ==============================Fields===========================================
@@ -37,7 +37,7 @@ public class RoleRestController {
      * [POST] /rest/role/save <br>
      * 保存数据(新增|更新)
      */
-    @PostMapping(value = "/save")
+    @PostMapping("/save")
     public Result<?> save(@RequestBody Role role) {
         String id = role.getId();
         if (StringUtils.isEmpty(id)) {
@@ -50,9 +50,9 @@ public class RoleRestController {
 
     /**
      * [DELETE] /rest/role/{id} <br>
-     * 保存数据(新增|更新)
+     * 删除数据
      */
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable("id") String id) {
         roleService.deleteById(id);
         return Result.ok();
@@ -60,9 +60,9 @@ public class RoleRestController {
 
     /**
      * [GET] /rest/role/{id} <br>
-     * 保存数据(新增|更新)
+     * 查询数据
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Result<?> getById(@PathVariable("id") String id) {
         Role role = roleService.getById(id);
         return Result.ok(role);
@@ -72,7 +72,7 @@ public class RoleRestController {
      * [GET] /rest/role/list <br>
      * 查询数据列表
      */
-    @GetMapping(value = "/list")
+    @GetMapping("/list")
     public Result<?> pagedQuery(Pagination pagination, Role condition) {
         condition = ObjectUtils.defaultIfNull(condition, new Role());
         Page<Role> page = roleService.pagedQuery(pagination, condition);
@@ -83,7 +83,7 @@ public class RoleRestController {
      * [GET] /rest/role/all <br>
      * 查询数据列表
      */
-    @GetMapping(value = "/all")
+    @GetMapping("/all")
     public Result<?> find() {
         List<Role> records = roleService.findAll();
         return Result.ok(records);
@@ -93,7 +93,7 @@ public class RoleRestController {
      * [GET] /rest/role/{id}/permission-ids <br>
      * 根据角色查询功能权限(ID)
      */
-    @GetMapping(value = "/getAuthPerm/{id}")
+    @GetMapping("/getAuthPerm/{id}")
     public Result<?> findIdByRoleId(@PathVariable("id") String roleId) {
         List<String> permissionIds = roleService.findPermissionIdByRoleId(roleId);
         return Result.ok(permissionIds);
@@ -103,7 +103,7 @@ public class RoleRestController {
      * [POST] /rest/role/{id}/permission-ids <br>
      * 更新角色功能权限关联
      */
-    @PostMapping(value = "/{id}/permission-ids")
+    @PostMapping("/{id}/permission-ids")
     public Result<?> updateRolePermissions(@PathVariable("id") String roleId, @RequestBody String[] permissionIds) {
         roleService.updateRolePermissions(roleId, permissionIds);
         return Result.ok();

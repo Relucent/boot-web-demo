@@ -27,7 +27,7 @@ import yyl.demo.service.PermissionService;
  * @author YYL
  */
 @RestController
-@RequestMapping(value = "/rest/permission")
+@RequestMapping("/rest/permission")
 public class PermissionRestController {
     // ==============================Fields===========================================
     @Autowired
@@ -38,7 +38,7 @@ public class PermissionRestController {
      * [POST] /rest/user/save <br>
      * 保存数据(新增|更新)
      */
-    @PostMapping(value = "/save")
+    @PostMapping("/save")
     public Result<?> save(@RequestBody Permission permission) {
         String id = permission.getId();
         if (id == null) {
@@ -51,9 +51,9 @@ public class PermissionRestController {
 
     /**
      * [DELETE] /rest/permission/{id} <br>
-     * 保存数据(新增|更新)
+     * 删除数据
      */
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable("id") String id) {
         permissionService.deleteById(id);
         return Result.ok();
@@ -61,9 +61,9 @@ public class PermissionRestController {
 
     /**
      * [GET] /rest/permission/{id} <br>
-     * 保存数据(新增|更新)
+     * 查询数据
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Result<?> getById(@PathVariable("id") String id) {
         Permission permission = permissionService.getById(id);
         return Result.ok(permission);
@@ -73,7 +73,7 @@ public class PermissionRestController {
      * [GET] /rest/permission/list <br>
      * 查询数据列表
      */
-    @GetMapping(value = "/list")
+    @GetMapping("/list")
     public Result<?> pagedQuery(Pagination pagination, Permission condition) {
         condition = ObjectUtils.defaultIfNull(condition, new Permission());
         Page<Permission> page = permissionService.pagedQuery(pagination, condition);
@@ -84,7 +84,7 @@ public class PermissionRestController {
      * [GET] /rest/permission/menu-tree/{rootId} <br>
      * 查询菜单树(只到菜单层级)
      */
-    @GetMapping(value = "/menu-tree/{rootId}")
+    @GetMapping("/menu-tree/{rootId}")
     public Result<?> menuTree(@PathVariable("rootId") String rootId) {
         List<BasicNodeVO> menus = permissionService.getMenuTree(rootId, PermissionTypes.MENU);
         return Result.ok(menus);
@@ -94,7 +94,7 @@ public class PermissionRestController {
      * [GET] /rest/permission/menu-all-tree <br>
      * 查询菜单功能树(全部层级)
      */
-    @GetMapping(value = "/menu-all-tree")
+    @GetMapping("/menu-all-tree")
     public Result<?> menuPermTree() {
         List<BasicNodeVO> nodes = permissionService.getMenuTree(Ids.ROOT_ID, PermissionTypes.BUTTON);
         return Result.ok(nodes);

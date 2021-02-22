@@ -17,7 +17,7 @@ import yyl.demo.service.AuthRealmService;
  * 主页/登录/注销 视图类
  */
 @RestController
-@RequestMapping(value = "/rest/passport")
+@RequestMapping("/rest/passport")
 public class IndexRestController {
 
     // ==============================Fields===========================================
@@ -29,7 +29,7 @@ public class IndexRestController {
      * [POST] | /rest/login <br>
      * 用户登录
      */
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public Result<?> doLogin(@RequestBody UsernamePasswordToken token) {
         UserPrincipal principal = authRealmService.doGetAuthenticationInfo(token);
         Securitys.login(principal);
@@ -40,7 +40,7 @@ public class IndexRestController {
      * [POST] | /rest/logout <br>
      * 用户登出
      */
-    @RequestMapping(value = "/logout")
+    @RequestMapping("/logout")
     public Result<?> logout() {
         Securitys.logout();
         return Result.ok();

@@ -16,7 +16,7 @@ import yyl.demo.service.DepartmentService;
  * 部门管理
  */
 @RestController
-@RequestMapping(value = "/rest/department")
+@RequestMapping("/rest/department")
 public class DepartmentRestController {
 
     // ==============================Fields===========================================
@@ -28,9 +28,9 @@ public class DepartmentRestController {
      * [GET] /rest/department/tree <br>
      * 查询部门数据(新增|更新)
      */
-    @GetMapping(value = "/tree")
-    public Result<?> getDeptTree() {
-        List<BasicNodeVO> nodes = departmentService.getDeptTree();
+    @GetMapping("/tree")
+    public Result<?> getTree() {
+        List<BasicNodeVO> nodes = departmentService.getTree();
         return Result.ok(nodes);
     }
 }

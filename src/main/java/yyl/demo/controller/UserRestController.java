@@ -28,7 +28,7 @@ import yyl.demo.service.dto.PasswordDTO;
  * @author YYL
  */
 @RestController
-@RequestMapping(value = "/rest/user")
+@RequestMapping("/rest/user")
 public class UserRestController {
 
     // ==============================Fields===========================================
@@ -40,7 +40,7 @@ public class UserRestController {
      * [POST] /rest/user/save <br>
      * 保存数据(新增|更新)
      */
-    @PostMapping(value = "/save")
+    @PostMapping("/save")
     public Result<?> save(@RequestBody User user) {
         String id = user.getId();
         if (id == null) {
@@ -56,7 +56,7 @@ public class UserRestController {
      * [BODY] {id:?,enabled:?}<br>
      * 启用禁用
      */
-    @PostMapping(value = "/enable")
+    @PostMapping("/enable")
     public Result<?> enable(@RequestBody Mapx params) {
         String id = params.getString("id");
         Integer enabled = params.getInteger("enabled");
@@ -68,7 +68,7 @@ public class UserRestController {
      * [DELETE] /rest/user/{id} <br>
      * 根据编号删除用户
      */
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public Result<?> delete(@PathVariable("id") String id) {
         userService.deleteById(id);
         return Result.ok();
@@ -78,7 +78,7 @@ public class UserRestController {
      * [GET] /rest/user/{id} <br>
      * 保存数据(新增|更新)
      */
-    // @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Result<?> getById(@PathVariable("id") String id) {
         User user = userService.getById(id);
         return Result.ok(user);
@@ -88,7 +88,7 @@ public class UserRestController {
      * [GET] /rest/user/list <br>
      * 查询数据列表
      */
-    @GetMapping(value = "/list")
+    @GetMapping("/list")
     public Result<?> pagedQuery(Pagination pagination, User condition) {
         condition = ObjectUtils.defaultIfNull(condition, new User());
         Page<User> page = userService.pagedQuery(pagination, condition);
@@ -99,7 +99,7 @@ public class UserRestController {
      * [GET] /rest/user/current/name<br>
      * 获得当前用户姓名
      */
-    @GetMapping(value = "/current/name")
+    @GetMapping("/current/name")
     public Result<String> currentName() {
         UserPrincipal principal = Securitys.getPrincipal();
         return Result.ok(principal.getRealname());
@@ -109,7 +109,7 @@ public class UserRestController {
      * [GET] /rest/user/{id}/role-ids <br>
      * 查询用户的角色(ID)
      */
-    @GetMapping(value = "/{id}/role-ids")
+    @GetMapping("/{id}/role-ids")
     public Result<?> findRoleIdByUserId(@PathVariable("id") String userId) {
         List<String> roleIds = userService.findRoleIdByUserId(userId);
         return Result.ok(roleIds);
@@ -119,7 +119,7 @@ public class UserRestController {
      * [POST] /rest/user/{id}/role-ids <br>
      * 更新用户关联的角色
      */
-    @PostMapping(value = "/{id}/role-ids")
+    @PostMapping("/{id}/role-ids")
     public Result<?> updateUserRole(@PathVariable("id") String userId, @RequestBody String[] roleIds) {
         userService.updateUserRole(userId, roleIds);
         return Result.ok();
@@ -129,7 +129,7 @@ public class UserRestController {
      * [POST] /rest/user/{id}/reset-password <br>
      * 重置密码
      */
-    @PostMapping(value = "/{id}/reset-password")
+    @PostMapping("/{id}/reset-password")
     public Result<?> resetPassword(@PathVariable("id") String id) {
         userService.resetPassword(id);
         return Result.ok();
@@ -139,7 +139,7 @@ public class UserRestController {
      * [POST] /rest/user/password <br>
      * 修改用户密码
      */
-    @PostMapping(value = "/password")
+    @PostMapping("/password")
     public Result<?> updateCurrentPassword(@RequestBody PasswordDTO passwordDto) {
         userService.updateCurrentPassword(passwordDto);
         return Result.ok();
