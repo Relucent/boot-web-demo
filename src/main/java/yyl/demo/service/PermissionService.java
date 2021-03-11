@@ -85,7 +85,7 @@ public class PermissionService {
      * @param id 权限ID
      */
     public void deleteById(String id) {
-        if (permissionMapper.selectCountByParentId(id) != 0) {
+        if (permissionMapper.countByParentId(id) != 0) {
             throw ExceptionHelper.prompt("该功能存在子节点，不能被直接删除");
         }
         permissionMapper.deleteById(id);
@@ -153,7 +153,7 @@ public class PermissionService {
      * @return 查询结果
      */
     public Page<Permission> pagedQuery(Pagination pagination, Permission condition) {
-        return MybatisHelper.selectPage(pagination, () -> permissionMapper.selectListBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> permissionMapper.findBy(condition));
     }
 
     /**
@@ -164,7 +164,7 @@ public class PermissionService {
      */
     public List<BasicNodeVO> getMenuTree(String rootId, Integer typeLevel) {
         UserPrincipal principal = Securitys.getPrincipal();
-        List<Permission> entities = permissionMapper.selectAllList();
+        List<Permission> entities = permissionMapper.findAll();
         NodeFilter<Permission> filter = PermissionTypeFilter.getInstance(typeLevel);
         if (!Ids.ADMIN_ID.equals(principal.getId())) {
             String[] permissionIds = principal.getPermissionIds();
@@ -185,7 +185,7 @@ public class PermissionService {
      * 强制刷新功能树索引(ID路径)
      */
     public void forceRefreshIndexes() {
-        List<Permission> entities = permissionMapper.selectAllList();
+        List<Permission> entities = permissionMapper.findAll();
         TreeUtil.recursiveSetIdPath(entities, Permission::getId, Permission::getParentId, Permission::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Permission entity : entities) {
             permissionMapper.updateById(entity);
@@ -258,7 +258,7 @@ public class PermissionService {
         for (; !idQueue.isEmpty();) {
             String id = idQueue.remove();// QUEUE->I
             idSet.add(id);//
-            for (Permission entity : permissionMapper.selectListByParentId(id)) {
+            for (Permission entity : permissionMapper.findByParentId(id)) {
                 if (!idSet.contains(entity.getId())) {
                     entities.add(entity);
                     idQueue.add(entity.getId());// QUEUE<-I

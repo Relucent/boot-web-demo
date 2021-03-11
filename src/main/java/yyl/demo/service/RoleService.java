@@ -112,7 +112,7 @@ public class RoleService {
      * @return 查询结果
      */
     public Page<Role> pagedQuery(Pagination pagination, Role condition) {
-        return MybatisHelper.selectPage(pagination, () -> roleMapper.selectListBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> roleMapper.findBy(condition));
     }
 
     /**
@@ -120,7 +120,7 @@ public class RoleService {
      * @return 角色列表
      */
     public List<Role> findAll() {
-        return roleMapper.selectAllList();
+        return roleMapper.findAll();
     }
 
     /**
@@ -142,7 +142,7 @@ public class RoleService {
      * @return 功能权限ID列表
      */
     public List<String> findPermissionIdByRoleId(String roleId) {
-        return rolePermissionMapper.selectPermissionIdListByRoleId(roleId);
+        return rolePermissionMapper.findPermissionIdByRoleId(roleId);
     }
 
     /**
@@ -151,7 +151,7 @@ public class RoleService {
      * @return 功能权限ID列表
      */
     public List<String> findPermissionIdByRoleIds(String[] roleIds) {
-        return rolePermissionMapper.selectPermissionIdListByRoleIds(roleIds);
+        return rolePermissionMapper.findPermissionIdByRoleIds(roleIds);
     }
 
     /**
@@ -196,7 +196,7 @@ public class RoleService {
         if (StringUtils.isEmpty(name)) {
             throw ExceptionHelper.prompt("角色名称不能为空");
         }
-        Role entity = roleMapper.selectByName(name);
+        Role entity = roleMapper.getByName(name);
         if (entity != null && !Objects.equals(entity.getId(), role.getId())) {
             throw ExceptionHelper.prompt("已经存在相同名称的角色");
         }

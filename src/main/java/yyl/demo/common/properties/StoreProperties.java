@@ -1,4 +1,4 @@
-package yyl.demo.common.configuration.properties;
+package yyl.demo.common.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

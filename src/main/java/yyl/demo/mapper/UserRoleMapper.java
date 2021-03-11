@@ -17,6 +17,10 @@ import yyl.demo.entity.UserRole;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
+    // ==============================MapperMethods====================================
+    // ...
+
+    // ==============================DefaultMethods===================================
     /**
      * 删除用户角色关联数据
      * @param userId 用户ID
@@ -38,7 +42,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @param userId 用户ID
      * @return 角色用户角色关联列表
      */
-    default List<UserRole> selectListByUserId(String userId) {
+    default List<UserRole> findByUserId(String userId) {
         return selectList(Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, userId));
     }
 
@@ -47,7 +51,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @param userId 用户ID
      * @return 角色ID列表
      */
-    default List<String> selectRoleIdListByUserId(String userId) {
+    default List<String> findRoleIdListByUserId(String userId) {
         return selectList(Wrappers.<UserRole>lambdaQuery()//
                 .select(UserRole::getRoleId)//
                 .eq(UserRole::getUserId, userId))//

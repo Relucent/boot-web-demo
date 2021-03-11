@@ -25,7 +25,7 @@ import com.github.relucent.base.common.web.WebUtil.DownloadSimpleFile;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import yyl.demo.common.configuration.properties.StoreProperties;
+import yyl.demo.common.properties.StoreProperties;
 
 /**
  * 对象存储服务

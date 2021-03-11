@@ -22,7 +22,7 @@ import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
 
-import yyl.demo.common.configuration.properties.SecurityProperties;
+import yyl.demo.common.properties.SecurityProperties;
 import yyl.demo.common.security.SecurityFilter;
 
 /**

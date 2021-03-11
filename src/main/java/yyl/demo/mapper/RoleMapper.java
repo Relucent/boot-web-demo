@@ -18,11 +18,15 @@ import yyl.demo.entity.Role;
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
 
+    // ==============================MapperMethods====================================
+    // ...
+
+    // ==============================DefaultMethods===================================
     /**
      * 查询全部角色
      * @return 角色列表
      */
-    default List<Role> selectAllList() {
+    default List<Role> findAll() {
         return selectList(Wrappers.emptyWrapper());
     }
 
@@ -31,18 +35,18 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param name 角色名称
      * @return 角色
      */
-    default Role selectByName(String name) {
+    default Role getByName(String name) {
         return selectOne(Wrappers.<Role>lambdaQuery().eq(Role::getName, name).last("limit 1"));
     }
 
     /**
      * 根据条件查询角色
-     * @param condition 查询条件
+     * @param criteria 查询条件
      * @return 角色列表
      */
-    default List<Role> selectListBy(Role condition) {
+    default List<Role> findBy(Role criteria) {
         LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery();
-        String name = condition.getName();
+        String name = criteria.getName();
         if (StringUtils.isNotEmpty(name)) {
             wrapper.eq(Role::getName, name);
         }

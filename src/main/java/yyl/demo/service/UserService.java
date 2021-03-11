@@ -19,10 +19,10 @@ import com.github.relucent.base.common.page.Page;
 import com.github.relucent.base.common.page.Pagination;
 import com.github.relucent.base.plugin.mybatis.MybatisHelper;
 
-import yyl.demo.common.configuration.properties.SecurityProperties;
-import yyl.demo.common.constant.BoolInts;
 import yyl.demo.common.constant.Ids;
 import yyl.demo.common.constant.Symbols;
+import yyl.demo.common.enums.BoolEnum;
+import yyl.demo.common.properties.SecurityProperties;
 import yyl.demo.common.security.Securitys;
 import yyl.demo.common.security.UserPrincipal;
 import yyl.demo.common.standard.AuditableUtil;
@@ -80,7 +80,7 @@ public class UserService {
 
         entity.setRealname(user.getRealname());
         entity.setRemark(user.getRemark());
-        entity.setEnabled(BoolInts.normalize(user.getEnabled()));
+        entity.setEnabled(BoolEnum.of(user.getEnabled(), BoolEnum.NO).integer());
 
         AuditableUtil.setCreated(entity, principal);
         userMapper.insert(entity);
@@ -124,7 +124,7 @@ public class UserService {
 
         entity.setRealname(user.getRealname());
         entity.setRemark(user.getRemark());
-        entity.setEnabled(BoolInts.normalize(user.getEnabled()));
+        entity.setEnabled(BoolEnum.of(user.getEnabled(), BoolEnum.NO).integer());
 
         AuditableUtil.setUpdated(entity, principal);
         userMapper.updateById(entity);
@@ -136,12 +136,15 @@ public class UserService {
      * @param enabled 是否启用
      */
     public void enable(String id, Integer enabled) {
-        UserPrincipal principal = Securitys.getPrincipal();
-        User entity = new User();
-        entity.setId(id);
-        entity.setEnabled(BoolInts.normalize(enabled));
-        AuditableUtil.setUpdated(entity, principal);
-        userMapper.updateById(entity);
+        BoolEnum bool = BoolEnum.of(enabled, null);
+        if (bool != null) {
+            UserPrincipal principal = Securitys.getPrincipal();
+            User entity = new User();
+            entity.setId(id);
+            entity.setEnabled(bool.integer());
+            AuditableUtil.setUpdated(entity, principal);
+            userMapper.updateById(entity);
+        }
     }
 
     /**
@@ -209,7 +212,7 @@ public class UserService {
      * @return 用户信息
      */
     public User getByUsername(String username) {
-        return userMapper.selectByUsername(username);
+        return userMapper.getByUsername(username);
     }
 
     /**
@@ -219,7 +222,7 @@ public class UserService {
      * @return 分页结果
      */
     public Page<User> pagedQuery(Pagination pagination, User condition) {
-        return MybatisHelper.selectPage(pagination, () -> userMapper.selectListBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> userMapper.findBy(condition));
     }
 
     /**
@@ -228,7 +231,7 @@ public class UserService {
      * @return 角色ID列表
      */
     public List<String> findRoleIdByUserId(String userId) {
-        return userRoleMapper.selectRoleIdListByUserId(userId);
+        return userRoleMapper.findRoleIdListByUserId(userId);
     }
 
     /**
@@ -239,7 +242,7 @@ public class UserService {
     public void updateUserRole(String userId, String[] roleIds) {
         UserPrincipal principal = Securitys.getPrincipal();
         Map<String, UserRole> roleIdMap = new HashMap<>();
-        for (UserRole entity : userRoleMapper.selectListByUserId(userId)) {
+        for (UserRole entity : userRoleMapper.findByUserId(userId)) {
             roleIdMap.put(entity.getRoleId(), entity);
         }
         List<UserRole> newEntities = new ArrayList<>();
@@ -276,7 +279,7 @@ public class UserService {
         if (StringUtils.isEmpty(realname)) {
             throw ExceptionHelper.prompt("姓名不能为空");
         }
-        User entity = userMapper.selectByUsername(username);
+        User entity = userMapper.getByUsername(username);
         if (entity != null && !Objects.equals(entity.getId(), id)) {
             throw ExceptionHelper.prompt("已经存在相同账号");
         }

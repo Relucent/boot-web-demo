@@ -2,8 +2,10 @@ package yyl.demo.mapper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
@@ -16,11 +18,15 @@ import yyl.demo.entity.Permission;
 @Mapper
 public interface PermissionMapper extends BaseMapper<Permission> {
 
+    // ==============================MapperMethods====================================
+    // ...
+
+    // ==============================DefaultMethods===================================
     /**
      * 查询全部功能权限
      * @return 功能权限列表
      */
-    default List<Permission> selectAllList() {
+    default List<Permission> findAll() {
         return selectList(Wrappers.emptyWrapper());
     }
 
@@ -29,17 +35,22 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @param parentId 父功能权限ID
      * @return 子功能权限列表
      */
-    default List<Permission> selectListByParentId(String parentId) {
+    default List<Permission> findByParentId(String parentId) {
         return selectList(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, parentId));
     }
 
     /**
      * 根据条件查询功能权限
-     * @param condition 查询条件
+     * @param criteria 查询条件
      * @return 功能权限列表
      */
-    default List<Permission> selectListBy(Permission condition) {
-        return selectList(Wrappers.lambdaQuery(condition));
+    default List<Permission> findBy(Permission criteria) {
+        String name = criteria.getName();
+        LambdaQueryWrapper<Permission> wrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(name)) {
+            wrapper.eq(Permission::getName, name);
+        }
+        return selectList(wrapper);
     }
 
     /**
@@ -47,7 +58,7 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @param parentId 父功能权限ID
      * @return 记录数
      */
-    default Integer selectCountByParentId(String parentId) {
+    default Integer countByParentId(String parentId) {
         return selectCount(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, parentId));
     }
 

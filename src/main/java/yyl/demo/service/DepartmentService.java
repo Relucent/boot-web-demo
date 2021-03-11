@@ -74,7 +74,7 @@ public class DepartmentService {
      * @param id 部门ID
      */
     public void deleteById(String id) {
-        if (departmentMapper.selectCountByParentId(id) != 0) {
+        if (departmentMapper.countByParentId(id) != 0) {
             throw ExceptionHelper.prompt("存在子机构，不能被直接删除");
         }
         departmentMapper.deleteById(id);
@@ -138,7 +138,7 @@ public class DepartmentService {
      * @return 查询结果
      */
     public Page<Department> pagedQuery(Pagination pagination, Department condition) {
-        return MybatisHelper.selectPage(pagination, () -> departmentMapper.selectListBy(condition));
+        return MybatisHelper.selectPage(pagination, () -> departmentMapper.findBy(condition));
     }
 
     /**
@@ -146,7 +146,7 @@ public class DepartmentService {
      * @return 部门树
      */
     public List<BasicNodeVO> getTree() {
-        List<Department> entities = departmentMapper.selectAllList();
+        List<Department> entities = departmentMapper.findAll();
         List<BasicNodeVO> nodes = TreeUtil.buildTree(//
                 Ids.DEPT_ROOT_ID, //
                 entities, //
@@ -162,7 +162,7 @@ public class DepartmentService {
      * 强制刷新机构树索引(ID路径)
      */
     public void forceRefreshIndexes() {
-        List<Department> entities = departmentMapper.selectAllList();
+        List<Department> entities = departmentMapper.findAll();
         TreeUtil.recursiveSetIdPath(entities, Department::getId, Department::getParentId, Department::setIdPath, Ids.ROOT_ID, Symbols.SEPARATOR);
         for (Department entity : entities) {
             departmentMapper.updateById(entity);
@@ -231,7 +231,7 @@ public class DepartmentService {
         for (; !idQueue.isEmpty();) {
             String id = idQueue.remove();// QUEUE->I
             idSet.add(id);//
-            for (Department entity : departmentMapper.selectListByParentId(id)) {
+            for (Department entity : departmentMapper.findByParentId(id)) {
                 if (!idSet.contains(entity.getId())) {
                     entities.add(entity);
                     idQueue.add(entity.getId());// QUEUE<-I

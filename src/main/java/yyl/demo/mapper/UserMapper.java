@@ -18,15 +18,17 @@ import yyl.demo.entity.User;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    // ==============================MapperMethods====================================
+    // ...
     /**
      * 根据条件查询用户
-     * @param condition 查询条件
+     * @param criteria 查询条件
      * @return 用户列表
      */
-    default List<User> selectListBy(User condition) {
+    default List<User> findBy(User criteria) {
         LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
-        String realname = condition.getRealname();
-        String departmentId = condition.getDepartmentId();
+        String realname = criteria.getRealname();
+        String departmentId = criteria.getDepartmentId();
         if (StringUtils.isNotEmpty(realname)) {
             wrapper.eq(User::getRealname, realname);
         }
@@ -36,12 +38,13 @@ public interface UserMapper extends BaseMapper<User> {
         return selectList(wrapper);
     }
 
+    // ==============================DefaultMethods===================================
     /**
      * 根据账号查询用户
      * @param username 用户名
      * @return 用户信息
      */
-    default User selectByUsername(String username) {
-        return selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, username).last("limit 1"));
+    default User getByUsername(String username) {
+        return selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, username));
     }
 }
