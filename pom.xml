@@ -23,7 +23,7 @@
 		<!-- LibraryVersion -->
 		<project.version>0.0.1-SNAPSHOT</project.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-io.version>2.6</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<lombok.version>1.16.22</lombok.version>
 		<mybatis-plus.version>3.4.1</mybatis-plus.version>
 		<springdoc-openapi.version>1.4.4</springdoc-openapi.version>
