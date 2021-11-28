@@ -22,7 +22,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<!-- LibraryVersion -->
 		<project.version>0.0.1-SNAPSHOT</project.version>
-		<bouncycastle.version>1.66</bouncycastle.version>
+		<bouncycastle.version>1.67</bouncycastle.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-io.version>2.7</commons-io.version>
 		<guava.version>27.0.1-android</guava.version>
