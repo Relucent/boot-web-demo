@@ -27,6 +27,7 @@ import yyl.demo.common.matcher.PermitUrlMatcher;
 import yyl.demo.properties.WebSecurityProperties;
 import yyl.demo.security.filter.AuthenticationTokenFilter;
 import yyl.demo.security.store.AuthenticationTokenStore;
+import yyl.demo.security.store.RsaKeyPairStore;
 
 /**
  * 安全相关配置
@@ -107,6 +108,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationTokenStore authenticationTokenStore() {
         return new AuthenticationTokenStore(properties);
+    }
+
+    /**
+     * RSA密钥对存储器
+     * @return RSA密钥对存储器
+     */
+    @Primary
+    @Bean
+    public RsaKeyPairStore rsaKeyPairStore() {
+        return new RsaKeyPairStore();
     }
 
     /** 密码编码器 */

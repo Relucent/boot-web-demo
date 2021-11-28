@@ -15,6 +15,7 @@ import com.github.relucent.base.plugin.spring.context.WebContextHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import yyl.demo.model.dto.UsernamePasswordDTO;
+import yyl.demo.model.vo.RsaPublicKeyVO;
 import yyl.demo.model.vo.UserInfoVO;
 import yyl.demo.security.model.AccessToken;
 import yyl.demo.service.AuthenticationTokenService;
@@ -29,6 +30,14 @@ public class AuthController {
     private AuthenticationTokenService authenticationTokenService;
 
     // ==============================Methods==========================================
+    @ApiOperation("获取加密公钥")
+    @PostMapping("/getPublicKey")
+    @PermitAll
+    public Result<RsaPublicKeyVO> getPublicKey() {
+        RsaPublicKeyVO vo = authenticationTokenService.getPublicKey();
+        return Result.ok(vo);
+    }
+
     @ApiOperation("用户登录")
     @PostMapping("/login")
     @PermitAll

@@ -52,9 +52,7 @@ public class GlobalExceptionAdvice {
                 }
             }
         }
-        if (exception instanceof RuntimeException) {
-            log.error("!", exception);
-        }
+        log.error("!", exception);
         return Result.errorMessage("Service Error!");
     }
 

@@ -20,4 +20,7 @@ public class UsernamePasswordDTO implements Serializable {
     @ApiModelProperty("密码")
     @NotEmpty(message = "密码不能为空")
     private String password;
+
+    @ApiModelProperty("秘钥ID")
+    private String rsaId;
 }
