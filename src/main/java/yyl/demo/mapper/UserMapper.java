@@ -110,7 +110,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
      * @param organizationId 机构ID
      * @return 用户数
      */
-    default int countByOrganizationId(String organizationId) {
+    default Long countByOrganizationId(String organizationId) {
         LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
         lqw.eq(UserEntity::getOrganizationId, organizationId);
         lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());

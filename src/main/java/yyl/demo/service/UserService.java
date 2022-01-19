@@ -1,5 +1,7 @@
 package yyl.demo.service;
 
+import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import yyl.demo.common.model.PaginationQO;
 import yyl.demo.common.mybatis.MyPageHelper;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.common.util.IdUtil;
+import yyl.demo.common.util.RsaUtil;
 import yyl.demo.entity.UserEntity;
 import yyl.demo.entity.UserRoleEntity;
 import yyl.demo.kit.UserKit;
@@ -35,6 +38,7 @@ import yyl.demo.model.qo.UserQO;
 import yyl.demo.model.ro.UserRO;
 import yyl.demo.model.vo.UserVO;
 import yyl.demo.security.Securitys;
+import yyl.demo.security.store.RsaKeyPairStore;
 
 /**
  * 系统用户
@@ -46,13 +50,13 @@ public class UserService {
     // ==============================Fields===========================================
     @Autowired
     private UserMapper userMapper;
-
     @Autowired
     private UserRoleMapper userRoleMapper;
-
     @Autowired
     private OrganizationMapper organizationMapper;
 
+    @Autowired
+    private RsaKeyPairStore rsaKeyPairStore;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -174,6 +178,7 @@ public class UserService {
         String identity = Securitys.getUserId();
         String oldPassword = passwordDto.getOldPassword();
         String newPassword = passwordDto.getNewPassword();
+        String rsaId = passwordDto.getRsaId();
 
         if (StringUtils.isEmpty(oldPassword)) {
             throw ExceptionHelper.prompt("请输入旧密码");
@@ -182,12 +187,28 @@ public class UserService {
             throw ExceptionHelper.prompt("请输入新密码");
         }
 
+        // 使用RSA加密
+        if (StringUtils.isNotEmpty(rsaId)) {
+            KeyPair keyPair = rsaKeyPairStore.get(rsaId);
+            if (keyPair == null) {
+                throw ExceptionHelper.prompt("客户端秘钥失效！");
+            }
+            try {
+                PrivateKey privateKey = keyPair.getPrivate();
+                oldPassword = RsaUtil.decryptBase64(oldPassword, privateKey);
+                newPassword = RsaUtil.decryptBase64(newPassword, privateKey);
+                rsaKeyPairStore.remove(rsaId);
+            } catch (Exception e) {
+                throw ExceptionHelper.prompt("客户端秘钥无效!");
+            }
+        }
+
         String userId = identity;
         UserEntity entity = userMapper.selectById(userId);
         if (entity == null) {
             throw ExceptionHelper.prompt("用户未登录");
         }
-        if (!passwordEncoder.matches(passwordDto.getOldPassword(), entity.getPassword())) {
+        if (!passwordEncoder.matches(oldPassword, entity.getPassword())) {
             throw ExceptionHelper.prompt("旧密码输入错误");
         }
         entity.setPassword(passwordEncoder.encode(newPassword));

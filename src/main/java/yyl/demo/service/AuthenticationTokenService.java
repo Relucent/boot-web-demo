@@ -99,6 +99,7 @@ public class AuthenticationTokenService {
             }
             try {
                 password = RsaUtil.decryptBase64(password, keyPair.getPrivate());
+                rsaKeyPairStore.remove(rsaId);
             } catch (Exception e) {
                 log.error("!", e);
                 throw ExceptionHelper.prompt("客户端凭证失效!");

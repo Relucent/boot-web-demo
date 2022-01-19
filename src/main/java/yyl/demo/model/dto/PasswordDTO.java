@@ -18,4 +18,6 @@ public class PasswordDTO implements Serializable {
     @ApiModelProperty("新密码")
     @NotEmpty(message = "新密码不能为空")
     private String newPassword;
+    @ApiModelProperty("秘钥ID")
+    private String rsaId;
 }

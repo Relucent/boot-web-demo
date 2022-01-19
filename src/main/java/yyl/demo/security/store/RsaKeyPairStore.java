@@ -5,6 +5,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -76,6 +77,14 @@ public class RsaKeyPairStore {
             log.error("!", e);
         }
         return null;
+    }
+
+    /**
+     * 删除密钥对
+     * @param id 密钥对ID
+     */
+    public void remove(String id) {
+        Optional.ofNullable(id).ifPresent(cache::invalidate);
     }
 
     // ==============================InnerClass=======================================

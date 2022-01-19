@@ -51,7 +51,7 @@
 					<input type="text" is="el-input" ref="username" @keyup.enter.native="enter(0)" v-model.trim="token.username" />
 				</div>
 				<div is="el-form-item" label="密码">
-					<input is="el-input" type="password" ref="password" @keyup.enter.native="enter(1)" v-model="token.password" auto-complete="off" />
+					<input is="el-input" type="password" ref="password" @keyup.enter.native="enter(1)" v-model="token.password" auto-complete="off" show-password/>
 				</div>
 				<div is="el-form-item">
 					<button is="el-button" type="primary" @click="submit()">登录</button>

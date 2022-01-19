@@ -38,7 +38,8 @@ server:
       io: 16
   # 阻塞任务线程池，当执行类似servlet请求阻塞IO操作，undertow会从这个线程池中取得线程。它的值取决于系统线程执行任务的阻塞系数，默认值是 io-threads*8
       worker: 256
-
+  error:
+    path: /error
 
 spring:
   profiles:
@@ -77,6 +78,8 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     default-property-inclusion: NON_NULL
     time-zone: GMT+8
+  mvc:
+    pathmatch:      matching-strategy: ant-path-matcher
 #  resources:
 #    # 静态资源，默认["classpath:/META-INF/resources/","classpath:/resources/", "classpath:/static/", "classpath:/public/"]
 #    static-locations:
