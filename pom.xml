@@ -30,7 +30,7 @@
 		<lombok.version>1.16.22</lombok.version>
 		<mybatis-plus.version>3.5.0</mybatis-plus.version>
 		<pagehelper-starter.version>1.4.1</pagehelper-starter.version>
-		<base-lib.version>0.1.6</base-lib.version>
+		<base-lib.version>0.2.0</base-lib.version>
 	</properties>
 	<dependencies>
 		<!-- _springboot|web -->
