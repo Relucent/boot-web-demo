@@ -12,11 +12,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.github.relucent.base.common.json.JsonUtil;
@@ -34,7 +35,7 @@ import yyl.demo.security.store.RsaKeyPairStore;
  */
 @Configuration
 @EnableConfigurationProperties(WebSecurityProperties.class)
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
     // =======================Fields==================================================
     @Autowired
@@ -47,8 +48,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     // =======================Methods=================================================
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         PermitUrlMatcher permitUrlMatcher = permitUrlMatcher();
         http.authorizeRequests()
                 // 不需要身份认证的资源
@@ -83,12 +84,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .headers().cacheControl().and()
                 // 允许 IFrame 嵌套
                 .frameOptions().disable();
+        return http.build();
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        // 放行所有OPTIONS请求
-        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return new WebSecurityCustomizer() {
+            @Override
+            public void customize(WebSecurity web) {
+                // 放行所有OPTIONS请求
+                web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+
+            }
+        };
     }
 
     /**
@@ -141,5 +149,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PermitUrlMatcher permitUrlMatcher() {
         return new PermitUrlMatcher(applicationContext, properties);
     }
-
 }
