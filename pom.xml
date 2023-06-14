@@ -26,7 +26,7 @@
 		<bouncycastle.version>1.70</bouncycastle.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-io.version>2.7</commons-io.version>
-		<guava.version>31.0.1-jre</guava.version>
+		<guava.version>32.0.0-jre</guava.version>
 		<knife4j.version>4.1.0</knife4j.version>
 		<lombok.version>1.16.22</lombok.version>
 		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
