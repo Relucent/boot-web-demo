@@ -11,6 +11,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.relucent.base.common.collection.CollectionUtil;
 
 import yyl.demo.common.enums.IntBoolEnum;
+import yyl.demo.common.model.PageVO;
+import yyl.demo.common.model.PaginationQO;
+import yyl.demo.common.mybatis.MyPageHelper;
 import yyl.demo.entity.UserEntity;
 import yyl.demo.model.qo.UserQO;
 
@@ -21,99 +24,103 @@ import yyl.demo.model.qo.UserQO;
 @Mapper
 public interface UserMapper extends BaseMapper<UserEntity> {
 
-    // ==============================MapperMethods====================================
-    // ...
+	// ==============================MapperMethods====================================
+	// ...
 
-    // ==============================DefaultMethods===================================
-    /**
-     * 查询全部用户
-     * @return 全部用户列表
-     */
-    default List<UserEntity> findAll() {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        lqw.orderByDesc(UserEntity::getRealname);
-        return selectList(lqw);
-    }
+	// ==============================DefaultMethods===================================
+	/**
+	 * 查询全部用户
+	 * @return 全部用户列表
+	 */
+	default List<UserEntity> findAll() {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		lqw.orderByDesc(UserEntity::getRealname);
+		return selectList(lqw);
+	}
 
-    /**
-     * 查询机构下的用户
-     * @param orgId 机构ID
-     * @return 用户列表
-     */
-    default List<UserEntity> findByOrganizationId(String organizationId) {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(UserEntity::getOrganizationId, organizationId);
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        lqw.orderByDesc(UserEntity::getRealname);
-        return selectList(lqw);
-    }
+	/**
+	 * 查询机构下的用户
+	 * @param orgId 机构ID
+	 * @return 用户列表
+	 */
+	default List<UserEntity> findByOrganizationId(String organizationId) {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.eq(UserEntity::getOrganizationId, organizationId);
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		lqw.orderByDesc(UserEntity::getRealname);
+		return selectList(lqw);
+	}
 
-    /**
-     * 查询全部用户ID
-     * @return 用户ID列表
-     */
-    default List<String> findId() {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.select(UserEntity::getId);
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        return CollectionUtil.map(selectList(lqw), UserEntity::getId);
-    }
+	/**
+	 * 查询全部用户ID
+	 * @return 用户ID列表
+	 */
+	default List<String> findId() {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.select(UserEntity::getId);
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		return CollectionUtil.map(selectList(lqw), UserEntity::getId);
+	}
 
-    /**
-     * 查询用户
-     * @param qo 查询条件
-     * @return 用户列表
-     */
-    default List<UserEntity> findByCriteria(UserQO qo) {
-        String keyword = qo.getKeyword();
-        String organizationId = qo.getOrganizationId();
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        if (StringUtils.isNoneEmpty(keyword)) {
-            lqw.and(w -> w.likeLeft(UserEntity::getUsername, keyword)//
-                    .or().likeLeft(UserEntity::getRealname, keyword));
-        }
-        if (StringUtils.isNoneEmpty(organizationId)) {
-            lqw.eq(UserEntity::getOrganizationId, organizationId);
-        }
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        lqw.orderByAsc(UserEntity::getUsername);
-        return selectList(lqw);
-    }
+	/**
+	 * 查询用户
+	 * @param pagination 分页条件
+	 * @return 用户列表
+	 */
+	default PageVO<UserEntity> findByCriteria(PaginationQO<UserQO> pagination) {
+		UserQO qo = pagination.getFilter();
+		String keyword = qo.getKeyword();
+		String organizationId = qo.getOrganizationId();
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		if (StringUtils.isNoneEmpty(keyword)) {
+			lqw.and(w -> w.likeLeft(UserEntity::getUsername, keyword)//
+					.or().likeLeft(UserEntity::getRealname, keyword));
+		}
+		if (StringUtils.isNoneEmpty(organizationId)) {
+			lqw.eq(UserEntity::getOrganizationId, organizationId);
+		}
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		lqw.orderByAsc(UserEntity::getUsername);
 
-    /**
-     * 根据ID查询用户
-     * @param id 用户ID
-     * @return 用户信息
-     */
-    default UserEntity getById(String id) {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(UserEntity::getId, id);
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        return selectOne(lqw);
-    }
+		PageVO<UserEntity> page = MyPageHelper.invoke(pagination, p -> selectPage(p, lqw));
 
-    /**
-     * 根据账号查询用户
-     * @param username 用户名
-     * @return 用户信息
-     */
-    default UserEntity getByUsername(String username) {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(UserEntity::getUsername, username);
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        return selectOne(lqw);
-    }
+		return page;
+	}
 
-    /**
-     * 查询机构下的用户数
-     * @param organizationId 机构ID
-     * @return 用户数
-     */
-    default Long countByOrganizationId(String organizationId) {
-        LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
-        lqw.eq(UserEntity::getOrganizationId, organizationId);
-        lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
-        return selectCount(lqw);
-    }
+	/**
+	 * 根据ID查询用户
+	 * @param id 用户ID
+	 * @return 用户信息
+	 */
+	default UserEntity getById(String id) {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.eq(UserEntity::getId, id);
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		return selectOne(lqw);
+	}
+
+	/**
+	 * 根据账号查询用户
+	 * @param username 用户名
+	 * @return 用户信息
+	 */
+	default UserEntity getByUsername(String username) {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.eq(UserEntity::getUsername, username);
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		return selectOne(lqw);
+	}
+
+	/**
+	 * 查询机构下的用户数
+	 * @param organizationId 机构ID
+	 * @return 用户数
+	 */
+	default Long countByOrganizationId(String organizationId) {
+		LambdaQueryWrapper<UserEntity> lqw = Wrappers.lambdaQuery();
+		lqw.eq(UserEntity::getOrganizationId, organizationId);
+		lqw.eq(UserEntity::getDeleted, IntBoolEnum.N.value());
+		return selectCount(lqw);
+	}
 }

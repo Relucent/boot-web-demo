@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
 import com.github.relucent.base.common.identifier.IdUtil;
 
 import yyl.demo.common.constant.IdConstant;
@@ -23,7 +23,6 @@ import yyl.demo.common.constant.SymbolConstant;
 import yyl.demo.common.enums.IntBoolEnum;
 import yyl.demo.common.model.PageVO;
 import yyl.demo.common.model.PaginationQO;
-import yyl.demo.common.mybatis.MyPageHelper;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.common.util.RsaUtil;
 import yyl.demo.entity.UserEntity;
@@ -96,7 +95,7 @@ public class UserService {
 	 */
 	public void deleteById(String id) {
 		if (IdConstant.ADMIN_ID.equals(id)) {
-			throw ExceptionHelper.prompt("系统管理员不能被删除");
+			throw ExceptionUtil.prompt("系统管理员不能被删除");
 		}
 		userRoleMapper.deleteByUserId(id);
 
@@ -118,7 +117,7 @@ public class UserService {
 
 		UserEntity entity = userMapper.selectById(dto.getId());
 		if (entity == null) {
-			throw ExceptionHelper.prompt("用户不存在或者已经失效");
+			throw ExceptionUtil.prompt("用户不存在或者已经失效");
 		}
 		UserKit.copyProperties(dto, entity);
 
@@ -140,7 +139,7 @@ public class UserService {
 	 */
 	public void enableById(String id, Integer enabled) {
 		if (IdConstant.ADMIN_ID.equals(id)) {
-			throw ExceptionHelper.prompt("内置账号不能被禁用");
+			throw ExceptionUtil.prompt("内置账号不能被禁用");
 		}
 		IntBoolEnum bool = IntBoolEnum.of(enabled, null);
 		if (bool != null && StringUtils.isNoneEmpty(id)) {
@@ -161,7 +160,7 @@ public class UserService {
 		String identity = Securitys.getUserId();
 		UserEntity entity = userMapper.selectById(id);
 		if (entity == null) {
-			throw ExceptionHelper.prompt("用户不存在或者已经失效");
+			throw ExceptionUtil.prompt("用户不存在或者已经失效");
 		}
 		String password = entity.getUsername();
 		entity.setPassword(passwordEncoder.encode(password));
@@ -181,17 +180,17 @@ public class UserService {
 		String rsaId = passwordDto.getRsaId();
 
 		if (StringUtils.isEmpty(oldPassword)) {
-			throw ExceptionHelper.prompt("请输入旧密码");
+			throw ExceptionUtil.prompt("请输入旧密码");
 		}
 		if (StringUtils.isEmpty(newPassword)) {
-			throw ExceptionHelper.prompt("请输入新密码");
+			throw ExceptionUtil.prompt("请输入新密码");
 		}
 
 		// 使用RSA加密
 		if (StringUtils.isNotEmpty(rsaId)) {
 			KeyPair keyPair = rsaKeyPairStore.get(rsaId);
 			if (keyPair == null) {
-				throw ExceptionHelper.prompt("客户端秘钥失效！");
+				throw ExceptionUtil.prompt("客户端秘钥失效！");
 			}
 			try {
 				PrivateKey privateKey = keyPair.getPrivate();
@@ -199,17 +198,17 @@ public class UserService {
 				newPassword = RsaUtil.decryptBase64(newPassword, privateKey);
 				rsaKeyPairStore.remove(rsaId);
 			} catch (Exception e) {
-				throw ExceptionHelper.prompt("客户端秘钥无效!");
+				throw ExceptionUtil.prompt("客户端秘钥无效!");
 			}
 		}
 
 		String userId = identity;
 		UserEntity entity = userMapper.selectById(userId);
 		if (entity == null) {
-			throw ExceptionHelper.prompt("用户未登录");
+			throw ExceptionUtil.prompt("用户未登录");
 		}
 		if (!passwordEncoder.matches(oldPassword, entity.getPassword())) {
-			throw ExceptionHelper.prompt("旧密码输入错误");
+			throw ExceptionUtil.prompt("旧密码输入错误");
 		}
 		entity.setPassword(passwordEncoder.encode(newPassword));
 		AuditableUtil.setUpdated(entity, identity);
@@ -249,8 +248,7 @@ public class UserService {
 	 * @return 分页结果
 	 */
 	public PageVO<UserRO> list(PaginationQO<UserQO> pagination) {
-		UserQO qo = pagination.getFilter();
-		PageVO<UserEntity> page = MyPageHelper.invoke(pagination, () -> userMapper.findByCriteria(qo));
+		PageVO<UserEntity> page = userMapper.findByCriteria(pagination);
 		return page.mapRecords(UserKit::toRO);
 	}
 
@@ -300,17 +298,17 @@ public class UserService {
 		String organizationId = dto.getOrganizationId();
 
 		if (StringUtils.isEmpty(username)) {
-			throw ExceptionHelper.prompt("用户名不能为空");
+			throw ExceptionUtil.prompt("用户名不能为空");
 		}
 		if (StringUtils.isEmpty(realname)) {
-			throw ExceptionHelper.prompt("姓名不能为空");
+			throw ExceptionUtil.prompt("姓名不能为空");
 		}
 		UserEntity entity = userMapper.getByUsername(username);
 		if (entity != null && !Objects.equals(entity.getId(), id)) {
-			throw ExceptionHelper.prompt("已经存在相同账号");
+			throw ExceptionUtil.prompt("已经存在相同账号");
 		}
 		if (IdConstant.ADMIN_ID.equals(id) && organizationMapper.getById(organizationId) == null) {
-			throw ExceptionHelper.prompt("该组织机构无效");
+			throw ExceptionUtil.prompt("该组织机构无效");
 		}
 	}
 }
