@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.relucent.base.common.collection.CollectionUtil;
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import yyl.demo.common.constant.SecurityConstant;
@@ -86,34 +86,34 @@ public class AuthenticationTokenService {
         String rsaId = dto.getRsaId();
 
         if (StringUtils.isEmpty(username)) {
-            throw ExceptionHelper.prompt("请输入用户名！");
+            throw ExceptionUtil.prompt("请输入用户名！");
         }
         if (StringUtils.isEmpty(password)) {
-            throw ExceptionHelper.prompt("请输入密码！");
+            throw ExceptionUtil.prompt("请输入密码！");
         }
 
         if (StringUtils.isNotEmpty(rsaId)) {
             KeyPair keyPair = rsaKeyPairStore.get(rsaId);
             if (keyPair == null) {
-                throw ExceptionHelper.prompt("客户端凭证无效！");
+                throw ExceptionUtil.prompt("客户端凭证无效！");
             }
             try {
                 password = RsaUtil.decryptBase64(password, keyPair.getPrivate());
                 rsaKeyPairStore.remove(rsaId);
             } catch (Exception e) {
                 log.error("!", e);
-                throw ExceptionHelper.prompt("客户端凭证失效!");
+                throw ExceptionUtil.prompt("客户端凭证失效!");
             }
         }
         UserEntity entity = userMapper.getByUsername(username);
         if (entity == null) {
-            throw ExceptionHelper.prompt("用户名错误，请检查用户名！");
+            throw ExceptionUtil.prompt("用户名错误，请检查用户名！");
         }
         if (!passwordEncoder.matches(password, entity.getPassword())) {
-            throw ExceptionHelper.prompt("用户名或密码错误！");
+            throw ExceptionUtil.prompt("用户名或密码错误！");
         }
         if (!IntBoolEnum.Y.is(entity.getEnabled())) {
-            throw ExceptionHelper.prompt("用户已被禁用，请联系管理员！");
+            throw ExceptionUtil.prompt("用户已被禁用，请联系管理员！");
         }
 
         UserPrincipal principal = buildPrincipal(entity);

@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.relucent.base.common.collection.CollectionUtil;
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
 import com.github.relucent.base.common.identifier.IdUtil;
 
 import yyl.demo.common.enums.IntBoolEnum;
 import yyl.demo.common.model.PageVO;
 import yyl.demo.common.model.PaginationQO;
-import yyl.demo.common.mybatis.MyPageHelper;
 import yyl.demo.common.standard.AuditableUtil;
 import yyl.demo.entity.RoleEntity;
 import yyl.demo.entity.RolePermissionEntity;
@@ -96,7 +95,7 @@ public class RoleService {
 		validate(dto);
 		RoleEntity entity = roleMapper.selectById(dto.getId());
 		if (entity == null) {
-			throw ExceptionHelper.prompt("角色不存在或者已经失效");
+			throw ExceptionUtil.prompt("角色不存在或者已经失效");
 		}
 		RoleKit.copyProperties(dto, entity);
 		String identity = Securitys.getUserId();
@@ -115,7 +114,7 @@ public class RoleService {
 	public RoleVO getById(String id) {
 		RoleEntity entity = roleMapper.selectById(id);
 		if (entity == null) {
-			throw ExceptionHelper.prompt("角色不存在或者已经失效");
+			throw ExceptionUtil.prompt("角色不存在或者已经失效");
 		}
 		RoleVO vo = RoleKit.toVO(entity);
 
@@ -131,8 +130,7 @@ public class RoleService {
 	 * @return 分页结果
 	 */
 	public PageVO<RoleRO> list(PaginationQO<RoleQO> pagination) {
-		RoleQO qo = pagination.getFilter();
-		PageVO<RoleEntity> page = MyPageHelper.invoke(pagination, () -> roleMapper.findByCriteria(qo));
+		PageVO<RoleEntity> page = roleMapper.findByCriteria(pagination);
 		return page.mapRecords(RoleKit::toRO);
 	}
 
@@ -198,16 +196,16 @@ public class RoleService {
 		String code = dto.getCode();
 		String name = dto.getName();
 		if (StringUtils.isEmpty(code)) {
-			throw ExceptionHelper.prompt("角色编码不能为空");
+			throw ExceptionUtil.prompt("角色编码不能为空");
 		}
 		if (StringUtils.isEmpty(name)) {
-			throw ExceptionHelper.prompt("角色名称不能为空");
+			throw ExceptionUtil.prompt("角色名称不能为空");
 		}
 		if (roleMapper.existsByCodeAndNeId(code, id)) {
-			throw ExceptionHelper.prompt("该角色编码已经被使用，角色编码不能重复");
+			throw ExceptionUtil.prompt("该角色编码已经被使用，角色编码不能重复");
 		}
 		if (roleMapper.existsByNameAndNeId(name, id)) {
-			throw ExceptionHelper.prompt("该角色名称已经被使用，角色名称不能重复");
+			throw ExceptionUtil.prompt("该角色名称已经被使用，角色名称不能重复");
 		}
 	}
 }
