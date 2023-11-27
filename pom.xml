@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>yyl</groupId>
@@ -23,14 +24,14 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<!-- LibraryVersion -->
 		<project.version>0.0.1-SNAPSHOT</project.version>
-		<bouncycastle.version>1.70</bouncycastle.version>
+		<bouncycastle.version>1.77</bouncycastle.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-io.version>2.7</commons-io.version>
-		<guava.version>31.0.1-jre</guava.version>
-		<knife4j.version>4.1.0</knife4j.version>
+		<guava.version>32.0.0-jre</guava.version>
+		<knife4j.version>4.3.0</knife4j.version>
 		<lombok.version>1.16.22</lombok.version>
-		<mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-		<base-lib.version>0.2.9</base-lib.version>
+		<mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+		<base-lib.version>0.3.0</base-lib.version>
 	</properties>
 	<dependencies>
 		<!-- _springboot|web -->
@@ -66,7 +67,7 @@
 		<!-- _bouncycastle| -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
+			<artifactId>bcprov-jdk18on</artifactId>
 			<version>${bouncycastle.version}</version>
 		</dependency>
 		<!-- _commons| -->
