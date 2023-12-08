@@ -1,11 +1,9 @@
 package yyl.demo.dao.mapper;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -13,7 +11,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import yyl.demo.entity.UserEntity;
 import yyl.demo.mapper.UserMapper;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class UserMapperTest {
@@ -21,7 +18,7 @@ public class UserMapperTest {
     @Autowired
     private UserMapper userMapper;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         userMapper.insert(ofUser("10000", "U1", "~", "Jeff Bezos", "/", 1));
         userMapper.insert(ofUser("20000", "U2", "~", "Bill Gates", "/", 1));
@@ -40,6 +37,7 @@ public class UserMapperTest {
     private UserEntity ofUser(String id, String username, String password, String realname, String remark, Integer enabled) {
         UserEntity user = new UserEntity();
         user.setId(id);
+        user.setOrganizationId("");
         user.setUsername(username);
         user.setPassword(password);
         user.setRealname(realname);

@@ -17,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
+import com.github.relucent.base.common.identifier.IdUtil;
 import com.github.relucent.base.common.tree.TreeUtil;
 import com.github.relucent.base.common.tree.TreeUtil.NodeFilter;
 
@@ -26,7 +27,6 @@ import yyl.demo.common.constant.SymbolConstant;
 import yyl.demo.common.enums.IntBoolEnum;
 import yyl.demo.common.enums.PermissionTypeEnum;
 import yyl.demo.common.standard.AuditableUtil;
-import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.PermissionEntity;
 import yyl.demo.kit.PermissionKit;
 import yyl.demo.mapper.PermissionMapper;
@@ -79,7 +79,7 @@ public class PermissionService {
      */
     public void deleteById(String id) {
         if (permissionMapper.countByParentId(id) != 0) {
-            throw ExceptionHelper.prompt("该功能存在子节点，不能被直接删除");
+            throw ExceptionUtil.prompt("该功能存在子节点，不能被直接删除");
         }
 
         // 删除关联
@@ -105,7 +105,7 @@ public class PermissionService {
         PermissionEntity entity = permissionMapper.selectById(dto.getId());
 
         if (entity == null) {
-            throw ExceptionHelper.prompt("数据不存在");
+            throw ExceptionUtil.prompt("数据不存在");
         }
 
         String originalIdPath = entity.getIdPath();
@@ -132,7 +132,7 @@ public class PermissionService {
     public PermissionVO getById(String id) {
         PermissionEntity entity = permissionMapper.selectById(id);
         if (entity == null) {
-            throw ExceptionHelper.prompt("数据不存在或者已经失效");
+            throw ExceptionUtil.prompt("数据不存在或者已经失效");
         }
         PermissionVO vo = PermissionKit.toVO(entity);
         String parentId = entity.getParentId();
@@ -207,15 +207,15 @@ public class PermissionService {
         String name = dto.getName();
         Integer type = dto.getType();
         if (StringUtils.isEmpty(name)) {
-            throw ExceptionHelper.prompt("名称不能为空");
+            throw ExceptionUtil.prompt("名称不能为空");
         }
         if (type == null) {
-            throw ExceptionHelper.prompt("类别不能为空");
+            throw ExceptionUtil.prompt("类别不能为空");
         }
         if (!IdConstant.ROOT_ID.equals(parentId)) {
             PermissionEntity parentEntity = permissionMapper.selectById(parentId);
             if (parentEntity == null) {
-                throw ExceptionHelper.prompt("没有查询到对应的上级");
+                throw ExceptionUtil.prompt("没有查询到对应的上级");
             }
         }
     }

@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
+import com.github.relucent.base.common.identifier.IdUtil;
 
 import yyl.demo.common.standard.AuditableUtil;
-import yyl.demo.common.util.IdUtil;
 import yyl.demo.component.FileStoreComponent;
 import yyl.demo.component.FileStoreComponent.FileMeta;
 import yyl.demo.entity.FileEntity;
@@ -59,7 +59,7 @@ public class FileService {
         try (InputStream input = file.getInputStream()) {
             fileStoreComponent.put(path, input);
         } catch (IOException e) {
-            throw ExceptionHelper.prompt("文件上传失败");
+            throw ExceptionUtil.prompt("文件上传失败");
         }
 
         FileEntity entity = new FileEntity();

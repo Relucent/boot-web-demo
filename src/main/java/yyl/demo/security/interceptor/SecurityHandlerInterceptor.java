@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import com.github.relucent.base.common.json.JsonUtil;
 import com.github.relucent.base.common.web.WebUtil;
@@ -15,7 +15,7 @@ import yyl.demo.common.constant.IdConstant;
 import yyl.demo.security.Securitys;
 import yyl.demo.security.model.UserPrincipal;
 
-public class SecurityHandlerInterceptor extends HandlerInterceptorAdapter {
+public class SecurityHandlerInterceptor implements AsyncHandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

@@ -14,14 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
+import com.github.relucent.base.common.identifier.IdUtil;
 import com.github.relucent.base.common.tree.TreeUtil;
 
 import yyl.demo.common.constant.IdConstant;
 import yyl.demo.common.constant.SymbolConstant;
 import yyl.demo.common.enums.IntBoolEnum;
 import yyl.demo.common.standard.AuditableUtil;
-import yyl.demo.common.util.IdUtil;
 import yyl.demo.entity.OrganizationEntity;
 import yyl.demo.kit.OrganizationKit;
 import yyl.demo.mapper.OrganizationMapper;
@@ -67,7 +67,7 @@ public class OrganizationService {
      */
     public void deleteById(String id) {
         if (userMapper.countByOrganizationId(id) > 0) {
-            throw ExceptionHelper.prompt("该机构下存在用户，不能被直接删除！");
+            throw ExceptionUtil.prompt("该机构下存在用户，不能被直接删除！");
         }
         OrganizationEntity updated = new OrganizationEntity();
         updated.setId(id);
@@ -85,7 +85,7 @@ public class OrganizationService {
         validate(dto);
         OrganizationEntity entity = organizationMapper.getById(dto.getId());
         if (entity == null) {
-            throw ExceptionHelper.prompt("机构不存在或者已经失效");
+            throw ExceptionUtil.prompt("机构不存在或者已经失效");
         }
         OrganizationKit.copyProperties(dto, entity);
 
@@ -110,7 +110,7 @@ public class OrganizationService {
     public OrganizationVO getById(String id) {
         OrganizationEntity entity = organizationMapper.getById(id);
         if (entity == null) {
-            throw ExceptionHelper.prompt("机构不存在或者已经失效");
+            throw ExceptionUtil.prompt("机构不存在或者已经失效");
         }
         OrganizationVO vo = OrganizationKit.toVO(entity);
         String parentId = entity.getParentId();
@@ -172,11 +172,11 @@ public class OrganizationService {
         String id = dto.getId();
         String name = dto.getName();
         if (StringUtils.isEmpty(name)) {
-            throw ExceptionHelper.prompt("机构名不能为空");
+            throw ExceptionUtil.prompt("机构名不能为空");
         }
         OrganizationEntity entity = organizationMapper.getByName(name);
         if (entity != null && !Objects.equals(entity.getId(), id)) {
-            throw ExceptionHelper.prompt("已经存在相同的机构名");
+            throw ExceptionUtil.prompt("已经存在相同的机构名");
         }
     }
 
