@@ -2,30 +2,29 @@ package yyl.demo.model.vo;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel(value = "机构信息_OrganizationVO")
+@Schema(name = "机构信息_OrganizationVO")
 @SuppressWarnings("serial")
 @Data
 public class OrganizationVO implements Serializable {
 
-    @ApiModelProperty("机构ID")
+    @Schema(description = "机构ID")
     private String id;
 
-    @ApiModelProperty("上级机构ID")
+    @Schema(description = "上级机构ID")
     private String parentId;
 
-    @ApiModelProperty("上级机构名称")
+    @Schema(description = "上级机构名称")
     private String parentName;
 
-    @ApiModelProperty("名称")
+    @Schema(description = "名称")
     private String name;
 
-    @ApiModelProperty("备注")
+    @Schema(description = "备注")
     private String remark;
 
-    @ApiModelProperty("排序号")
+    @Schema(description = "排序号")
     private Integer ordinal;
 }

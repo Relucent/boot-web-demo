@@ -2,18 +2,17 @@ package yyl.demo.model.vo;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel("用户信息_UserInfoVO")
+@Schema(name = "用户信息_UserInfoVO")
 @SuppressWarnings("serial")
 @Data
 public class UserInfoVO implements Serializable {
-    @ApiModelProperty("用户ID")
+    @Schema(description = "用户ID")
     private String id;
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String username;
-    @ApiModelProperty("真实姓名")
+    @Schema(description = "真实姓名")
     private String realname;
 }

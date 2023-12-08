@@ -3,24 +3,23 @@ package yyl.demo.model.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel("角色信息_RoleVO")
+@Schema(name = "角色信息_RoleVO")
 @SuppressWarnings("serial")
 @Data
 public class RoleVO implements Serializable {
 
-    @ApiModelProperty("主键")
+    @Schema(description = "主键")
     private String id;
-    @ApiModelProperty("编码")
+    @Schema(description = "编码")
     private String code;
-    @ApiModelProperty("名称")
+    @Schema(description = "名称")
     private String name;
-    @ApiModelProperty("备注")
+    @Schema(description = "备注")
     private String remark;
 
-    @ApiModelProperty("关联权限")
+    @Schema(description = "关联权限")
     private List<String> permissionIds;
 }

@@ -5,10 +5,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.relucent.base.common.identifier.IdUtil;
 
-import yyl.demo.common.util.IdUtil;
 import yyl.demo.properties.WebSecurityProperties;
 import yyl.demo.security.model.AccessToken;
 import yyl.demo.security.model.UserPrincipal;
@@ -29,7 +29,8 @@ public class AuthenticationTokenStore {
     public AuthenticationTokenStore(WebSecurityProperties properties) {
         Duration ttl = properties.getAccessTokenTtl();
         Duration maxIdleTime = properties.getAccessTokenMaxIdleTime();
-        userPrincipalCache = CacheBuilder.newBuilder()//
+        userPrincipalCache = Caffeine.newBuilder()//
+                .maximumSize(100_000) // 防攻击/防OOM （10万个缓存上限）
                 .expireAfterWrite(ttl.toMillis(), TimeUnit.MILLISECONDS)//
                 .expireAfterAccess(maxIdleTime.toMillis(), TimeUnit.MILLISECONDS)//
                 .build();

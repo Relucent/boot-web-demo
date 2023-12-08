@@ -8,27 +8,26 @@ import java.util.function.Function;
 import com.github.relucent.base.common.collection.CollectionUtil;
 import com.github.relucent.base.common.page.Page;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel("分页查询结果(PageVO)")
+@Schema(name = "分页查询结果(PageVO)")
 @Data
 @SuppressWarnings("serial")
 public class PageVO<T> implements Page<T> {
 
     // =================================Fields================================================
     /** 查询的偏移量(从0开始) */
-    @ApiModelProperty(value = "查询的偏移量，从0开始", example = "0")
+    @Schema(description = "查询的偏移量，从0开始")
     private long offset = 1;
     /** 每页记录条数 */
-    @ApiModelProperty("每页记录条数")
+    @Schema(description = "每页记录条数")
     private long limit = 20;
     /** 当前页数据 */
-    @ApiModelProperty("当前页数据列表")
+    @Schema(description = "当前页数据列表")
     private List<T> records;
     /** 总记录数 */
-    @ApiModelProperty("总记录数")
+    @Schema(description = "总记录数")
     private long total = 0;
 
     // =================================Constructors===========================================

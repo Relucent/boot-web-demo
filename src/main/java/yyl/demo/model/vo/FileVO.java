@@ -2,24 +2,23 @@ package yyl.demo.model.vo;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@ApiModel("文件信息_FileVO")
+@Schema(name = "文件信息_FileVO")
 @SuppressWarnings("serial")
 @Data
 public class FileVO implements Serializable {
-    @ApiModelProperty("文件ID")
+    @Schema(description = "文件ID")
     private String id;
-    @ApiModelProperty("文件名称")
+    @Schema(description = "文件名称")
     private String name;
-    @ApiModelProperty("文件扩展名")
+    @Schema(description = "文件扩展名")
     private String extension;
-    @ApiModelProperty("文件尺寸")
+    @Schema(description = "文件尺寸")
     private Long length;
-    @ApiModelProperty("内容类型")
+    @Schema(description = "内容类型")
     private String contentType;
-    @ApiModelProperty("存储路径")
+    @Schema(description = "存储路径")
     private String path;
 }

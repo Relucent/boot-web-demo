@@ -134,7 +134,7 @@ public interface PermissionMapper extends BaseMapper<PermissionEntity> {
      * @param parentId 父功能权限ID
      * @return 记录数
      */
-    default Integer countByParentId(String parentId) {
+    default Long countByParentId(String parentId) {
         LambdaQueryWrapper<PermissionEntity> lqw = Wrappers.lambdaQuery();
         lqw.eq(PermissionEntity::getParentId, parentId);
         lqw.eq(PermissionEntity::getDeleted, IntBoolEnum.N.value());
