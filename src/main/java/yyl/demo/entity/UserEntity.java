@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import yyl.demo.entity.basic.BaseEntity;
 
 /**
@@ -16,38 +18,39 @@ import yyl.demo.entity.basic.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "user", autoResultMap = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserEntity extends BaseEntity {
 
     /** 主键 */
     @TableId("id")
-    private String id;
+    String id;
     /** 登录名 */
     @TableField("username")
-    private String username;
+    String username;
     /** 登录密码 */
     @TableField("password")
-    private String password;
+    String password;
 
     /** 所属机构 */
     @TableField("organization_id")
-    private String organizationId;
+    String organizationId;
     /** 用户姓名 */
     @TableField("realname")
-    private String realname;
+    String realname;
 
     /** 性别 */
     @TableField("sex")
-    private String sex;
+    String sex;
 
     /** 电话 */
     @TableField("phone")
-    private String phone;
+    String phone;
 
     /** 备注 */
     @TableField("remark")
-    private String remark;
+    String remark;
 
     /** 是否可用 */
     @TableField("enabled")
-    private Integer enabled;
+    Integer enabled;
 }

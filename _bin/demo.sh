@@ -15,6 +15,8 @@ LOGFILE_PATH="${WORKING_DIR}/${PROJECT}.log"
 
 STOP_WAIT_TIME=60
 
+cd ${WORKING_DIR}
+
 get_server_pid() {
   echo `ps -ef | grep java | grep ${JARFILE_PATH} | awk '{print $2}'`
 }

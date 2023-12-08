@@ -21,16 +21,15 @@ import com.github.relucent.base.common.web.DownloadMode;
 import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import yyl.demo.component.FileStoreComponent.FileMeta;
 import yyl.demo.model.vo.FileVO;
 import yyl.demo.service.FileService;
 
 @RequestMapping("/rest/file")
-@Api(tags = "文件存储")
+@Tag(name = "文件存储")
 @Slf4j
 public class FileController {
 
@@ -39,9 +38,9 @@ public class FileController {
     private FileService fileService;
 
     // ==============================Methods==========================================
+    @Operation(summary = "上传文件")
     @PostMapping(value = "/upload")
-    @ApiOperation("上传文件")
-    public Result<FileVO> upload(@ApiParam(value = "上传文件", required = true) @RequestPart(value = "file", required = true) MultipartFile file) {
+    public Result<FileVO> upload(@RequestPart(value = "file", required = true) MultipartFile file) {
         FileVO vo = fileService.put(file);
         return Result.ok(vo);
     }
@@ -52,7 +51,7 @@ public class FileController {
      * @param request HTTP请求
      * @param response HTTP 响应
      */
-    @ApiOperation("下载文件")
+    @Operation(summary = "下载文件")
     @GetMapping(value = "/download")
     public void download(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
         doDownload(id, request, response, DownloadMode.ATTACHMENT);
@@ -64,7 +63,7 @@ public class FileController {
      * @param request HTTP请求
      * @param response HTTP 响应
      */
-    @ApiOperation("内嵌文件")
+    @Operation(summary = "内嵌文件")
     @GetMapping(value = "/inline")
     public void inline(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
         doDownload(id, request, response, DownloadMode.INLINE);

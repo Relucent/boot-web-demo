@@ -759,9 +759,19 @@ var __ = {
 				dialog && ((options.width && (dialog.width = options.width)) | (options.height && (dialog.height = options.height)))
 			}
 		},
-		message : function(option) {
+		message : (function(fn) {
+			([ 'info', 'success', 'warning', 'error' ]).forEach(function(type, i) {
+				fn[type] = function(message) {
+					__.message({
+						message : message,
+						type : type
+					});
+				};
+			});
+			return fn;
+		})(function(option) {
 			return __.top().vue().$message(option);
-		},
+		}),
 		// alert(message, title,{callback:fn1}) || alert(message, title).then(fn1,fn2)
 		alert : function(message, title, options) {
 			var _opener_ = __.top();

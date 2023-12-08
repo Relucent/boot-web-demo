@@ -2,16 +2,18 @@ package yyl.demo.mapper;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.lang.Nullable;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 import yyl.demo.common.enums.IntBoolEnum;
+import yyl.demo.common.model.PageVO;
+import yyl.demo.common.model.PaginationQO;
+import yyl.demo.common.mybatis.MyPageHelper;
 import yyl.demo.entity.RoleEntity;
 import yyl.demo.model.qo.RoleQO;
 import yyl.demo.model.ro.RoleInfoRO;
@@ -58,25 +60,28 @@ public interface RoleMapper extends BaseMapper<RoleEntity> {
 
     /**
      * 根据条件查询角色
-     * @param qo 查询条件
+     * @param pagination 分页条件
      * @return 角色列表
      */
-    default List<RoleEntity> findByCriteria(RoleQO qo) {
-        LambdaQueryWrapper<RoleEntity> lqw = Wrappers.lambdaQuery();
+    default PageVO<RoleEntity> findByCriteria(PaginationQO<RoleQO> pagination) {
+        RoleQO qo = pagination.getFilter();
         String keyword = qo.getKeyword();
+        LambdaQueryWrapper<RoleEntity> lqw = Wrappers.lambdaQuery();
         if (StringUtils.isNotEmpty(keyword)) {
             lqw.and(w -> w.likeLeft(RoleEntity::getName, keyword)//
                     .or().likeLeft(RoleEntity::getCode, keyword));
         }
         lqw.eq(RoleEntity::getDeleted, IntBoolEnum.N.value());
         lqw.orderByAsc(RoleEntity::getCode);
-        return selectList(lqw);
+
+        PageVO<RoleEntity> page = MyPageHelper.invoke(pagination, p -> selectPage(p, lqw));
+        return page;
     }
 
     /**
      * 验证是否存在相同编码
      * @param code 编码
-     * @param id 排除的ID(可选)
+     * @param id   排除的ID(可选)
      * @return 是否存在相同名称
      */
     default boolean existsByCodeAndNeId(String code, @Nullable String id) {
@@ -90,7 +95,7 @@ public interface RoleMapper extends BaseMapper<RoleEntity> {
     /**
      * 验证是否存在相同名称
      * @param name 名称
-     * @param id 排除的ID(可选)
+     * @param id   排除的ID(可选)
      * @return 是否存在相同名称
      */
     default boolean existsByNameAndNeId(String name, @Nullable String id) {

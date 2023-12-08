@@ -15,5 +15,6 @@
 	document.writeln('<script src="' + $ctx + '/__/element-ui/2.15.6/index.js"></script>');
 	document.writeln('<script src="' + $ctx + '/__/axios/0.22.0/axios.min.js"></script>');
 	document.writeln('<script src="' + $ctx + '/__/cookie/3.0.1/js.cookie.min.js"></script>');
+	document.writeln('<script src="' + $ctx + '/__/jsencrypt/3.2.1/jsencrypt.min.js"></script>');
 	document.writeln('<script src="' + $ctx + '/__/__/__.js" data-context-path="' + $ctx + '"></script>');
 }();

@@ -2,20 +2,19 @@ package yyl.demo.model.qo;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-@ApiModel("机构查询条件(OrgQO)")
+@Schema(name = "机构查询条件(OrgQO)")
 @Accessors(chain = true)
 @Data
 @SuppressWarnings("serial")
 public class OrganizationQO implements Serializable {
 
-    @ApiModelProperty("名称")
+    @Schema(description = "名称")
     private String name;
 
-    @ApiModelProperty("上级机构ID")
+    @Schema(description = "上级机构ID")
     private String parentId;
 }

@@ -27,9 +27,4 @@ public class GlobalErrorController implements ErrorController {
         }
         return Result.error();
     }
-
-    @Override
-    public String getErrorPath() {
-        return ERROR_PATH;
-    }
 }

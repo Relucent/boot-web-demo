@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import yyl.demo.entity.basic.BaseEntity;
 
 /**
@@ -16,45 +18,46 @@ import yyl.demo.entity.basic.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "permission", autoResultMap = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PermissionEntity extends BaseEntity {
 
     /** 主键 */
     @TableId("id")
-    private String id;
+    String id;
 
     /** 上级ID */
     @TableField("parent_id")
-    private String parentId;
+    String parentId;
 
     /** 类别 */
     @TableField("type")
-    private Integer type;
+    Integer type;
 
     /** 名称 */
     @TableField("name")
-    private String name;
+    String name;
 
     /** 编码 */
     @TableField("code")
-    private String code;
+    String code;
 
     /** 访问路径 */
     @TableField("path")
-    private String path;
+    String path;
 
     /** 图标 */
     @TableField("icon")
-    private String icon;
+    String icon;
 
     /** 备注 */
     @TableField("remark")
-    private String remark;
+    String remark;
 
     /** 排序号 */
     @TableField("ordinal")
-    private String ordinal;
+    String ordinal;
 
     /** ID路径 */
     @TableField("id_path")
-    private String idPath;
+    String idPath;
 }

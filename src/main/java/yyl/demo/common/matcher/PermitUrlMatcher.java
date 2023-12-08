@@ -12,6 +12,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -47,7 +49,25 @@ public class PermitUrlMatcher {
                 if (ax == null) {
                     continue;
                 }
-                for (String url : info.getPatternsCondition().getPatterns()) {
+
+                Set<String> patterns = null;
+                if (patterns == null) {
+                    PathPatternsRequestCondition pprc = info.getPathPatternsCondition();
+                    if (pprc != null) {
+                        patterns = pprc.getPatternValues();
+                    }
+                }
+                if (patterns == null) {
+                    PatternsRequestCondition prc = info.getPatternsCondition();
+                    if (prc != null) {
+                        patterns = prc.getPatterns();
+                    }
+                }
+                if (patterns == null) {
+                    log.error("RequestMappingInfo[{}] patterns is null", info);
+                    continue;
+                }
+                for (String url : patterns) {
                     String path = pathVariablePattern.matcher(url).replaceAll("*");
                     permitAllUrlSet.add(path);
                 }

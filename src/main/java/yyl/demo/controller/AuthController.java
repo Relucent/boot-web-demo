@@ -4,22 +4,24 @@ import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.relucent.base.plugin.model.Result;
-import com.github.relucent.base.plugin.spring.context.WebContextHolder;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import yyl.demo.common.context.WebContextHolder;
 import yyl.demo.model.dto.UsernamePasswordDTO;
+import yyl.demo.model.vo.RsaPublicKeyVO;
 import yyl.demo.model.vo.UserInfoVO;
 import yyl.demo.security.model.AccessToken;
 import yyl.demo.service.AuthenticationTokenService;
 
-@Api(tags = "认证")
+@Tag(name = "认证")
 @RestController
 @RequestMapping("/rest/auth")
 public class AuthController {
@@ -29,7 +31,15 @@ public class AuthController {
     private AuthenticationTokenService authenticationTokenService;
 
     // ==============================Methods==========================================
-    @ApiOperation("用户登录")
+    @Operation(summary = "获取加密公钥")
+    @PostMapping("/getPublicKey")
+    @PermitAll
+    public Result<RsaPublicKeyVO> getPublicKey() {
+        RsaPublicKeyVO vo = authenticationTokenService.getPublicKey();
+        return Result.ok(vo);
+    }
+
+    @Operation(summary = "用户登录")
     @PostMapping("/login")
     @PermitAll
     public Result<AccessToken> doLogin(@RequestBody UsernamePasswordDTO dto) {
@@ -37,8 +47,9 @@ public class AuthController {
         return Result.ok(token);
     }
 
-    @ApiOperation(" 用户登出")
-    @RequestMapping("/logout")
+    @Operation(summary = " 用户登出")
+    @GetMapping("/logout")
+    @PostMapping("/logout")
     @PermitAll
     public Result<?> logout() {
         authenticationTokenService.logout();
@@ -46,7 +57,7 @@ public class AuthController {
         return Result.ok();
     }
 
-    @ApiOperation("用户信息")
+    @Operation(summary = "用户信息")
     @PostMapping("/info")
     public Result<UserInfoVO> info(HttpServletRequest request) {
         UserInfoVO info = authenticationTokenService.getCurrentUser();

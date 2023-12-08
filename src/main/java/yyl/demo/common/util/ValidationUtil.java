@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 
 import com.github.relucent.base.common.collection.CollectionUtil;
-import com.github.relucent.base.common.exception.ExceptionHelper;
+import com.github.relucent.base.common.exception.ExceptionUtil;
 
 /**
  * 数据校验工具类
@@ -27,7 +27,7 @@ public class ValidationUtil {
     public static void checkErrors(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String message = getErrorMessage(bindingResult);
-            throw ExceptionHelper.prompt(message);
+            throw ExceptionUtil.prompt(message);
         }
     }
 
@@ -54,7 +54,7 @@ public class ValidationUtil {
      */
     public static void notNull(Object obj, String message) {
         if (obj == null) {
-            throw ExceptionHelper.prompt(message);
+            throw ExceptionUtil.prompt(message);
         }
     }
 
@@ -65,7 +65,7 @@ public class ValidationUtil {
      */
     public static void notEmpty(String string, String message) {
         if (StringUtils.isEmpty(string)) {
-            throw ExceptionHelper.prompt(message);
+            throw ExceptionUtil.prompt(message);
         }
     }
 
@@ -76,7 +76,7 @@ public class ValidationUtil {
      */
     public static void notEmpty(Collection<?> collection, String message) {
         if (CollectionUtil.isEmpty(collection)) {
-            throw ExceptionHelper.prompt(message);
+            throw ExceptionUtil.prompt(message);
         }
     }
 
@@ -87,7 +87,7 @@ public class ValidationUtil {
      */
     public static void checkError(boolean error, String message) {
         if (error) {
-            throw ExceptionHelper.prompt(message);
+            throw ExceptionUtil.prompt(message);
         }
     }
 }
