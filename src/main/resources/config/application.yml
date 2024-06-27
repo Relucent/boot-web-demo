@@ -3,7 +3,7 @@
 logging:
   level:
     root: info
-    yyl.demo.DemoWebApplication: info
+    "[yyl.demo.DemoWebApplication]": info
 #  config: classpath:config/logback-spring.xml
 #  file: 
 #    max-size: 20MB

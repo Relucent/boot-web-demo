@@ -28,9 +28,9 @@ public class BannerUtil {
 				+ "\t         http://{}:{}{}/doc.html\n" //
 				+ "----------------------------------------------------------", //
 				applicationName, //
-				hostAddress, //
 				serverPort, //
 				servletContextPath, //
+				hostAddress, //
 				serverPort, //
 				servletContextPath);
 	}
