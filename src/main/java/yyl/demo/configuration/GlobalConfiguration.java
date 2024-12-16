@@ -31,30 +31,30 @@ import yyl.demo.common.jackson.Jackson2ObjectMapperBuilderCustomizerImplement;
 @Configuration
 public class GlobalConfiguration {
 
-    /**
-     * _Jackson 定制器
-     * @return _Jackson 定制器
-     */
-    @Primary
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer Jackson2ObjectMapperBuilderCustomizer() {
-        return new Jackson2ObjectMapperBuilderCustomizerImplement();
-    }
+	/**
+	 * _Jackson 定制器
+	 * @return _Jackson 定制器
+	 */
+	@Primary
+	@Bean
+	Jackson2ObjectMapperBuilderCustomizer Jackson2ObjectMapperBuilderCustomizer() {
+		return new Jackson2ObjectMapperBuilderCustomizerImplement();
+	}
 
-    @PostConstruct
-    public void initialize() {
-        JsonUtil.setHandler(new JacksonHandler(new ObjectMapper()//
-                .enable(JsonParser.Feature.ALLOW_COMMENTS)//
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)//
-                .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)//
-                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)//
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)//
-                .registerModules(new SimpleModule() //
-                        .addSerializer(BigDecimal.class, BigDecimalPowerSerializer.INSTANCE)//
-                        .addDeserializer(BigDecimal.class, BigDecimalPowerDeserializer.INSTANCE)//
-                        .addSerializer(Date.class, DatePowerSerializer.INSTANCE)//
-                        .addDeserializer(Date.class, DatePowerDeserializer.INSTANCE))//
-                .findAndRegisterModules())//
-        );
-    }
+	@PostConstruct
+	public void initialize() {
+		JsonUtil.setHandler(new JacksonHandler(new ObjectMapper()//
+				.enable(JsonParser.Feature.ALLOW_COMMENTS)//
+				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)//
+				.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)//
+				.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)//
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)//
+				.registerModules(new SimpleModule() //
+						.addSerializer(BigDecimal.class, BigDecimalPowerSerializer.INSTANCE)//
+						.addDeserializer(BigDecimal.class, BigDecimalPowerDeserializer.INSTANCE)//
+						.addSerializer(Date.class, DatePowerSerializer.INSTANCE)//
+						.addDeserializer(Date.class, DatePowerDeserializer.INSTANCE))//
+				.findAndRegisterModules())//
+		);
+	}
 }

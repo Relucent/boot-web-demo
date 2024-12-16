@@ -31,7 +31,7 @@ public class SwaggerConfiguration {
 
     // ==============================Methods==========================================
     @Bean
-    public OpenAPI customOpenAPI() {
+    OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()//
                 .title(properties.getTitle())//
                 .version(properties.getVersion())//
@@ -40,7 +40,7 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public OperationCustomizer customOperationCustomizer() {
+    OperationCustomizer customOperationCustomizer() {
         return new OperationCustomizer() {
             @Override
             public Operation customize(Operation operation, HandlerMethod handlerMethod) {

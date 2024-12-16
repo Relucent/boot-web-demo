@@ -20,8 +20,8 @@ public class DemoWebApplication {
 	 * @param args 参数
 	 */
 	public static void main(String[] args) {
-		ConfigurableApplicationContext cpplicationContext = SpringApplication.run(DemoWebApplication.class, args);
-		BannerUtil.printEnvironment(cpplicationContext);
+		ConfigurableApplicationContext context = SpringApplication.run(DemoWebApplication.class, args);
+		BannerUtil.printEnvironment(context);
 		log.info("[Startup Success]");
 	}
 }
