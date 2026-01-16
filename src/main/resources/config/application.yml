@@ -3,7 +3,7 @@
 logging:
   level:
     root: info
-    "[yyl.demo.DemoWebApplication]": info
+#    yyl.demo.DemoWebApplication: info
 #  config: classpath:config/logback-spring.xml
 #  file: 
 #    max-size: 20MB
@@ -53,21 +53,24 @@ spring:
     location: classpath:/banner/banner.txt
   # 数据源配置配置
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/_demo?serverTimezone=Asia/Shanghai&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
-    username: root
-    password: root
-    hikari:
-      auto-commit: true
-      connection-test-query: SELECT 1
-      connection-timeout: 30000
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      maximum-pool-size: 20
-      minimum-idle: 10
-      pool-name: DatebookHikariCP
-      validation-timeout: 3000
+    dynamic:
+      primary: master
+      datasource:
+        master:
+          type: com.zaxxer.hikari.HikariDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/_demo?serverTimezone=Asia/Shanghai&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+          username: root
+          password: root
+          hikari:
+            is-auto-commit: true
+            connection-test-query: SELECT 1
+            connection-timeout: 30000
+            idle-timeout: 30000
+            max-lifetime: 1800000
+            maximum-pool-size: 20
+            minimum-idle: 10
+            validation-timeout: 3000
   redis:
     database: 1
     host: localhost
@@ -98,5 +101,15 @@ mybatis-plus:
       logic-not-delete-value: 0
   mapper-locations: classpath:mybatis/mapper/**/*.xml
 
-#knife4j:
-#  enable: true
+# 使用：ENC(密文)
+jasypt:
+  encryptor:
+    password: your-secret-key
+
+#springdoc:
+#  api-docs:
+#    # 控制 /v3/api-docs 是否启用
+#    enabled: true
+#  swagger-ui:
+#    # 控制 Swagger UI 是否启用
+#    enabled: true

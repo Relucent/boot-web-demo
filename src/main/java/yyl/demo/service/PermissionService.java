@@ -40,7 +40,7 @@ import yyl.demo.security.model.UserPrincipal;
 /**
  * 功能权限管理
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class PermissionService {
 
@@ -156,7 +156,7 @@ public class PermissionService {
     /**
      * 获得功能权限树
      * @param rootId 根节点
-     * @param type 类型级别
+     * @param type   类型级别
      * @return 功能权限树
      */
     public List<PermissionNodeVO> getPermissionTree(String rootId, PermissionTypeEnum type) {
