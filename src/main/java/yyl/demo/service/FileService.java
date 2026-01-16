@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.relucent.base.common.exception.ExceptionUtil;
@@ -24,6 +25,7 @@ import yyl.demo.security.Securitys;
 /**
  * 文件存储服务
  */
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class FileService {
 
