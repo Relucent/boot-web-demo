@@ -34,7 +34,7 @@ import yyl.demo.security.Securitys;
 /**
  * 机构管理
  */
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class OrganizationService {
 

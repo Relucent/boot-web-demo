@@ -8,8 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.github.relucent.base.plugin.spring.context.WebContextHolder;
-
+import yyl.demo.common.context.WebContextHolder;
 import yyl.demo.security.model.AuthenticatedUser;
 import yyl.demo.security.model.UserPrincipal;
 import yyl.demo.security.util.AccessTokenUtil;
