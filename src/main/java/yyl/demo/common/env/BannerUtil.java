@@ -26,8 +26,6 @@ public class BannerUtil {
 				+ "\tApplication: {} [Startup Success]\n" //
 				+ "\tSwagger: http://localhost:{}{}/swagger-ui/index.html\n" //
 				+ "\t         http://{}:{}{}/swagger-ui/index.html\n" //
-				+ "\tSwagger: http://localhost:{}{}/doc.html\n" //
-				+ "\t         http://{}:{}{}/doc.html\n" //
 				+ "----------------------------------------------------------", //
 				applicationName, //
 				serverPort, //

@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +42,7 @@ public class GlobalConfiguration {
 	 */
 	@Primary
 	@Bean
-	Jackson2ObjectMapperBuilderCustomizer Jackson2ObjectMapperBuilderCustomizer() {
+	public Jackson2ObjectMapperBuilderCustomizer Jackson2ObjectMapperBuilderCustomizer() {
 		return new Jackson2ObjectMapperBuilderCustomizerImplement();
 	}
 
@@ -90,13 +88,9 @@ public class GlobalConfiguration {
 	@Bean
 	@Primary
 	public JacksonHandler jacksonHandler() {
-		return new JacksonHandler(objectMapper());
-	}
-
-	@PostConstruct
-	public void initialize() {
-		JacksonHandler handler = jacksonHandler();
+		JacksonHandler handler = new JacksonHandler(objectMapper());
 		JsonUtil.setHandler(handler);
 		JacksonUtil.setHandler(handler);
+		return handler;
 	}
 }
