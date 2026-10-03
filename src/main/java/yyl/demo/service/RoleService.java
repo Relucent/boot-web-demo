@@ -59,7 +59,7 @@ public class RoleService {
         validate(dto);
         RoleEntity entity = new RoleEntity();
         RoleKit.copyProperties(dto, entity);
-        entity.setId(IdUtil.timeId());
+        entity.setId(IdUtil.ulid());
         String identity = Securitys.getUserId();
         AuditableUtil.setCreated(entity, identity);
         roleMapper.insert(entity);

@@ -48,7 +48,7 @@ public class AuthenticationTokenStore {
         if (UserPrincipal.isAnonymousUser(principal)) {
             return null;
         }
-        String tokenValue = IdUtil.uuid32() + IdUtil.timeId();
+        String tokenValue = IdUtil.uuid32();
         AccessToken token = new AccessToken();
         token.setValue(tokenValue);
         userPrincipalCache.put(tokenValue, principal);

@@ -49,7 +49,7 @@ public class FileService {
     public FileVO put(MultipartFile file) {
 
         // 文件ID
-        String id = IdUtil.timeId();
+        String id = IdUtil.ulid();
 
         // 生成文件存储路径
         String path = createPath(id);
