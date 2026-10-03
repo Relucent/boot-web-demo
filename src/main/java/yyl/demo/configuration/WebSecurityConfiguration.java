@@ -21,10 +21,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.github.relucent.base.common.json.JsonUtil;
-import com.github.relucent.base.common.web.WebUtil;
 import com.github.relucent.base.plugin.model.Result;
 
 import yyl.demo.common.matcher.PermitUrlMatcher;
+import yyl.demo.common.util.WebUtil;
 import yyl.demo.properties.WebSecurityProperties;
 import yyl.demo.security.filter.AuthenticationTokenFilter;
 import yyl.demo.security.store.AuthenticationTokenStore;
